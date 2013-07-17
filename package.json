@@ -1,0 +1,20 @@
+{
+	"name": "Dirrlicht",
+	"description": "Irrlicht engine port to D2.",
+	"authors": ["Nikolaus Gebhardt", "Gushcha Anton"],
+	"homepage": "http://myproject.com",
+	"license": "zlib",
+
+	"targetType": "library",
+
+	"configurations": [
+		{
+			"name": "manualmem",
+			"versions": [
+				"CUSTOM_MEMORY_MANAGMENT", 
+				"IRR_COMPILE_WITH_GUI", 
+				"IRR_COMPILE_WITH_BMP_LOADER"
+			],
+		}
+	]
+}
