@@ -222,13 +222,13 @@ interface IFileReadCallBack
 	int read(void* buffer, int sizeToRead);
 
 	/// Returns size of file in bytes
-	long getSize() const;
+	long getSize();
 }
 
 /// Empty class to be used as parent class for IrrXMLReader.
 /** 
 * If you need another class as base class for the xml reader, you can do this by creating
-* the reader using for example new CXMLReaderImpl<char, YourBaseClass>(yourcallback);
+* the reader using for example new CXMLReaderImpl!(char, YourBaseClass)(yourcallback);
 * The Irrlicht Engine for example needs IReferenceCounted as base class for every object to
 * let it automaticly reference countend, hence it replaces IXMLBase with IReferenceCounted.
 * See irrXML.cpp on how this can be done in detail. 
@@ -281,7 +281,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	bool read();
 
 	/// Returns the type of the current XML node.
-	EXML_NODE getNodeType() const;
+	EXML_NODE getNodeType();
 
 	/// Returns attribute count of the current XML node.
 	/** 
@@ -289,7 +289,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* node is EXN_ELEMENT, and the element has attributes.
 	* Returns: amount of attributes of this xml node. 
 	*/
-	uint getAttributeCount() const;
+	uint getAttributeCount();
 
 	/// Returns name of an attribute.
 	/** 
@@ -297,7 +297,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* idx = 	Zero based index, should be something between 0 and getAttributeCount()-1.
 	* Returns: Name of the attribute, 0 if an attribute with this index does not exist. 
 	*/
-	string_type getAttributeName(int idx) const;
+	string_type getAttributeName(int idx);
 
 	/// Returns the value of an attribute.
 	/** 
@@ -305,7 +305,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* idx = Zero based index, should be something between 0 and getAttributeCount()-1.
 	* Returns: Value of the attribute, 0 if an attribute with this index does not exist. 
 	*/
-	string_type getAttributeValue(int idx) const;
+	string_type getAttributeValue(int idx);
 
 	/// Returns the value of an attribute.
 	/** 
@@ -313,7 +313,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* name =	Name of the attribute.
 	* Returns: Value of the attribute, 0 if an attribute with this name does not exist. 
 	*/
-	string_type getAttributeValue(string_type name) const;
+	string_type getAttributeValue(string_type name);
 
 	/// Returns the value of an attribute in a safe way.
 	/** 
@@ -323,7 +323,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* name = Name of the attribute.
 	* Returns: Value of the attribute, and "" if an attribute with this name does not exist 
 	*/
-	string_type getAttributeValueSafe(string_type name) const;
+	string_type getAttributeValueSafe(string_type name);
 
 	/// Returns the value of an attribute as integer.
 	/** 
@@ -332,7 +332,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* Returns: Value of the attribute as integer, and 0 if an attribute with this name does not exist or
 	* the value could not be interpreted as integer. 
 	*/
-	int getAttributeValueAsInt(string_type name) const;
+	int getAttributeValueAsInt(string_type name);
 
 	/// Returns the value of an attribute as integer.
 	/** 
@@ -341,7 +341,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* Returns: Value of the attribute as integer, and 0 if an attribute with this index does not exist or
 	* the value could not be interpreted as integer. 
 	*/
-	int getAttributeValueAsInt(int idx) const;
+	int getAttributeValueAsInt(int idx);
 
 	/// Returns the value of an attribute as float.
 	/** 
@@ -350,7 +350,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* Returns: Value of the attribute as float, and 0 if an attribute with this name does not exist or
 	* the value could not be interpreted as float. 
 	*/
-	float getAttributeValueAsFloat(string_type name) const;
+	float getAttributeValueAsFloat(string_type name);
 
 	/// Returns the value of an attribute as float.
 	/** 
@@ -359,24 +359,24 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* Returns: Value of the attribute as float, and 0 if an attribute with this index does not exist or
 	* the value could not be interpreted as float. 
 	*/
-	float getAttributeValueAsFloat(int idx) const;
+	float getAttributeValueAsFloat(int idx);
 
 	/// Returns the name of the current node.
 	/** 
 	* Only valid, if the node type is EXN_ELEMENT.
 	* Returns: Name of the current node or 0 if the node has no name. 
 	*/
-	string_type getNodeName() const;
+	string_type getNodeName();
 
 	/// Returns data of the current node.
 	/** 
 	* Only valid if the node has some
 	* data and it is of type EXN_TEXT, EXN_COMMENT, EXN_CDATA or EXN_UNKNOWN. 
 	*/
-	string_type getNodeData() const;
+	string_type getNodeData();
 
 	/// Returns if an element is an empty element, like &lt;foo />
-	bool isEmptyElement() const;
+	bool isEmptyElement();
 
 	/// Returns format of the source xml file.
 	/** 
@@ -385,7 +385,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* to the format wanted by the user when creating the parser. This
 	* method is useful to get/display additional informations. 
 	*/
-	ETEXT_FORMAT getSourceFormat() const;
+	ETEXT_FORMAT getSourceFormat();
 
 	/// Returns format of the strings returned by the parser.
 	/** 
@@ -394,7 +394,7 @@ class IIrrXMLReader(char_type, super_class) : super_class
 	* IrrXMLReaderUTF32. It should not be necessary to call this
 	* method and only exists for informational purposes. 
 	*/
-	ETEXT_FORMAT getParserFormat() const;
+	ETEXT_FORMAT getParserFormat();
 }
 
 struct xmlChar(T) 
@@ -417,7 +417,7 @@ struct xmlChar(T)
 	}
 	mixin(gen());
 
-	T opCast(T)() const
+	T opCast(T)()
 	{
 		return c;
 	}

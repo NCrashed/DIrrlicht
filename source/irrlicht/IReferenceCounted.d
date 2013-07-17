@@ -36,7 +36,7 @@ is stored somewhere by the driver.
 */
 class IReferenceCounted
 {
-	this()
+	this() nothrow
 	{
 		mDebugName = "";
 		version(CUSTOM_MEMORY_MANAGMENT)

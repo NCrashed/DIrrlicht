@@ -62,7 +62,7 @@ class SNamedPath
 	protected:
 
 		// convert the given path string to a name string.
-		Path PathToName(const Path p)
+		static Path PathToName(const Path p)
 		{
 			return toLower(replace(p, regex(`\\`, "g"), "/"));
 		}
