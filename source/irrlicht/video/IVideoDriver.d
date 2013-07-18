@@ -1,3 +1,6 @@
 module irrlicht.video.IVideoDriver;
 
-interface IVideoDriver {}
+interface IVideoDriver 
+{
+	
+}
