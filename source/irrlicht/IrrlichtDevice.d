@@ -3,13 +3,7 @@ module irrlicht.IrrlichtDevice;
 import irrlicht.video.IVideoDriver;
 import irrlicht.video.IVideoModeList;
 import irrlicht.video.ECOLOR_FORMAT;
-import irrlicht.video.E_DRIVER_TYPE;
-import irrlicht.video.EDT_NULL;
-import irrlicht.video.EDT_BURNINGSVIDEO;
-import irrlicht.video.EDT_SOFTWARE;
-import irrlicht.video.EDT_DIRECT3D8;
-import irrlicht.video.EDT_DIRECT3D9;
-import irrlicht.video.EDT_OPENGL;
+import irrlicht.video.EDriverTypes;
 
 import irrlicht.io.IFileSystem;
 
@@ -28,7 +22,7 @@ import irrlicht.ITimer;
 import irrlicht.IEventReceiver;
 import irrlicht.SEvent;
 import irrlicht.SJoystickInfo;
-import irrlicht.E_DEVICE_TYPE;
+import irrlicht.EDeviceTypes;
 
 /// The Irrlicht device. You can create it with createDevice() or createDeviceEx().
 /** 
@@ -343,10 +337,10 @@ interface class IrrlichtDevice : IReferenceCounted
 	{
 		switch (driver)
 		{
-			case EDT_NULL:
+			case E_DRIVER_TYPE.EDT_NULL:
 				return true;
 			
-			case EDT_SOFTWARE:
+			case E_DRIVER_TYPE.EDT_SOFTWARE:
 				version(_IRR_COMPILE_WITH_SOFTWARE_)
 				{
 					return true;
@@ -356,7 +350,7 @@ interface class IrrlichtDevice : IReferenceCounted
 					return false;
 				}
 			
-			case EDT_BURNINGSVIDEO:
+			case E_DRIVER_TYPE.EDT_BURNINGSVIDEO:
 				version(_IRR_COMPILE_WITH_BURNINGSVIDEO_)
 				{
 					return true;
@@ -366,7 +360,7 @@ interface class IrrlichtDevice : IReferenceCounted
 					return false;
 				}
 
-			case EDT_DIRECT3D8:
+			case E_DRIVER_TYPE.EDT_DIRECT3D8:
 				version(_IRR_COMPILE_WITH_DIRECT3D_8_)
 				{
 					return true;
@@ -376,7 +370,7 @@ interface class IrrlichtDevice : IReferenceCounted
 					return false;
 				}
 
-			case EDT_DIRECT3D9:
+			case E_DRIVER_TYPE.EDT_DIRECT3D9:
 				version(_IRR_COMPILE_WITH_DIRECT3D_9_)
 				{
 					return true;
@@ -386,7 +380,7 @@ interface class IrrlichtDevice : IReferenceCounted
 					return false;
 				}
 				
-			case EDT_OPENGL:
+			case E_DRIVER_TYPE.EDT_OPENGL:
 				version(_IRR_COMPILE_WITH_OPENGL_)
 				{
 					return true;
