@@ -3,10 +3,9 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.io.IFileSystem;
 
-import irrlicht.IReferenceCounted;
-import irrlicht.io.IReadFile;
-import irrlicht.io.IFileArchive;
-import irrlicht.io.IArchiveLoader;
+import irrlicht.IReferenceCounted; //TODO: NCrashed
+import irrlicht.io.IReadFile; //TODO: Done
+import irrlicht.io.IFileArchive; //TODO: Done
 import irrlicht.io.IFileList;
 import irrlicht.io.IXMLReader;
 import irrlicht.io.IReadFile;
@@ -293,11 +292,12 @@ interface IFileSystem : IReferenceCounted
 	*After calling this, the Irrlicht Engine will search and open files directly from this archive too.
 	*This is useful for hiding data from the end user, speeding up file access and making it possible to
 	*access for example Quake2/KingPin/Hexen2 .pak files
+	*
 	*Params:
-	*	filename= Filename of the pak archive to add to the file system.
-	*	ignoreCase= If set to true, files in the archive can be accessed without
-	*				writing all letters in the right case.
-	*	ignorePaths= If set to true, files in the added archive can be accessed
+	*	filename = 		Filename of the pak archive to add to the file system.
+	*	ignoreCase = 	If set to true, files in the archive can be accessed without
+	*					writing all letters in the right case.
+	*	ignorePaths = 	If set to true, files in the added archive can be accessed
 	*					without its complete path.(should not use with Quake2 paks
 	*Returns: True if the archive was added successful, false if not. 
 	*/
@@ -314,8 +314,9 @@ interface IFileSystem : IReferenceCounted
 
 	/// Changes the current working directory.
 	/** 
+	*
 	*Params:
-	*	newDirectory= A string specifying the new working directory.
+	*	newDirectory =	A string specifying the new working directory.
 	*The string is operating system dependent. Under Windows it has
 	*the form "<drive>:\<directory>\<sudirectory>\<..>". An example would be: "C:\Windows\"
 	*Returns: True if successful, otherwise false. 

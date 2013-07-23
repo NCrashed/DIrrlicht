@@ -3,11 +3,11 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.io.IReadFile;
 
-//import irrlicht.IReferenceCounted;
+//import irrlicht.IReferenceCounted; //TODO:
 import irrlicht.io.path;
 
 /// Interface providing read acess to a file
-interface IReadFile //: IReferenceCounted
+interface IReadFile //: IReferenceCounted //TODO:
 {
 	/// Reads an amount of bytes from the file.
 	/**
@@ -56,5 +56,5 @@ IReadFile createReadFile(const Path fileName);
 /// Internal function, please do not use
 IReadFile createLimitReadFile(const Path fileName, IReadFile alreadyOpenedFile, long pos, long areaSize);
 
-//! Internal function, please do not use.
+/// Internal function, please do not use.
 IReadFile createMemoryReadFile(void* memory, long size, const Path fileName, bool deleteMemoryWhenDropped);

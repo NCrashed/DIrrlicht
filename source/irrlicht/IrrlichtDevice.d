@@ -5,14 +5,14 @@ import irrlicht.video.IVideoModeList;
 import irrlicht.video.SColor;
 import irrlicht.video.EDriverTypes;
 
-import irrlicht.io.IFileSystem;
+import irrlicht.io.IFileSystem; //TODO: port FileSystem
 
 import irrlicht.gui.IGUIEnvironment;
 import irrlicht.gui.ICursorControl;
 
 import irrlicht.scene.ISceneManager;
 
-import irrlicht.core.array;
+import irrlicht.core.irrArray;
 
 import irrlicht.IReferenceCounted;
 import irrlicht.IRandomizer;
@@ -245,7 +245,7 @@ interface IrrlichtDevice : IReferenceCounted
 	*Params:
 	*	receiver= New receiver to be used. 
 	*/
-	void setEventReceiver(IEventReceiver receiver) = 0;
+	void setEventReceiver(IEventReceiver receiver);
 
 	/// Provides access to the current event receiver.
 	/** 
