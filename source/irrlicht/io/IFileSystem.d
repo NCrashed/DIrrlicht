@@ -3,9 +3,9 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.io.IFileSystem;
 
-import irrlicht.IReferenceCounted; //TODO: NCrashed
-import irrlicht.io.IReadFile; //TODO: Done
-import irrlicht.io.IFileArchive; //TODO: Done
+import irrlicht.IReferenceCounted;
+import irrlicht.io.IReadFile;
+import irrlicht.io.IFileArchive;
 import irrlicht.io.IFileList;
 import irrlicht.io.IXMLReader;
 import irrlicht.io.IReadFile;
