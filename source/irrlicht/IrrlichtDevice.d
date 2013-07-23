@@ -5,7 +5,7 @@ import irrlicht.video.IVideoModeList;
 import irrlicht.video.SColor;
 import irrlicht.video.EDriverTypes;
 
-import irrlicht.io.IFileSystem; //TODO: port FileSystem
+import irrlicht.io.IFileSystem;
 
 import irrlicht.gui.IGUIEnvironment;
 import irrlicht.gui.ICursorControl;
