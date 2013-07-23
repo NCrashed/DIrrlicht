@@ -467,7 +467,7 @@ struct vector3d(T)
 	* Useful for setting in shader constants for example. The fourth value
 	* will always be 0. 
 	*/
-	void getAs4Values(T* array)
+	void getAs4Values(out T[4] array)
 	{
 		array[0] = X;
 		array[1] = Y;
@@ -479,7 +479,7 @@ struct vector3d(T)
 	/** 
 	* Useful for setting in shader constants for example.
 	*/
-	void getAs3Values(T* array) const
+	void getAs3Values(out T[3] array) const
 	{
 		array[0] = X;
 		array[1] = Y;
