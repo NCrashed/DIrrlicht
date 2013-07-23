@@ -87,20 +87,20 @@ struct vector3d(T)
 	{
 		return vector3d!T(scalar * X, scalar * Y, scalar * Z);
 	}
-	
+
 	/// sort in order X, Y, Z. Equality with rounding tolerance.
 	/// Difference must be above rounding tolerance.
 	bool opCmp()(auto ref const vector3d!T other)
 	{
-		if (X<other.X && !approxEqual(X, other.X)) ||
+		if ((X<other.X && !approxEqual(X, other.X)) ||
 					(approxEqual(X, other.X) && Y<other.Y && !approxEqual(Y, other.Y)) ||
-					(approxEqual(X, other.X) && approxEqual(Y, other.Y) && Z<other.Z && !approxEqual(Z, other.Z))
+					(approxEqual(X, other.X) && approxEqual(Y, other.Y) && Z<other.Z && !approxEqual(Z, other.Z)))
 		{
 			return -1;
 		}
-		else if (X>other.X && !approxEqual(X, other.X)) ||
+		else if ((X>other.X && !approxEqual(X, other.X)) ||
 					(approxEqual(X, other.X) && Y>other.Y && !approxEqual(Y, other.Y)) ||
-					(approxEqual(X, other.X) && approxEqual(Y, other.Y) && Z>other.Z && !approxEqual(Z, other.Z))
+					(approxEqual(X, other.X) && approxEqual(Y, other.Y) && Z>other.Z && !approxEqual(Z, other.Z)))
 		{
 			return 1;
 		}
@@ -270,7 +270,7 @@ struct vector3d(T)
 		double sn = cast(double)sin(degrees);
 		Z -= center.Z;
 		Y -= center.Y;
-		set(X, (T)(Y*cs - Z*sn), (T)(Y*sn + Z*cs));
+		set(X, cast(T)(Y*cs - Z*sn), cast(T)(Y*sn + Z*cs));
 		Z += center.Z;
 		Y += center.Y;
 	}
@@ -301,9 +301,9 @@ struct vector3d(T)
 	vector3d!T getInterpolated_quadratic()(auto ref const vector3d!T v2, auto ref const vector3d!T v3, double d)
 	{
 		// this*(1-d)*(1-d) + 2 * v2 * (1-d) + v3 * d * d;
-		immutable double inv = (T) 1.0 - d;
+		immutable double inv = cast(T) 1.0 - d;
 		immutable double mul0 = inv * inv;
-		immutable double mul1 = (T) 2.0 * d * inv;
+		immutable double mul1 = cast(T) 2.0 * d * inv;
 		immutable double mul2 = d * d;
 
 		return vector3d!T(cast(T)(X * mul0 + v2.X * mul1 + v3.X * mul2),
@@ -349,7 +349,7 @@ struct vector3d(T)
 	{
 		vector3d!T angle;
 
-		immutable double tmp = (atan2(cast(double)X, cast(double)Z) * (PI / 180.0)));
+		immutable double tmp = (atan2(cast(double)X, cast(double)Z) * (PI / 180.0));
 		angle.Y = cast(T)tmp;
 
 		if (angle.Y < 0)
@@ -375,8 +375,8 @@ struct vector3d(T)
 	* this vector.  The calculation assumes the pole at (0,1,0) and
 	* returns the angles in X and Y.
 	*/
-	vector3d!T getSphericalCoordinateAngles()
-		if(is(T != int))
+	vector3d!T getSphericalCoordinateAngles()()
+		if(!is(T == int))
 	{
 		vector3d!T angle;
 		immutable double length = X*X + Y*Y + Z*Z;
@@ -385,7 +385,7 @@ struct vector3d(T)
 		{
 			if (X!=0)
 			{
-				angle.Y = cast(T)(atan2(cast(double)Z,cast(double)X) * (PI / 180.0)));
+				angle.Y = cast(T)(atan2(cast(double)Z,cast(double)X) * (PI / 180.0));
 			}
 			else if (Z<0)
 				angle.Y=180;
@@ -401,7 +401,7 @@ struct vector3d(T)
 	* this vector.  The calculation assumes the pole at (0,1,0) and
 	* returns the angles in X and Y.
 	*/
-	vector3d!T getSphericalCoordinateAngles()
+	vector3d!T getSphericalCoordinateAngles()()
 		if(is(T == int))
 	{
 		vector3d!int angle;
