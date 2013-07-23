@@ -2,7 +2,7 @@ module irrlicht.IrrlichtDevice;
 
 import irrlicht.video.IVideoDriver;
 import irrlicht.video.IVideoModeList;
-import irrlicht.video.ECOLOR_FORMAT;
+import irrlicht.video.SColor;
 import irrlicht.video.EDriverTypes;
 
 import irrlicht.io.IFileSystem;
@@ -31,7 +31,7 @@ import irrlicht.EDeviceTypes;
 *this class.  There should be only one instance of this class at any
 *time.
 */
-interface class IrrlichtDevice : IReferenceCounted
+interface IrrlichtDevice : IReferenceCounted
 {
 	/// Runs the device.
 	/** 
@@ -159,7 +159,9 @@ interface class IrrlichtDevice : IReferenceCounted
 	/// Sets a new randomizer.
 	/**
 	*Params:
-	*	r= Pointer to the new IRandomizer object. This object is grab()'ed by the engine and will be released upon the next setRandomizer call or upon device destruction. 
+	*	r=	Pointer to the new IRandomizer object. 
+	*		This object is grab()'ed by the engine and will be released upon the next setRandomizer call or 
+	*		upon device destruction. 
 	*/
 	void setRandomizer(IRandomizer r);
 
