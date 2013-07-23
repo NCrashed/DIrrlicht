@@ -25,7 +25,7 @@ struct line3d(T)
 	line3d!T opBinary(string op)(auto ref const vector3d!T point)
 		if(op == "+" || op == "-")
 	{
-		return line3d!T(mixin("start "~op~" point"), mixin("end "~op" point"));
+		return line3d!T(mixin("start "~op~" point"), mixin("end "~op~" point"));
 	}
 
 	auto ref line3d!T opOpAssign(string op)(auto ref const vector3d!T point)
