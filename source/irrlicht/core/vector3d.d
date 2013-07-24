@@ -247,7 +247,7 @@ struct vector3d(T)
 	*/
 	void rotateXZBy()(double degrees, auto ref const vector3d!T center)
 	{
-		degrees *= 180 / PI;
+		degrees *= DEGTORAD;
 		double cs = cast(double)cos(degrees);
 		double sn = cast(double)sin(degrees);
 		X -= center.X;
@@ -265,7 +265,7 @@ struct vector3d(T)
 	*/
 	void rotateYZBy()(double degrees, auto ref const vector3d!T center)
 	{
-		degrees *= 180.0 / PI;
+		degrees *= DEGTORAD;
 		double cs = cast(double)cos(degrees);
 		double sn = cast(double)sin(degrees);
 		Z -= center.Z;
@@ -349,7 +349,7 @@ struct vector3d(T)
 	{
 		vector3d!T angle;
 
-		immutable double tmp = (atan2(cast(double)X, cast(double)Z) * (PI / 180.0));
+		immutable double tmp = (atan2(cast(double)X, cast(double)Z) * RADTODEG);
 		angle.Y = cast(T)tmp;
 
 		if (angle.Y < 0)
@@ -359,7 +359,7 @@ struct vector3d(T)
 
 		immutable double z1 = cast(double)sqrt(X*X + Z*Z);
 
-		angle.X = cast(T)(atan2(cast(double)z1, cast(double)Y) * (PI / 180.0) - 90.0);
+		angle.X = cast(T)(atan2(cast(double)z1, cast(double)Y) * RADTODEG - 90.0);
 
 		if (angle.X < 0)
 			angle.X += 360;
@@ -385,12 +385,12 @@ struct vector3d(T)
 		{
 			if (X!=0)
 			{
-				angle.Y = cast(T)(atan2(cast(double)Z,cast(double)X) * (PI / 180.0));
+				angle.Y = cast(T)(atan2(cast(double)Z,cast(double)X) * RADTODEG);
 			}
 			else if (Z<0)
 				angle.Y=180;
 
-			angle.X = cast(T)(acos(Y * 1/sqrt(length)) * (PI / 180.0));
+			angle.X = cast(T)(acos(Y * 1/sqrt(length)) * RADTODEG);
 		}
 		return angle;
 	}
@@ -411,12 +411,12 @@ struct vector3d(T)
 		{
 			if (X!=0)
 			{
-				angle.Y = round(cast(float)(atan2(cast(double)Z,cast(double)X) * RADTODEG64));
+				angle.Y = round(cast(float)(atan2(cast(double)Z,cast(double)X) * RADTODEG));
 			}
 			else if (Z<0)
 				angle.Y=180;
 
-			angle.X = round(cast(float)(acos(Y * 1/sqrt(length)) * RADTODEG64));
+			angle.X = round(cast(float)(acos(Y * 1/sqrt(length)) * RADTODEG));
 		}
 		return angle;
 	}
@@ -434,12 +434,12 @@ struct vector3d(T)
 	*/
 	vector3d!T rotationToDirection()(auto ref const vector3d!T forwards)
 	{
-		immutable double cr = cast(double)cos( DEGTORAD64 * X );
-		immutable double sr = cast(double)sin( DEGTORAD64 * X );
-		immutable double cp = cast(double)cos( DEGTORAD64 * Y );
-		immutable double sp = cast(double)sin( DEGTORAD64 * Y );
-		immutable double cy = cast(double)cos( DEGTORAD64 * Z );
-		immutable double sy = cast(double)sin( DEGTORAD64 * Z );
+		immutable double cr = cast(double)cos( DEGTORAD * X );
+		immutable double sr = cast(double)sin( DEGTORAD * X );
+		immutable double cp = cast(double)cos( DEGTORAD * Y );
+		immutable double sp = cast(double)sin( DEGTORAD * Y );
+		immutable double cy = cast(double)cos( DEGTORAD * Z );
+		immutable double sy = cast(double)sin( DEGTORAD * Z );
 
 		immutable srsp = sr*sp;
 		immutable crsp = cr*sp;

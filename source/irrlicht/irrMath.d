@@ -3,6 +3,15 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.irrMath;
 
+import std.math;
+import std.traits;
+
+/// Constant for converting from degrees to radians
+enum DEGTORAD = PI / 180.0;
+
+/// constant for converting from radians to degrees (formally known as GRAD_PI)
+enum RADTODEG = 180.0 / PI;
+
 static int   F32_AS_S32(float f)				{return (*(cast(int  *) &(f)));}
 static uint  F32_AS_U32(float f)				{return (*(cast(uint *) &(f)));}
 static uint* F32_AS_U32_POINTER(ref float f)	{return ( (cast(uint *) &(f)));}
@@ -22,3 +31,46 @@ static bool	F32_EQUAL_0(float f)			{return ( (F32_AS_U32(f) & F32_EXPON_MANTISSA
 
 // only same sign
 static bool	F32_A_GREATER_B(float a, float b)	{return (F32_AS_S32((a)) > F32_AS_S32((b)));}
+
+/// returns if a equals zero, taking rounding errors into account
+bool iszero(T)(const T a, const T tolerance = T.epsilon)
+	if(isFloatingPoint!T)
+{
+	return approxEqual(a, 0.0, tolerance);
+}
+
+/// returns if a equals zero, taking rounding errors into account
+bool iszero(T)(const T a, const T tolerance = 0)
+	if(isIntegral!T && isUnsigned!T)
+{
+	return a <= tolerance;
+}
+
+/// returns if a equals zero, taking rounding errors into account
+bool iszero(T)(const T a, const T tolerance = 0)
+	if(isIntegral!T && !isUnsigned!T)
+{
+	static if(is(T == int))
+		return ( a & 0x7ffffff ) <= tolerance;
+	else
+		return fabs(a) <= tolerance;
+}
+
+T clamp(T)(T val, T minv, T maxv)
+{
+	return cast(T)fmax(fmin(val, maxv), minv);
+}
+
+private union inttofloat
+{
+	uint u;
+	int s;
+	float f;
+}
+
+static uint IR(float x)
+{
+	inttofloat tmp; 
+	tmp.f=x; 
+	return tmp.u;
+}

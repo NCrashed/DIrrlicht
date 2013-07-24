@@ -389,11 +389,6 @@ struct vector2d(T)
 					return 180.0-atan(-cast(double)Y/-cast(double)X) * RADTODEG64;;
 		}
 
-		private double clamp(double val, double minv, double maxv)
-		{
-			return fmax(fmin(val, maxv), minv);
-		}
-
 		/// Calculates the angle or this vector in degrees in the counter trigonometric sense.
 		/**
 		* 0 is to the right (3 o'clock), values increase clockwise.
