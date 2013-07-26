@@ -1,5 +1,5 @@
 {
-	"name": "Dirrlicht",
+	"name": "dirrlicht",
 	"description": "Irrlicht engine port to D2.",
 	"authors": ["Nikolaus Gebhardt", "Gushcha Anton"],
 	"homepage": "https://github.com/NCrashed/DIrrlicht",

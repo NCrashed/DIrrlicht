@@ -386,7 +386,7 @@ struct vector2d(T)
 				if (X > 0)
 					return 360.0-atan(-cast(double)Y/cast(double)X) * RADTODEG64;
 				else
-					return 180.0-atan(-cast(double)Y/-cast(double)X) * RADTODEG64;;
+					return 180.0-atan(-cast(double)Y/-cast(double)X) * RADTODEG64;
 		}
 
 		/// Calculates the angle or this vector in degrees in the counter trigonometric sense.

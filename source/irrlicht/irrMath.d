@@ -74,3 +74,11 @@ static uint IR(float x)
 	tmp.f=x; 
 	return tmp.u;
 }
+
+static float FR(T)(T x)
+	if(isIntegral!T)
+{
+	inttofloat tmp;
+	tmp.u = x;
+	return tmp.f;
+}
