@@ -297,3 +297,12 @@ struct line2d(T)
 	/// End point of the line.
 	vector2d!T end = vector2d!T(1);
 }
+
+/// Alias for float line2d
+alias line2d!float line2df;
+
+/// Alias for int line2d
+alias line2d!int line2di;
+
+/// Alias for uint line2d
+alias line2d!uint line2du;

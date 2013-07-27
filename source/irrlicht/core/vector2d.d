@@ -515,9 +515,10 @@ struct vector2d(T)
 		/// Y coordinate of vector;
 		T Y;
 
-		vector2d!T opBinaryRight(string op, S)(const S scalar) const
+		vector2d!T opBinaryRight(string op)(const T scalar) const
+			if(op == "*")
 		{
-			return vector*scalar;
+			return this*scalar;
 		}
 	}
 }
