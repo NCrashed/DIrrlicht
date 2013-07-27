@@ -10,6 +10,8 @@ import irrlicht.core.dimension2d;
 import irrlicht.core.vector2d;
 import irrlicht.core.SMaterial;
 import irrlicht.core.triangle3d;
+import irrlicht.video.EDriverTypes;
+import irrlicht.video.EDriverFeatures;
 
 interface IVideoDriver 
 {
