@@ -56,7 +56,7 @@ bool iszero(T)(const T a, const T tolerance = 0)
 		return fabs(a) <= tolerance;
 }
 
-T clamp(T)(T val, T minv, T maxv)
+T clamp(T)(inout(T) val, inout(T) minv, inout(T) maxv)
 {
 	return cast(T)fmax(fmin(val, maxv), minv);
 }
