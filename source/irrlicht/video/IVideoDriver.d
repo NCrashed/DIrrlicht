@@ -13,8 +13,14 @@ import irrlicht.core.plane3d;
 import irrlicht.core.dimension2d;
 import irrlicht.core.vector2d;
 import irrlicht.core.triangle3d;
+import irrlicht.io.IAttributes;
+import irrlicht.io.IAttributeExchangingObject;
+import irrlicht.io.IReadFile;
+import irrlicht.io.IWriteFile;
+import irrlicht.video.IMeshBuffer;
+import irrlicht.video.IMesh;
 
-interface IVideoDriver 
+interface IVideoDriver
 {
 
 }

@@ -38,12 +38,12 @@ interface IAttributeExchangingObject
 	* Implement this to expose the attributes of your scene node animator for
 	* scripting languages, editors, debuggers or xml serialization purposes. 
 	*/
-	void serializeAttributes(out IAttributes outAttr, SAttributeReadWriteOptions options = null) const;
+	void serializeAttributes(out IAttributes outAttr, SAttributeReadWriteOptions options = SAttributeReadWriteOptions()) const;
 
 	/// Reads attributes of the object.
 	/** 
 	* Implement this to set the attributes of your scene node animator for
 	* scripting languages, editors, debuggers or xml deserialization purposes. 
 	*/
-	void deserializeAttributes(IAttributes inAttr, SAttributeReadWriteOptions options = null);
+	void deserializeAttributes(IAttributes inAttr, SAttributeReadWriteOptions options = SAttributeReadWriteOptions());
 }
