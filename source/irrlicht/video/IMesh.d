@@ -6,7 +6,7 @@ module irrlicht.video.IMesh;
 import irrlicht.video.SMaterial;
 import irrlicht.video.EMaterialFlags;
 import irrlicht.video.IMeshBuffer;
-import irrlicht.video.EHardwareBufferFlags;
+import irrlicht.scene.EHardwareBufferFlags;
 import irrlicht.core.aabbox3d;
 
 /// Class which holds the geometry of an object.
@@ -21,7 +21,7 @@ interface IMesh
 	/**
 	* Returns: Amount of mesh buffers (IMeshBuffer) in this mesh. 
 	*/
-	uint getMeshBufferCount() const;
+	size_t getMeshBufferCount() const;
 
 	/// Get pointer to a mesh buffer.
 	/**
@@ -31,7 +31,7 @@ interface IMesh
 	* Returns: Pointer to the mesh buffer or 0 if there is no such
 	* mesh buffer. 
 	*/
-	IMeshBuffer getMeshBuffer(uint nr) const;
+	IMeshBuffer getMeshBuffer(size_t nr);
 
 	/// Get pointer to a mesh buffer which fits a material
 	/**
@@ -40,13 +40,13 @@ interface IMesh
 	* Returns: Pointer to the mesh buffer or 0 if there is no such
 	* mesh buffer. 
 	*/
-	IMeshBuffer getMeshBuffer(const SMaterial material) const;
+	IMeshBuffer getMeshBuffer(const SMaterial material);
 
 	/// Get an axis aligned bounding box of the mesh.
 	/**
 	* Returns: Bounding box of this mesh. 
 	*/
-	const ref aabbox3d!float getBoundingBox() const;
+	aabbox3df getBoundingBox() const;
 
 	/// Set user-defined axis aligned bounding box
 	/**
@@ -79,4 +79,16 @@ interface IMesh
 	* on the GPU in the next render cycle. 
 	*/
 	void setDirty(E_BUFFER_TYPE buffer = E_BUFFER_TYPE.EBT_VERTEX_AND_INDEX);
+
+	/// foreach implementation
+	int opApply(int delegate(IMeshBuffer) dg);
+
+	/// foreach_reverse implementation
+	int opApplyReverse(int delegate(IMeshBuffer) dg);
+
+	/// foreach implementation with indexing
+	int opApply(int delegate(IMeshBuffer, size_t) dg);
+
+	/// foreach_reverse implementation with indexing
+	int opApplyReverse(int delegate(IMeshBuffer, size_t) dg);
 }
