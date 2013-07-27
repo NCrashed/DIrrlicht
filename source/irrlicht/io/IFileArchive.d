@@ -6,7 +6,6 @@ module irrlicht.io.IFileArchive;
 import irrlicht.io.IReadFile;
 import irrlicht.io.IFileList;
 import irrlicht.io.path;
-//import irrlicht.IReferenceCounted;
 import irrlicht.irrTypes;
 
 /// FileSystemType: which Filesystem should be used for e.g. browsing
@@ -45,7 +44,7 @@ enum E_FILE_ARCHIVE_TYPE
 }
 
 /// The FileArchive manages archives and provides access to files inside them.
-interface IFileArchive //: IReferenceCounted
+interface IFileArchive
 {
 	/// Opens a file based on its name
 	/** 
@@ -96,7 +95,7 @@ interface IFileArchive //: IReferenceCounted
 * this and add your new Archive loader with
 * IFileSystem.addArchiveLoader() to the engine. 
 */
-interface IArchiveLoader //: IReferenceCounted
+interface IArchiveLoader
 {
 	/// Check if the file might be loaded by this class
 	/** 

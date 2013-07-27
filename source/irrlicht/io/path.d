@@ -14,10 +14,8 @@ alias string Path;
 /** Irrlicht is internally not case-sensitive when it comes to names.
     Also this class is a first step towards support for correctly serializing renamed objects.
 */
-class SNamedPath
+struct SNamedPath
 {
-	this() {}
-
 	this(const Path p)
 	{
 		mPath = p;
@@ -25,7 +23,7 @@ class SNamedPath
 	}
 
 	//! Is smaller comparator
-	bool opBinary(string op)(const SNamedPath other)
+	bool opBinary(string op)(auto ref const SNamedPath other) const
 		if(op == "<")
 	{
 		return mInternalName < other.mInternalName;
@@ -39,7 +37,7 @@ class SNamedPath
 	}
 
 	//! Get the path
-	const Path path() @property
+	const Path path() @property const
 	{
 		return mPath;
 	}
@@ -48,13 +46,13 @@ class SNamedPath
 	* Get the name which is used to identify the file.
 	* This string is similar to the names and filenames used before Irrlicht 1.7
 	*/
-	const Path internalName() @property
+	const Path internalName() @property const
 	{
 		return mInternalName;
 	}
 
 	/// Implicit cast to string
-	T opCast(T)() if(is(T == string))
+	T opCast(T)() const if(is(T == string)) 
 	{
 		return cast(string)Path;
 	}

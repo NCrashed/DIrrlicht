@@ -6,7 +6,7 @@ module irrlicht.core.irrAllocator;
 //import irrlicht.IrrCompileConfig;
 
 /// Very simple allocator implementation, containers using it can be used across dll boundaries
-class irrAllocator(T : Object)
+class irrAllocator(T)
 {
 	public
 	{

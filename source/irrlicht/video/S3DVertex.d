@@ -39,7 +39,7 @@ immutable(string[]) sBuiltInVertexTypeNames =
 struct S3DVertex
 {
 	/// constructor
-	this()(float x, float y, float z, float nx, float ny, float nz, SColor c, float tu, float tv)
+	this()(float x, float y, float z, float nx, float ny, float nz, SColor c, float tu, float tv) pure
 	{
 		Pos = vector3df(x,y,z);
 		Normal = vector3df(nx,ny,nz);
@@ -49,7 +49,7 @@ struct S3DVertex
 
 	/// constructor
 	this()(auto ref const vector3df pos, auto ref const vector3df normal,
-		auto ref const SColor color, auto ref const vector2df tcoords)
+		auto ref const SColor color, auto ref const vector2df tcoords) pure
 	{
 		Pos = pos;
 		Normal = normal;
@@ -69,13 +69,13 @@ struct S3DVertex
 	/// Texture coordinates
 	vector2df TCoords;
 
-	bool opEqual()(auto ref const S3DVertex other)
+	bool opEqual()(auto ref const S3DVertex other) const
 	{
 		return ((Pos == other.Pos) && (Normal == other.Normal) &&
 			(Color == other.Color) && (TCoords == other.TCoords));
 	}
 
-	int opCmp()(auto ref const S3DVertex other)
+	int opCmp()(auto ref const S3DVertex other) const
 	{
 		if ((Pos < other.Pos) ||
 				((Pos == other.Pos) && (Normal < other.Normal)) ||
@@ -94,12 +94,12 @@ struct S3DVertex
 		return 0;
 	}
 
-	E_VERTEX_TYPE getType()
+	E_VERTEX_TYPE getType() const
 	{
-		return EVT_STANDARD;
+		return E_VERTEX_TYPE.EVT_STANDARD;
 	}
 
-	S3DVertex getInterpolated()(auto ref const S3DVertex other, float d)
+	S3DVertex getInterpolated()(auto ref const S3DVertex other, float d) const
 	{
 		d = clamp(d, 0.0f, 1.0f);
 		return S3DVertex(Pos.getInterpolated(other.Pos, d),
@@ -118,7 +118,7 @@ struct S3DVertex
 struct S3DVertex2TCoords
 {
 	/// constructor with two different texture coords, but no normal
-	this()(float x, float y, float z, SColor c, float tu, float tv, float tu2, float tv2)
+	this()(float x, float y, float z, SColor c, float tu, float tv, float tu2, float tv2) pure
 	{
 		Pos = vector3df(x, y, z);
 		Normal = vector3df(0.0f);
@@ -128,7 +128,7 @@ struct S3DVertex2TCoords
 	}
 	/// constructor with two different texture coords, but no normal
 	this()(auto ref const vector3df pos, auto ref const SColor color,
-		auto ref const vector2df tcoords, auto ref const vector2df tcoords2)
+		auto ref const vector2df tcoords, auto ref const vector2df tcoords2) pure
 	{
 		Pos = pos;
 		Normal = vector3df(0.0f);
@@ -139,7 +139,7 @@ struct S3DVertex2TCoords
 
 	/// constructor with all values
 	this()(auto ref const vector3df pos, auto ref const vector3df normal, auto ref const SColor color,
-		auto ref const vector2df tcoords, auto ref const vector2df tcoords2)
+		auto ref const vector2df tcoords, auto ref const vector2df tcoords2) pure
 	{
 		Pos = pos;
 		Normal = normal;
@@ -149,7 +149,7 @@ struct S3DVertex2TCoords
 	}
 
 	/// constructor with all values
-	this()(float x, float y, float z, float nx, float ny, float nz, auto ref const SColor c, float tu, float tv, float tu2, float tv2)
+	this()(float x, float y, float z, float nx, float ny, float nz, auto ref const SColor c, float tu, float tv, float tu2, float tv2) pure
 	{
 		Pos = vector3df(x, y, z);
 		Normal = vector3df(nx, ny, nz);
@@ -159,7 +159,7 @@ struct S3DVertex2TCoords
 	}
 
 	/// constructor with the same texture coords and normal
-	this()(float x, float y, float z, float nx, float ny, float nz, auto ref const SColor c, float tu, float tv)
+	this()(float x, float y, float z, float nx, float ny, float nz, auto ref const SColor c, float tu, float tv) pure
 	{
 		Pos = vector3df(x, y, z);
 		Normal = vector3df(nx, ny, nz);
@@ -170,7 +170,7 @@ struct S3DVertex2TCoords
 
 	/// constructor with the same texture coords and normal
 	this()(auto ref const vector3df pos, auto ref const vector3df normal,
-		auto ref const SColor color, const vector2df tcoords)
+		auto ref const SColor color, const vector2df tcoords) pure
 	{
 		Pos = pos;
 		Normal = normal;
@@ -180,7 +180,7 @@ struct S3DVertex2TCoords
 	}
 
 	/// constructor from S3DVertex
-	this()(auto ref const S3DVertex o)
+	this()(auto ref const S3DVertex o) pure
 	{
 		Pos = o.Pos;
 		Normal = o.Normal;
@@ -205,14 +205,14 @@ struct S3DVertex2TCoords
 	vector2df TCoords2;
 
 	/// Equality operator
-	bool opEqual()(auto ref const S3DVertex2TCoords other)
-	{
+	bool opEqual()(auto ref const S3DVertex2TCoords other) const
+	{ 
 		return ((Pos == other.Pos) && (Normal == other.Normal) &&
 			(Color == other.Color) && (TCoords == other.TCoords) &&
 			(TCoords2 == other.TCoords2));
 	}
 
-	int opCmp()(auto ref const S3DVertex other)
+	int opCmp()(auto ref const S3DVertex other) const
 	{
 		if ((Pos < other.Pos) ||
 				((Pos == other.Pos) && (Normal < other.Normal)) ||
@@ -233,12 +233,12 @@ struct S3DVertex2TCoords
 		return 0;
 	}
 
-	E_VERTEX_TYPE getType()
+	E_VERTEX_TYPE getType() const
 	{
-		return EVT_2TCOORDS;
+		return E_VERTEX_TYPE.EVT_2TCOORDS;
 	}
 
-	S3DVertex2TCoords getInterpolated()(auto ref const S3DVertex2TCoords other, float d)
+	S3DVertex2TCoords getInterpolated()(auto ref const S3DVertex2TCoords other, float d) const
 	{
 		d = clamp(d, 0.0f, 1.0f);
 		return S3DVertex2TCoords(Pos.getInterpolated(other.Pos, d),
@@ -260,7 +260,7 @@ struct S3DVertexTangents
 	this()(float x, float y, float z, float nx=0.0f, float ny=0.0f, float nz=0.0f,
 			SColor c = SColor(0xFFFFFFFF), float tu=0.0f, float tv=0.0f,
 			float tanx=0.0f, float tany=0.0f, float tanz=0.0f,
-			float bx=0.0f, float by=0.0f, float bz=0.0f)
+			float bx=0.0f, float by=0.0f, float bz=0.0f) pure
 	{
 		Pos = vector3df(x,y,z);
 		Normal = vector3df(nx,ny,nz);
@@ -272,7 +272,7 @@ struct S3DVertexTangents
 
 	/// constructor
 	this()(auto ref const vector3df pos, auto ref const SColor c,
-		auto ref const vector2df tcoords)
+		auto ref const vector2df tcoords) pure
 	{
 		Pos = pos;
 		Normal = vector3df(0.0f);
@@ -287,7 +287,7 @@ struct S3DVertexTangents
 		auto ref const vector3df normal, auto ref const SColor c,
 		auto ref const vector2df tcoords,
 		auto ref const vector3df tangent = vector3df(0.0f),
-		auto ref const vector3df binormal = vector3df(0.0f))
+		auto ref const vector3df binormal = vector3df(0.0f)) pure
 	{
 		Pos = pos;
 		Normal = normal;
@@ -315,7 +315,7 @@ struct S3DVertexTangents
 	/// Binormal vector (tangent x normal)
 	vector3df Binormal;
 
-	bool opEqual()(auto ref const S3DVertex other)
+	bool opEqual()(auto ref const S3DVertex other) const
 	{
 		return ((Pos == other.Pos) && (Normal == other.Normal) &&
 			(Color == other.Color) && (TCoords == other.TCoords) &&
@@ -323,7 +323,7 @@ struct S3DVertexTangents
 			(Binormal == other.Binormal));
 	}
 
-	int opCmp()(auto ref const S3DVertex other)
+	int opCmp()(auto ref const S3DVertex other) const
 	{
 		if ((Pos < other.Pos) ||
 				((Pos == other.Pos) && (Normal < other.Normal)) ||
@@ -348,10 +348,10 @@ struct S3DVertexTangents
 
 	E_VERTEX_TYPE getType() const
 	{
-		return EVT_TANGENTS;
+		return E_VERTEX_TYPE.EVT_TANGENTS;
 	}
 
-	S3DVertexTangents getInterpolated()(auto ref const S3DVertexTangents other, float d)
+	S3DVertexTangents getInterpolated()(auto ref const S3DVertexTangents other, float d) const
 	{
 		d = clamp(d, 0.0f, 1.0f);
 		return S3DVertexTangents(Pos.getInterpolated(other.Pos, d),
@@ -363,15 +363,15 @@ struct S3DVertexTangents
 	}
 };
 
-uint getVertexPitchFromType(E_VERTEX_TYPE vertexType)
+uint getVertexPitchFromType(E_VERTEX_TYPE vertexType) 
 {
 	final switch (vertexType)
 	{
 		case E_VERTEX_TYPE.EVT_2TCOORDS:
-			return S3DVertex2TCoords.sizeof();
+			return S3DVertex2TCoords.sizeof;
 		case E_VERTEX_TYPE.EVT_TANGENTS:
-			return S3DVertexTangents.sizeof();
+			return S3DVertexTangents.sizeof;
 		case E_VERTEX_TYPE.EVT_STANDARD:
-			return S3DVertex.sizeof();
+			return S3DVertex.sizeof;
 	}
 }

@@ -6,10 +6,10 @@ module irrlicht.video.SMaterial;
 import irrlicht.video.SColor;
 import irrlicht.core.matrix4;
 import irrlicht.core.irrArray;
-import irrlicht.video.EMaterialsTypes;
-import irrlicht.video.EMaterialsFlags;
+import irrlicht.video.EMaterialTypes;
+import irrlicht.video.EMaterialFlags;
 import irrlicht.video.SMaterialLayer;
-import irrlicht.IReferenceCounted;
+import irrlicht.video.ITexture;
 import irrlicht.irrMath;
 import irrlicht.irrTypes;
 import std.bitmanip;
@@ -127,9 +127,9 @@ void unpack_textureBlendFunc ( out E_BLEND_FACTOR srcFact, out E_BLEND_FACTOR ds
 {
 	immutable uint state = IR(param);
 	alphaSource = (state & 0x0000F000) >> 12;
-	modulo	= E_MODULATE_FUNC( ( state & 0x00000F00 ) >> 8 );
-	srcFact = E_BLEND_FACTOR ( ( state & 0x000000F0 ) >> 4 );
-	dstFact = E_BLEND_FACTOR ( ( state & 0x0000000F ) );
+	modulo	= cast(E_MODULATE_FUNC)( ( state & 0x00000F00 ) >> 8 );
+	srcFact = cast(E_BLEND_FACTOR)( ( state & 0x000000F0 ) >> 4 );
+	dstFact = cast(E_BLEND_FACTOR)( ( state & 0x0000000F ) );
 }
 
 /// EMT_ONETEXTURE_BLEND: has BlendFactor Alphablending
@@ -137,11 +137,11 @@ bool textureBlendFunc_hasAlpha ( const E_BLEND_FACTOR factor )
 {
 	switch ( factor )
 	{
-		case EBF_SRC_ALPHA:
-		case EBF_ONE_MINUS_SRC_ALPHA:
-		case EBF_DST_ALPHA:
-		case EBF_ONE_MINUS_DST_ALPHA:
-		case EBF_SRC_ALPHA_SATURATE:
+		case E_BLEND_FACTOR.EBF_SRC_ALPHA:
+		case E_BLEND_FACTOR.EBF_ONE_MINUS_SRC_ALPHA:
+		case E_BLEND_FACTOR.EBF_DST_ALPHA:
+		case E_BLEND_FACTOR.EBF_ONE_MINUS_DST_ALPHA:
+		case E_BLEND_FACTOR.EBF_SRC_ALPHA_SATURATE:
 			return true;
 		default:
 			return false;
@@ -234,11 +234,11 @@ immutable(string[]) PolygonOffsetDirectionNames =
 enum MATERIAL_MAX_TEXTURES = _IRR_MATERIAL_MAX_TEXTURES_;
 
 /// Class for holding parameters for a material renderer
-class SMaterial : IReferenceCounted
+class SMaterial
 {
 
 	/// Default constructor. Creates a solid, lit material with white colors
-	this()
+	this() pure
 	{ 
 		MaterialType = E_MATERIAL_TYPE.EMT_SOLID;
 		AmbientColor = SColor(255,255,255,255);
@@ -271,12 +271,35 @@ class SMaterial : IReferenceCounted
 	* Params:
 	* 	other=  Material to copy from. 
 	*/
-	this(const SMaterial other)
+	this(const SMaterial other) pure
 	{
-		// These pointers are checked during assignment
-		for (uint i=0; i<MATERIAL_MAX_TEXTURES; ++i)
-			TextureLayer[i].TextureMatrix = null;
-		this = other;
+		MaterialType = other.MaterialType;
+		AmbientColor = other.AmbientColor;
+		DiffuseColor = other.DiffuseColor;
+		EmissiveColor = other.EmissiveColor;
+		MaterialTypeParam = other.MaterialTypeParam;
+		MaterialTypeParam2 = other.MaterialTypeParam2;
+		Thickness = other.Thickness;
+		ZBuffer = other.ZBuffer;
+		AntiAliasing = other.AntiAliasing;
+		ColorMask = other.ColorMask;
+		ColorMaterial = other.ColorMaterial;
+		BlendOperation = other.BlendOperation;
+		PolygonOffsetFactor = other.PolygonOffsetFactor;
+		PolygonOffsetDirection = other.PolygonOffsetDirection;
+		Wireframe = other.Wireframe;
+		PointCloud = other.PointCloud;
+		GouraudShading = other.GouraudShading;
+		Lighting = other.Lighting;
+		ZWriteEnable = other.ZWriteEnable;
+		BackfaceCulling = other.BackfaceCulling;
+		FrontfaceCulling = other.FrontfaceCulling;
+		FogEnable = other.FogEnable;
+		NormalizeNormals = other.NormalizeNormals;
+		UseMipMaps = other.UseMipMaps;
+
+		foreach(i, ref layer; other.TextureLayer)
+			TextureLayer[i] = new SMaterialLayer(layer);	
 	}
 
 	/// Assignment operator
@@ -284,7 +307,7 @@ class SMaterial : IReferenceCounted
 	* Params:
 	* 	other=  Material to copy from. 
 	*/
-	ref SMaterial opAssign(const SMaterial other)
+	SMaterial set(const SMaterial other)
 	{
 		// Check for self-assignment!
 		if (this == other)
@@ -300,10 +323,9 @@ class SMaterial : IReferenceCounted
 		MaterialTypeParam = other.MaterialTypeParam;
 		MaterialTypeParam2 = other.MaterialTypeParam2;
 		Thickness = other.Thickness;
-		for (uint i=0; i<MATERIAL_MAX_TEXTURES; ++i)
-		{
-			TextureLayer[i] = other.TextureLayer[i];
-		}
+
+		foreach(i, ref layer; other.TextureLayer)
+			TextureLayer[i] = new SMaterialLayer(layer);
 
 		Wireframe = other.Wireframe;
 		PointCloud = other.PointCloud;
@@ -521,10 +543,8 @@ class SMaterial : IReferenceCounted
 	*/
 	ref const matrix4 getTextureMatrix(size_t i)
 	{
-		if (i<MATERIAL_MAX_TEXTURES)
-			return TextureLayer[i].getTextureMatrix();
-		else
-			return IdentityMatrix;
+		assert(i<MATERIAL_MAX_TEXTURES);
+		return TextureLayer[i].getTextureMatrix();
 	}
 
 	/// Sets the i-th texture transformation matrix
@@ -573,7 +593,7 @@ class SMaterial : IReferenceCounted
 	*/
 	void setFlag(E_MATERIAL_FLAG flag, bool value)
 	{
-		switch (flag)
+		final switch (flag)
 		{
 			case E_MATERIAL_FLAG.EMF_WIREFRAME:
 				Wireframe = value; break;
@@ -588,9 +608,9 @@ class SMaterial : IReferenceCounted
 			case E_MATERIAL_FLAG.EMF_ZWRITE_ENABLE:
 				ZWriteEnable = value; break;
 			case E_MATERIAL_FLAG.EMF_BACK_FACE_CULLING:
-				E_MATERIAL_FLAG.BackfaceCulling = value; break;
-			case EMF_FRONT_FACE_CULLING:
-				E_MATERIAL_FLAG.FrontfaceCulling = value; break;
+				BackfaceCulling = value; break;
+			case E_MATERIAL_FLAG.EMF_FRONT_FACE_CULLING:
+				FrontfaceCulling = value; break;
 			case E_MATERIAL_FLAG.EMF_BILINEAR_FILTER:
 			{
 				for (size_t i=0; i<MATERIAL_MAX_TEXTURES; ++i)
@@ -627,20 +647,18 @@ class SMaterial : IReferenceCounted
 			}
 			break;
 			case E_MATERIAL_FLAG.EMF_ANTI_ALIASING:
-				AntiAliasing = value?EAAM_SIMPLE:EAAM_OFF; break;
+				AntiAliasing = value?E_ANTI_ALIASING_MODE.EAAM_SIMPLE:E_ANTI_ALIASING_MODE.EAAM_OFF; break;
 			case E_MATERIAL_FLAG.EMF_COLOR_MASK:
-				ColorMask = value?ECP_ALL:ECP_NONE; break;
+				ColorMask = value?E_COLOR_PLANE.ECP_ALL:E_COLOR_PLANE.ECP_NONE; break;
 			case E_MATERIAL_FLAG.EMF_COLOR_MATERIAL:
-				ColorMaterial = value?ECM_DIFFUSE:ECM_NONE; break;
+				ColorMaterial = value?E_COLOR_MATERIAL.ECM_DIFFUSE:E_COLOR_MATERIAL.ECM_NONE; break;
 			case E_MATERIAL_FLAG.EMF_USE_MIP_MAPS:
 				UseMipMaps = value; break;
 			case E_MATERIAL_FLAG.EMF_BLEND_OPERATION:
-				BlendOperation = value?EBO_ADD:EBO_NONE; break;
+				BlendOperation = value?E_BLEND_OPERATION.EBO_ADD:E_BLEND_OPERATION.EBO_NONE; break;
 			case E_MATERIAL_FLAG.EMF_POLYGON_OFFSET:
 				PolygonOffsetFactor = value?1:0;
-				PolygonOffsetDirection = EPO_BACK;
-				break;
-			default:
+				PolygonOffsetDirection = E_POLYGON_OFFSET.EPO_BACK;
 				break;
 		}
 	}
@@ -653,7 +671,7 @@ class SMaterial : IReferenceCounted
 	*/
 	bool getFlag(E_MATERIAL_FLAG flag)
 	{
-		switch (flag)
+		final switch (flag)
 		{
 			case E_MATERIAL_FLAG.EMF_WIREFRAME:
 				return Wireframe;
@@ -664,7 +682,7 @@ class SMaterial : IReferenceCounted
 			case E_MATERIAL_FLAG.EMF_LIGHTING:
 				return Lighting;
 			case E_MATERIAL_FLAG.EMF_ZBUFFER:
-				return ZBuffer!=ECFN_NEVER;
+				return ZBuffer!= E_COMPARISON_FUNC.ECFN_NEVER;
 			case E_MATERIAL_FLAG.EMF_ZWRITE_ENABLE:
 				return ZWriteEnable;
 			case E_MATERIAL_FLAG.EMF_BACK_FACE_CULLING:
@@ -681,7 +699,7 @@ class SMaterial : IReferenceCounted
 				return FogEnable;
 			case E_MATERIAL_FLAG.EMF_NORMALIZE_NORMALS:
 				return NormalizeNormals;
-			case EMF_TEXTURE_WRAP:
+			case E_MATERIAL_FLAG.EMF_TEXTURE_WRAP:
 				return !(TextureLayer[0].TextureWrapU ||
 						TextureLayer[0].TextureWrapV ||
 						TextureLayer[1].TextureWrapU ||
@@ -693,18 +711,16 @@ class SMaterial : IReferenceCounted
 			case E_MATERIAL_FLAG.EMF_ANTI_ALIASING:
 				return (AntiAliasing==1);
 			case E_MATERIAL_FLAG.EMF_COLOR_MASK:
-				return (ColorMask!=ECP_NONE);
+				return (ColorMask!=E_COLOR_PLANE.ECP_NONE);
 			case E_MATERIAL_FLAG.EMF_COLOR_MATERIAL:
-				return (ColorMaterial != ECM_NONE);
+				return (ColorMaterial != E_COLOR_MATERIAL.ECM_NONE);
 			case E_MATERIAL_FLAG.EMF_USE_MIP_MAPS:
 				return UseMipMaps;
 			case E_MATERIAL_FLAG.EMF_BLEND_OPERATION:
-				return BlendOperation != EBO_NONE;
+				return BlendOperation != E_BLEND_OPERATION.EBO_NONE;
 			case E_MATERIAL_FLAG.EMF_POLYGON_OFFSET:
 				return PolygonOffsetFactor != 0;
 		}
-
-		return false;
 	}
 
 	/// Equality operator
@@ -751,12 +767,12 @@ class SMaterial : IReferenceCounted
 
 	bool isTransparent()
 	{
-		return MaterialType==EMT_TRANSPARENT_ADD_COLOR ||
-			MaterialType==EMT_TRANSPARENT_ALPHA_CHANNEL ||
-			MaterialType==EMT_TRANSPARENT_VERTEX_ALPHA ||
-			MaterialType==EMT_TRANSPARENT_REFLECTION_2_LAYER;
+		return MaterialType==E_MATERIAL_TYPE.EMT_TRANSPARENT_ADD_COLOR ||
+			MaterialType==E_MATERIAL_TYPE.EMT_TRANSPARENT_ALPHA_CHANNEL ||
+			MaterialType==E_MATERIAL_TYPE.EMT_TRANSPARENT_VERTEX_ALPHA ||
+			MaterialType==E_MATERIAL_TYPE.EMT_TRANSPARENT_REFLECTION_2_LAYER;
 	}
 };
 
 /// global const identity Material
-extern immutable SMaterial IdentityMaterial = new IdentityMaterial();
+export immutable SMaterial IdentityMaterial = new immutable SMaterial();

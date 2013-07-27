@@ -13,7 +13,7 @@ import irrlicht.irrMath;
 struct triangle3d(T)
 {
 	/// Constructor for triangle with given three vertices
-	this()(auto ref const vector3d!T v1, auto ref const vector3d!T v2, auto ref const vector3d!T v3)
+	this()(auto ref const vector3d!T v1, auto ref const vector3d!T v2, auto ref const vector3d!T v3) pure
 	{
 		pointA = v1;
 		pointB = v2;
@@ -21,7 +21,7 @@ struct triangle3d(T)
 	}
 
 	/// Equality operator
-	bool opEqual()(auto ref const triangle3d!T other) 
+	bool opEqual()(auto ref const triangle3d!T other) const
 	{
 		return other.pointA==pointA && other.pointB==pointB && other.pointC==pointC;
 	}
@@ -32,7 +32,7 @@ struct triangle3d(T)
 	* 	box=  Box to check.
 	* Returns: True if triangle is within the box, otherwise false. 
 	*/
-	bool isTotalInsideBox()(auto ref const aabbox3d!T box)
+	bool isTotalInsideBox()(auto ref const aabbox3d!T box) const
 	{
 		return (box.isPointInside(pointA) &&
 			box.isPointInside(pointB) &&
@@ -45,7 +45,7 @@ struct triangle3d(T)
 	* 	box=  Box to check.
 	* Returns: True if triangle is outside the box, otherwise false. 
 	*/
-	bool isTotalOutsideBox()(auto ref const aabbox3d!T box)
+	bool isTotalOutsideBox()(auto ref const aabbox3d!T box) const
 	{
 		return ((pointA.X > box.MaxEdge.X && pointB.X > box.MaxEdge.X && pointC.X > box.MaxEdge.X) ||
 			(pointA.Y > box.MaxEdge.Y && pointB.Y > box.MaxEdge.Y && pointC.Y > box.MaxEdge.Y) ||
@@ -61,7 +61,7 @@ struct triangle3d(T)
 	* 	p=  Point which must be on the same plane as the triangle.
 	* Returns: The closest point of the triangle 
 	*/
-	vector3d!T closestPointOnTriangle()(auto ref const vector3d!T p)
+	vector3d!T closestPointOnTriangle()(auto ref const vector3d!T p) const
 	{
 		immutable vector3d!T rab = line3d!T(pointA, pointB).getClosestPoint(p);
 		immutable vector3d!T rbc = line3d!T(pointB, pointC).getClosestPoint(p);
@@ -82,7 +82,7 @@ struct triangle3d(T)
 	\param p Point to test. Assumes that this point is already
 	on the plane of the triangle.
 	\return True if the point is inside the triangle, otherwise false. */
-	bool isPointInside()(auto ref const vector3d!T p)
+	bool isPointInside()(auto ref const vector3d!T p) const
 	{
 		immutable af64 = vector3d!double(cast(double)pointA.X, cast(double)pointA.Y, cast(double)pointA.Z);
 		immutable bf64 = vector3d!double(cast(double)pointB.X, cast(double)pointB.Y, cast(double)pointB.Z);
@@ -104,7 +104,7 @@ struct triangle3d(T)
 	* on the plane of the triangle.
 	* Returns: True if point is inside the triangle, otherwise false. 
 	*/
-	bool isPointInsideFast()(auto ref const vector3d!T p)
+	bool isPointInsideFast()(auto ref const vector3d!T p) const
 	{
 		immutable vector3d!T a = pointC - pointA;
 		immutable vector3d!T b = pointB - pointA;
@@ -135,7 +135,7 @@ struct triangle3d(T)
 	* Returns: True if there was an intersection, false if not. 
 	*/
 	bool getIntersectionWithLimitedLine()(auto ref const line3d!T line,
-		out vector3d!T outIntersection)
+		out vector3d!T outIntersection) const
 	{
 		return getIntersectionWithLine(line.start,
 			line.getVector(), outIntersection) &&
@@ -156,7 +156,7 @@ struct triangle3d(T)
 	* Returns: True if there was an intersection, false if there was not. 
 	*/
 	bool getIntersectionWithLine()(auto ref const vector3d!T linePoint,
-		auto ref const vector3d!T lineVect, out vector3d!T outIntersection)
+		auto ref const vector3d!T lineVect, out vector3d!T outIntersection) const
 	{
 		if (getIntersectionOfPlaneWithLine(linePoint, lineVect, outIntersection))
 			return isPointInside(outIntersection);
@@ -174,7 +174,7 @@ struct triangle3d(T)
 	* Returns: True if there was an intersection, else false. 
 	*/
 	bool getIntersectionOfPlaneWithLine()(auto ref const vector3d!T linePoint,
-		auto ref const vector3d!T lineVect, out vector3d!T outIntersection)
+		auto ref const vector3d!T lineVect, out vector3d!T outIntersection) const
 	{
 		// Work with double to get more precise results (makes enough difference to be worth the casts).
 		immutable linePointf64 = vector3d!double(linePoint.X, linePoint.Y, linePoint.Z);
@@ -205,7 +205,7 @@ struct triangle3d(T)
 	/**
 	* Please note: The normal is not always normalized. 
 	*/
-	vector3d!T getNormal()
+	vector3d!T getNormal() const
 	{
 		return (pointB - pointA).crossProduct(pointC - pointA);
 	}
@@ -219,7 +219,7 @@ struct triangle3d(T)
 	* 	lookDirection=  Look direction.
 	* Returns: True if the plane is front facing and false if it is backfacing. 
 	*/
-	bool isFrontFacing()(auto ref const vector3d!T lookDirection)
+	bool isFrontFacing()(auto ref const vector3d!T lookDirection) const
 	{
 		immutable vector3d!T n = getNormal().normalize();
 		immutable float d = cast(float)n.dotProduct(lookDirection);
@@ -227,16 +227,15 @@ struct triangle3d(T)
 	}
 
 	/// Get the plane of this triangle.
-	plane3d!T getPlane()
+	plane3d!T getPlane() const
 	{
 		return plane3d!T(pointA, pointB, pointC);
 	}
 
 	/// Get the area of the triangle
-	T getArea()
+	double getArea() const
 	{
-		return (pointB - pointA).crossProduct(pointC - pointA).getLength() * 0.5f;
-
+		return (pointB - pointA).crossProduct(pointC - pointA).getLength() * 0.5;
 	}
 
 	/// sets the triangle's points
@@ -256,7 +255,7 @@ struct triangle3d(T)
 
 	// Using double instead of !T to avoid integer overflows when T=int (maybe also less floating point troubles).
 	private bool isOnSameSide()(auto ref const vector3d!double p1, auto ref const vector3d!double p2,
-		auto ref const vector3d!double a, auto ref const vector3d!double b)
+		auto ref const vector3d!double a, auto ref const vector3d!double b) const
 	{
 		vector3d!double bminusa = b - a;
 		vector3d!double cp1 = bminusa.crossProduct(p1 - a);

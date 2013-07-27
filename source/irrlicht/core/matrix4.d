@@ -4,7 +4,7 @@
 module irrlicht.core.matrix4;
 
 import std.math;
-import std.regex;
+//import std.regex;
 import irrlicht.core.vector3d;
 import irrlicht.core.vector2d;
 import irrlicht.core.plane3d;
@@ -16,20 +16,6 @@ import irrlicht.irrMath;
 // and make simpler identity check for seldomly changing matrices
 // otherwise identity check will always compare the elements
 private enum USE_MATRIX_TEST = true;
-
-// this is only for debugging purposes
-private enum USE_MATRIX_TEST_DEBUG = true;
-
-static if(USE_MATRIX_TEST_DEBUG)
-{
-	struct MatrixTest
-	{
-		char buf[256];
-		int Calls;
-		int ID;
-	}
-	static MatrixTest MTest;
-}
 
 /// 4x4 matrix. Mostly used as transformation matrix for 3d calculations.
 /** 
@@ -57,11 +43,6 @@ struct CMatrix4(T)
 	{
 		static if(USE_MATRIX_TEST)
 			definitelyIdentityMatrix = false;
-		static if(USE_MATRIX_TEST_DEBUG)
-		{
-			id = Mtest.ID++;
-			calls = 0;
-		}
 
 		switch(constructor)
 		{
@@ -85,11 +66,8 @@ struct CMatrix4(T)
 	this()(auto ref const CMatrix4!T other, eConstructor constructor = eConstructor.EM4CONST_COPY)
 	{
 		static if(USE_MATRIX_TEST)
-			definitelyIdentityMatrix = false;
-		static if(USE_MATRIX_TEST_DEBUG)
 		{
-			id = MTest.ID++;
-			calls = 0;
+			definitelyIdentityMatrix = false;
 		}
 
 		switch(constructor)
@@ -115,7 +93,7 @@ struct CMatrix4(T)
 
 	this(this)
 	{
-		M = M.dup;
+		M[] = M.dup[];
 	}
 
 	/// Simple operator for directly accessing every element of the matrix.
@@ -128,38 +106,39 @@ struct CMatrix4(T)
 	}
 
 	/// Simple operator for directly accessing every element of the matrix.
-	const ref T opApply()(const size_t row, const size_t col)
+	T opIndex()(const size_t row, const size_t col)
 	{
 		return M[ row * 4 + col ];
 	}
 
 	/// Simple operator for linearly accessing every element of the matrix.
-	ref T opIndex(size_t index)
+	T opIndex()(const size_t index)
 	{
-		static if(USE_MATRIX_TEST)
-			definitelyIdentityMatrix=false;
-
 		return M[index];
 	}
 
-	/// Simple operator for linearly accessing every element of the matrix.
-	const ref T opIndex(size_t index)
+	void opIndexAssign()(const T value, const size_t row, const size_t col)
 	{
-		return M[index];
+		M[ row * 4 + col ] = value;
+	}
+
+	void opIndexAssign()(const T value, const size_t index)
+	{
+		M[index] = value;
 	}
 
 	/// Sets this matrix equal to the other matrix.
 	auto ref CMatrix4!T opAssign()(auto ref const CMatrix4!T other)
 	{
 		if (this == other)
-			return *this;
+			return this;
 
 		M[] = other.M[];
 		
 		static if( USE_MATRIX_TEST )
 			definitelyIdentityMatrix = other.definitelyIdentityMatrix;
 
-		return *this;
+		return this;
 	}
 
 	/// Sets all elements of this matrix to the value.
@@ -175,13 +154,13 @@ struct CMatrix4(T)
 	}
 
 	/// Returns pointer to internal array
-	const T[] pointer() 
+	const T[16] pointer() 
 	{
 		return M;
 	}
 
 	/// Returns pointer to internal array
-	T[] pointer()
+	T[16] pointer()
 	{
 		static if(USE_MATRIX_TEST)
 			definitelyIdentityMatrix=false;
@@ -620,7 +599,6 @@ struct CMatrix4(T)
 	*/
 	vector3d!T getRotationDegrees()
 	{
-		immutable CMatrix4!(T)* mat = &this;
 		vector3d!T scale = getScale();
 		// we need to check for negative scale on to axes, which would bring up wrong results
 		if (scale.Y<0 && scale.Z<0)
@@ -640,7 +618,7 @@ struct CMatrix4(T)
 		}
 		immutable vector3d!double invScale = vector3d!double(1.0/scale.X, 1.0/scale.Y, 1.0/scale.Z);
 
-		double Y = -cast(double)asin(clamp(mat[2]*invScale.X, -1.0, 1.0));
+		double Y = -cast(double)asin(clamp(this[2]*invScale.X, -1.0, 1.0));
 		immutable C = cos(Y);
 		Y *= RADTODEG;
 
@@ -649,18 +627,18 @@ struct CMatrix4(T)
 		if (!iszero(C))
 		{
 			immutable invC = 1.0 / C;
-			rotx = mat[10] * invC * invScale.Z;
-			roty = mat[6] * invC * invScale.Y;
+			rotx = this[10] * invC * invScale.Z;
+			roty = this[6] * invC * invScale.Y;
 			X = cast(double)atan2( roty, rotx ) * RADTODEG;
-			rotx = mat[0] * invC * invScale.X;
-			roty = mat[1] * invC * invScale.X;
+			rotx = this[0] * invC * invScale.X;
+			roty = this[1] * invC * invScale.X;
 			Z = cast(double)atan2( roty, rotx ) * RADTODEG;
 		}
 		else
 		{
 			X = 0.0;
-			rotx = mat[5] * invScale.Y;
-			roty = -mat[4] * invScale.Y;
+			rotx = this[5] * invScale.Y;
+			roty = -this[4] * invScale.Y;
 			Z = cast(double)atan2( roty, rotx ) * RADTODEG;
 		}
 
@@ -718,7 +696,7 @@ struct CMatrix4(T)
 	/** 
 	* The 4th row and column are unmodified. 
 	*/
-	auto ref CMatrix4!T setRotationAxisRadians(auto ref const T angle, auto ref const vector3d!T axis)
+	auto ref CMatrix4!T setRotationAxisRadians()(auto ref const T angle, auto ref const vector3d!T axis)
 	{
  		immutable c = cos(angle);
 		immutable s = sin(angle);
@@ -948,14 +926,12 @@ struct CMatrix4(T)
 		Bmin[1] = Bmax[1] = M[13];
 		Bmin[2] = Bmax[2] = M[14];
 
-		immutable CMatrix4!(T)* m = &this;
-
 		for (uint i = 0; i < 3; ++i)
 		{
 			for (uint j = 0; j < 3; ++j)
 			{
-				immutable float a = m(j,i) * Amin[j];
-				immutable float b = m(j,i) * Amax[j];
+				immutable float a = this[j,i] * Amin[j];
+				immutable float b = this[j,i] * Amax[j];
 
 				if (a < b)
 				{
@@ -1084,68 +1060,66 @@ struct CMatrix4(T)
 			}
 		}
 
-		immutable CMatrix4!(T) *m = &this;
+		float d = (this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0]) * (this[2, 2] * this[3, 3] - this[2, 3] * this[3, 2]) -
+			(this[0, 0] * this[1, 2] - this[0, 2] * this[1, 0]) * (this[2, 1] * this[3, 3] - this[2, 3] * this[3, 1]) +
+			(this[0, 0] * this[1, 3] - this[0, 3] * this[1, 0]) * (this[2, 1] * this[3, 2] - this[2, 2] * this[3, 1]) +
+			(this[0, 1] * this[1, 2] - this[0, 2] * this[1, 1]) * (this[2, 0] * this[3, 3] - this[2, 3] * this[3, 0]) -
+			(this[0, 1] * this[1, 3] - this[0, 3] * this[1, 1]) * (this[2, 0] * this[3, 2] - this[2, 2] * this[3, 0]) +
+			(this[0, 2] * this[1, 3] - this[0, 3] * this[1, 2]) * (this[2, 0] * this[3, 1] - this[2, 1] * this[3, 0]);
 
-		float d = (m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0)) * (m(2, 2) * m(3, 3) - m(2, 3) * m(3, 2)) -
-			(m(0, 0) * m(1, 2) - m(0, 2) * m(1, 0)) * (m(2, 1) * m(3, 3) - m(2, 3) * m(3, 1)) +
-			(m(0, 0) * m(1, 3) - m(0, 3) * m(1, 0)) * (m(2, 1) * m(3, 2) - m(2, 2) * m(3, 1)) +
-			(m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1)) * (m(2, 0) * m(3, 3) - m(2, 3) * m(3, 0)) -
-			(m(0, 1) * m(1, 3) - m(0, 3) * m(1, 1)) * (m(2, 0) * m(3, 2) - m(2, 2) * m(3, 0)) +
-			(m(0, 2) * m(1, 3) - m(0, 3) * m(1, 2)) * (m(2, 0) * m(3, 1) - m(2, 1) * m(3, 0));
-
-		if( iszero ( d, float.min ) )
+		if( iszero ( d, float.epsilon ) )
 			return false;
 
 		d = 1.0 / d ;
 
-		outMatrix(0, 0) = d * (m(1, 1) * (m(2, 2) * m(3, 3) - m(2, 3) * m(3, 2)) +
-				m(1, 2) * (m(2, 3) * m(3, 1) - m(2, 1) * m(3, 3)) +
-				m(1, 3) * (m(2, 1) * m(3, 2) - m(2, 2) * m(3, 1)));
-		outMatrix(0, 1) = d * (m(2, 1) * (m(0, 2) * m(3, 3) - m(0, 3) * m(3, 2)) +
-				m(2, 2) * (m(0, 3) * m(3, 1) - m(0, 1) * m(3, 3)) +
-				m(2, 3) * (m(0, 1) * m(3, 2) - m(0, 2) * m(3, 1)));
-		outMatrix(0, 2) = d * (m(3, 1) * (m(0, 2) * m(1, 3) - m(0, 3) * m(1, 2)) +
-				m(3, 2) * (m(0, 3) * m(1, 1) - m(0, 1) * m(1, 3)) +
-				m(3, 3) * (m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1)));
-		outMatrix(0, 3) = d * (m(0, 1) * (m(1, 3) * m(2, 2) - m(1, 2) * m(2, 3)) +
-				m(0, 2) * (m(1, 1) * m(2, 3) - m(1, 3) * m(2, 1)) +
-				m(0, 3) * (m(1, 2) * m(2, 1) - m(1, 1) * m(2, 2)));
-		outMatrix(1, 0) = d * (m(1, 2) * (m(2, 0) * m(3, 3) - m(2, 3) * m(3, 0)) +
-				m(1, 3) * (m(2, 2) * m(3, 0) - m(2, 0) * m(3, 2)) +
-				m(1, 0) * (m(2, 3) * m(3, 2) - m(2, 2) * m(3, 3)));
-		outMatrix(1, 1) = d * (m(2, 2) * (m(0, 0) * m(3, 3) - m(0, 3) * m(3, 0)) +
-				m(2, 3) * (m(0, 2) * m(3, 0) - m(0, 0) * m(3, 2)) +
-				m(2, 0) * (m(0, 3) * m(3, 2) - m(0, 2) * m(3, 3)));
-		outMatrix(1, 2) = d * (m(3, 2) * (m(0, 0) * m(1, 3) - m(0, 3) * m(1, 0)) +
-				m(3, 3) * (m(0, 2) * m(1, 0) - m(0, 0) * m(1, 2)) +
-				m(3, 0) * (m(0, 3) * m(1, 2) - m(0, 2) * m(1, 3)));
-		outMatrix(1, 3) = d * (m(0, 2) * (m(1, 3) * m(2, 0) - m(1, 0) * m(2, 3)) +
-				m(0, 3) * (m(1, 0) * m(2, 2) - m(1, 2) * m(2, 0)) +
-				m(0, 0) * (m(1, 2) * m(2, 3) - m(1, 3) * m(2, 2)));
-		outMatrix(2, 0) = d * (m(1, 3) * (m(2, 0) * m(3, 1) - m(2, 1) * m(3, 0)) +
-				m(1, 0) * (m(2, 1) * m(3, 3) - m(2, 3) * m(3, 1)) +
-				m(1, 1) * (m(2, 3) * m(3, 0) - m(2, 0) * m(3, 3)));
-		outMatrix(2, 1) = d * (m(2, 3) * (m(0, 0) * m(3, 1) - m(0, 1) * m(3, 0)) +
-				m(2, 0) * (m(0, 1) * m(3, 3) - m(0, 3) * m(3, 1)) +
-				m(2, 1) * (m(0, 3) * m(3, 0) - m(0, 0) * m(3, 3)));
-		outMatrix(2, 2) = d * (m(3, 3) * (m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0)) +
-				m(3, 0) * (m(0, 1) * m(1, 3) - m(0, 3) * m(1, 1)) +
-				m(3, 1) * (m(0, 3) * m(1, 0) - m(0, 0) * m(1, 3)));
-		outMatrix(2, 3) = d * (m(0, 3) * (m(1, 1) * m(2, 0) - m(1, 0) * m(2, 1)) +
-				m(0, 0) * (m(1, 3) * m(2, 1) - m(1, 1) * m(2, 3)) +
-				m(0, 1) * (m(1, 0) * m(2, 3) - m(1, 3) * m(2, 0)));
-		outMatrix(3, 0) = d * (m(1, 0) * (m(2, 2) * m(3, 1) - m(2, 1) * m(3, 2)) +
-				m(1, 1) * (m(2, 0) * m(3, 2) - m(2, 2) * m(3, 0)) +
-				m(1, 2) * (m(2, 1) * m(3, 0) - m(2, 0) * m(3, 1)));
-		outMatrix(3, 1) = d * (m(2, 0) * (m(0, 2) * m(3, 1) - m(0, 1) * m(3, 2)) +
-				m(2, 1) * (m(0, 0) * m(3, 2) - m(0, 2) * m(3, 0)) +
-				m(2, 2) * (m(0, 1) * m(3, 0) - m(0, 0) * m(3, 1)));
-		outMatrix(3, 2) = d * (m(3, 0) * (m(0, 2) * m(1, 1) - m(0, 1) * m(1, 2)) +
-				m(3, 1) * (m(0, 0) * m(1, 2) - m(0, 2) * m(1, 0)) +
-				m(3, 2) * (m(0, 1) * m(1, 0) - m(0, 0) * m(1, 1)));
-		outMatrix(3, 3) = d * (m(0, 0) * (m(1, 1) * m(2, 2) - m(1, 2) * m(2, 1)) +
-				m(0, 1) * (m(1, 2) * m(2, 0) - m(1, 0) * m(2, 2)) +
-				m(0, 2) * (m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0)));
+		outMatrix[0, 0] = d * (this[1, 1] * (this[2, 2] * this[3, 3] - this[2, 3] * this[3, 2]) +
+				 this[1, 2] * (this[2, 3] *  this[3, 1] - this[2, 1] * this[3, 3]) +
+				 this[1, 3] * (this[2, 1] *  this[3, 2] - this[2, 2] * this[3, 1]));
+		outMatrix[0, 1] = d * (this[2, 1] * (this[0, 2] * this[3, 3] - this[0, 3] * this[3, 2]) +
+				 this[2, 2] * (this[0, 3] *  this[3, 1] - this[0, 1] * this[3, 3]) +
+				 this[2, 3] * (this[0, 1] *  this[3, 2] - this[0, 2] * this[3, 1]));
+		outMatrix[0, 2] = d * (this[3, 1] * (this[0, 2] * this[1, 3] - this[0, 3] * this[1, 2]) +
+				 this[3, 2] * (this[0, 3] *  this[1, 1] - this[0, 1] * this[1, 3]) +
+				 this[3, 3] * (this[0, 1] *  this[1, 2] - this[0, 2] * this[1, 1]));
+		outMatrix[0, 3] = d * (this[0, 1] * (this[1, 3] * this[2, 2] - this[1, 2] * this[2, 3]) +
+				 this[0, 2] * (this[1, 1] *  this[2, 3] - this[1, 3] * this[2, 1]) +
+				 this[0, 3] * (this[1, 2] *  this[2, 1] - this[1, 1] * this[2, 2]));
+		outMatrix[1, 0] = d * (this[1, 2] * (this[2, 0] * this[3, 3] - this[2, 3] * this[3, 0]) +
+				 this[1, 3] * (this[2, 2] *  this[3, 0] - this[2, 0] * this[3, 2]) +
+				 this[1, 0] * (this[2, 3] *  this[3, 2] - this[2, 2] * this[3, 3]));
+		outMatrix[1, 1] = d * (this[2, 2] * (this[0, 0] * this[3, 3] - this[0, 3] * this[3, 0]) +
+				 this[2, 3] * (this[0, 2] *  this[3, 0] - this[0, 0] * this[3, 2]) +
+				 this[2, 0] * (this[0, 3] *  this[3, 2] - this[0, 2] * this[3, 3]));
+		outMatrix[1, 2] = d * (this[3, 2] * (this[0, 0] * this[1, 3] - this[0, 3] * this[1, 0]) +
+				 this[3, 3] * (this[0, 2] *  this[1, 0] - this[0, 0] * this[1, 2]) +
+				 this[3, 0] * (this[0, 3] *  this[1, 2] - this[0, 2] * this[1, 3]));
+		outMatrix[1, 3] = d * (this[0, 2] * (this[1, 3] * this[2, 0] - this[1, 0] * this[2, 3]) +
+				 this[0, 3] * (this[1, 0] *  this[2, 2] - this[1, 2] * this[2, 0]) +
+				 this[0, 0] * (this[1, 2] *  this[2, 3] - this[1, 3] * this[2, 2]));
+		outMatrix[2, 0] = d * (this[1, 3] * (this[2, 0] * this[3, 1] - this[2, 1] * this[3, 0]) +
+				 this[1, 0] * (this[2, 1] *  this[3, 3] - this[2, 3] * this[3, 1]) +
+				 this[1, 1] * (this[2, 3] *  this[3, 0] - this[2, 0] * this[3, 3]));
+		outMatrix[2, 1] = d * (this[2, 3] * (this[0, 0] * this[3, 1] - this[0, 1] * this[3, 0]) +
+				 this[2, 0] * (this[0, 1] *  this[3, 3] - this[0, 3] * this[3, 1]) +
+				 this[2, 1] * (this[0, 3] *  this[3, 0] - this[0, 0] * this[3, 3]));
+		outMatrix[2, 2] = d * (this[3, 3] * (this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0]) +
+			 	 this[3, 0] * (this[0, 1] *  this[1, 3] - this[0, 3] * this[1, 1]) +
+				 this[3, 1] * (this[0, 3] *  this[1, 0] - this[0, 0] * this[1, 3]));
+		outMatrix[2, 3] = d * (this[0, 3] * (this[1, 1] * this[2, 0] - this[1, 0] * this[2, 1]) +
+				 this[0, 0] * (this[1, 3] *  this[2, 1] - this[1, 1] * this[2, 3]) +
+				 this[0, 1] * (this[1, 0] *  this[2, 3] - this[1, 3] * this[2, 0]));
+		outMatrix[3, 0] = d * (this[1, 0] * (this[2, 2] * this[3, 1] - this[2, 1] * this[3, 2]) +
+				 this[1, 1] * (this[2, 0] *  this[3, 2] - this[2, 2] * this[3, 0]) +
+				 this[1, 2] * (this[2, 1] *  this[3, 0] - this[2, 0] * this[3, 1]));
+		outMatrix[3, 1] = d * (this[2, 0] * (this[0, 2] * this[3, 1] - this[0, 1] * this[3, 2]) +
+				 this[2, 1] * (this[0, 0] *  this[3, 2] - this[0, 2] * this[3, 0]) +
+				 this[2, 2] * (this[0, 1] *  this[3, 0] - this[0, 0] * this[3, 1]));
+		outMatrix[3, 2] = d * (this[3, 0] * (this[0, 2] * this[1, 1] - this[0, 1] * this[1, 2]) +
+				 this[3, 1] * (this[0, 0] *  this[1, 2] - this[0, 2] * this[1, 0]) +
+				 this[3, 2] * (this[0, 1] *  this[1, 0] - this[0, 0] * this[1, 1]));
+		outMatrix[3, 3] = d * (this[0, 0] * (this[1, 1] * this[2, 2] - this[1, 2] * this[2, 1]) +
+				 this[0, 1] * (this[1, 2] *  this[2, 0] - this[1, 0] * this[2, 2]) +
+				 this[0, 2] * (this[1, 0] *  this[2, 1] - this[1, 1] * this[2, 0]));
 
 		static if( USE_MATRIX_TEST )
 			outMatrix.definitelyIdentityMatrix = definitelyIdentityMatrix;
@@ -1357,8 +1331,8 @@ struct CMatrix4(T)
 	/// Builds a right-handed orthogonal projection matrix.
 	auto ref CMatrix4!T buildProjectionMatrixOrthoRH(float widthOfViewVolume, float heightOfViewVolume, float zNear, float zFar)
 	{
-		assert(widthOfViewVolume!=0.f); //divide by zero
-		assert(heightOfViewVolume!=0.f); //divide by zero
+		assert(widthOfViewVolume!=0.0f); //divide by zero
+		assert(heightOfViewVolume!=0.0f); //divide by zero
 		assert(zNear!=zFar); //divide by zero
 		
 		M[0] = cast(T)(2/widthOfViewVolume);
@@ -1393,7 +1367,38 @@ struct CMatrix4(T)
 			const vector3df target,
 			const vector3df upVector)
 	{
+		vector3df zaxis = target - position;
+		zaxis.normalize();
 
+		vector3df xaxis = upVector.crossProduct(zaxis);
+		xaxis.normalize();
+
+		vector3df yaxis = zaxis.crossProduct(xaxis);
+
+		M[0] = cast(T)xaxis.X;
+		M[1] = cast(T)yaxis.X;
+		M[2] = cast(T)zaxis.X;
+		M[3] = 0;
+
+		M[4] = cast(T)xaxis.Y;
+		M[5] = cast(T)yaxis.Y;
+		M[6] = cast(T)zaxis.Y;
+		M[7] = 0;
+
+		M[8] = cast(T)xaxis.Z;
+		M[9] = cast(T)yaxis.Z;
+		M[10] = cast(T)zaxis.Z;
+		M[11] = 0;
+
+		M[12] = cast(T)-xaxis.dotProduct(position);
+		M[13] = cast(T)-yaxis.dotProduct(position);
+		M[14] = cast(T)-zaxis.dotProduct(position);
+		M[15] = 1;
+
+		static if( USE_MATRIX_TEST )
+			definitelyIdentityMatrix = false;
+
+		return this;
 	}
 
 	/// Builds a right-handed look-at matrix.
@@ -1402,7 +1407,37 @@ struct CMatrix4(T)
 			auto ref const vector3df target,
 			auto ref const vector3df upVector)
 	{
+		vector3df zaxis = position - target;
+		zaxis.normalize();
 
+		vector3df xaxis = upVector.crossProduct(zaxis);
+		xaxis.normalize();
+
+		vector3df yaxis = zaxis.crossProduct(xaxis);
+
+		M[0] = cast(T)xaxis.X;
+		M[1] = cast(T)yaxis.X;
+		M[2] = cast(T)zaxis.X;
+		M[3] = 0;
+
+		M[4] = cast(T)xaxis.Y;
+		M[5] = cast(T)yaxis.Y;
+		M[6] = cast(T)zaxis.Y;
+		M[7] = 0;
+
+		M[8] = cast(T)xaxis.Z;
+		M[9] = cast(T)yaxis.Z;
+		M[10] = cast(T)zaxis.Z;
+		M[11] = 0;
+
+		M[12] = cast(T)-xaxis.dotProduct(position);
+		M[13] = cast(T)-yaxis.dotProduct(position);
+		M[14] = cast(T)-zaxis.dotProduct(position);
+		M[15] = 1;
+		static if( USE_MATRIX_TEST )
+			definitelyIdentityMatrix=false;
+
+		return this;
 	}
 
 	/// Builds a matrix that flattens geometry into a plane.
@@ -1926,12 +1961,7 @@ struct CMatrix4(T)
 		static if(USE_MATRIX_TEST)
 		{
 			/// Flag is this matrix is identity matrix
-			uint definitelyIdentityMatrix;
-		}
-		static if(USE_MATRIX_TEST_DEBUG)
-		{
-			uint id;
-			uint calls;
+			bool definitelyIdentityMatrix;
 		}
 	}
 }
@@ -1940,4 +1970,4 @@ struct CMatrix4(T)
 alias CMatrix4!float matrix4;
 
 /// Global const identity matrix
-extern immutable matrix4 IdentityMatrix = matrix4(eConstructor.EM4CONST_IDENTITY);
+export immutable matrix4 IdentityMatrix = matrix4(matrix4.eConstructor.EM4CONST_IDENTITY);

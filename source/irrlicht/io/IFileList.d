@@ -1,6 +1,5 @@
 module irrlicht.io.IFileList;
 
-//import irrlicht.IReferenceCounted;
 import irrlicht.io.path;
 
 /// Provides a list of files and folders.
@@ -8,7 +7,7 @@ import irrlicht.io.path;
 * File lists usually contain a list of all files in a given folder,
 * but can also contain a complete directory structure. 
 */
-interface IFileList //: IReferenceCounted
+interface IFileList
 {
 	public
 	{

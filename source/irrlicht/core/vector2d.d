@@ -4,6 +4,7 @@
 module irrlicht.core.vector2d;
 
 import irrlicht.core.dimension2d;
+import irrlicht.irrMath;
 import std.math;
 
 /// 2d vector template class with lots of operators and methods.
@@ -16,58 +17,58 @@ struct vector2d(T)
 	public
 	{
 		/// Constructor with two different values
-		this(T nx, T ny)
+		this(T nx, T ny) pure
 		{
 			X = nx;
 			Y = ny;
 		}
 
 		/// Constructor with the same value for both members
-		this(T n)
+		this(T n) pure
 		{
 			X = n;
 			Y = n;
 		}
 
 		/// Copy constructor
-		this(const vector2d!T other)
+		this(const vector2d!T other) pure
 		{
 			X = other.X;
 			Y = other.Y;
 		}
 
-		this(const dimension2d!T other)
+		this(const dimension2d!T other) pure
 		{
 			X = other.Width;
 			Y = other.Height;
 		}
 
-		vector2d!T opUnary(string op)() if(op == "-")
+		vector2d!T opUnary(string op)() const if(op == "-") 
 		{
 			return vector2d!T(-X, -Y);
 		}
 
-		vector2d!T opAssign(const vector2d!T other)
+		auto ref vector2d!T opAssign(const vector2d!T other)
 		{
 			X = other.X;
 			Y = other.Y;
 			return this;
 		}
 
-		vector2d!T opAssign(const dimension2d!T other)
+		auto ref vector2d!T opAssign(const dimension2d!T other)
 		{
 			X = other.Width;
 			Y = other.Height;
 			return this;
 		}
 
-		vector2d!T opBinary(string op)(const vector2d!T other)
+		vector2d!T opBinary(string op)(const vector2d!T other) const
 			if(op == "+")
 		{
 			return vector2d!T(X+other.X, Y+other.Y);
 		}
 
-		vector2d!T opBinary(string op)(const dimension2d!T other)
+		vector2d!T opBinary(string op)(const dimension2d!T other) const
 			if(op == "+")
 		{
 			return vector2d!T(X+other.Width, Y+other.Height);
@@ -81,7 +82,7 @@ struct vector2d(T)
 			return this;
 		}
 
-		vector2d!T opBinary(string op)(const T v)
+		vector2d!T opBinary(string op)(const T v) const
 			if(op == "+")
 		{
 			return vector2d!T(X + v, Y + v);
@@ -103,13 +104,13 @@ struct vector2d(T)
 			return this;
 		}
 
-		vector2d!T opBinary(string op)(const vector2d!T other)
+		vector2d!T opBinary(string op)(const vector2d!T other) const
 			if(op == "-")
 		{
 			return vector2d!T(X-other.X, Y-other.Y);
 		}
 
-		vector2d!T opBinary(string op)(const dimension2d!T other)
+		vector2d!T opBinary(string op)(const dimension2d!T other) const
 			if(op == "-")
 		{
 			return vector2d!T(X-other.Width, Y-other.Height);
@@ -123,7 +124,7 @@ struct vector2d(T)
 			return this;
 		}
 
-		vector2d!T opBinary(string op)(const T v)
+		vector2d!T opBinary(string op)(const T v) const
 			if(op == "-")
 		{
 			return vector2d!T(X - v, Y - v);
@@ -145,7 +146,7 @@ struct vector2d(T)
 			return this;
 		}
 
-		vector2d!T opBinary(string op)(const vector2d!T other)
+		vector2d!T opBinary(string op)(const vector2d!T other) const
 			if(op == "*")
 		{
 			return vector2d!T(X*other.X, Y*other.Y);
@@ -159,7 +160,7 @@ struct vector2d(T)
 			return this;
 		}
 
-		vector2d!T opBinary(string op)(const T v)
+		vector2d!T opBinary(string op)(const T v) const
 			if(op == "*")
 		{
 			return vector2d!T(X*v, Y*v);
@@ -173,7 +174,7 @@ struct vector2d(T)
 			return this;
 		}
 
-		vector2d!T opBinary(string op)(const vector2d!T other)
+		vector2d!T opBinary(string op)(const vector2d!T other) const
 			if(op == "/")
 		{
 			return vector2d!T(X/other.X, Y/other.Y);
@@ -187,7 +188,7 @@ struct vector2d(T)
 			return this;
 		}
 
-		vector2d!T opBinary(string op)(const T v)
+		vector2d!T opBinary(string op)(const T v) const
 			if(op == "/")
 		{
 			return vector2d!T(X/v, Y/v);
@@ -202,7 +203,7 @@ struct vector2d(T)
 		}	
 		
 		/// sort in order X, Y. Equality with rounding tolerance.
-		int opCmp()(auto ref const vector2d!T other)
+		int opCmp()(auto ref const vector2d!T other) const
 		{
 			if ((X<other.X && X != other.X) ||
 				(X != other.X && Y<other.Y && Y != other.Y))
@@ -216,22 +217,10 @@ struct vector2d(T)
 				return 1;
 			} 
 
-			/*if (X<other.X || X == other.X) ||
-				(X == other.X && (Y<other.Y || Y == other.Y))
-			{
-				return 0;
-			}
-
-			if (X>other.X || X == other.X) ||
-				(X == other.X && (Y>other.Y || Y == other.Y))
-			{
-				return 0;
-			}*/
-
 			return 0;
 		}
 
-		bool opEqual()(auto ref const vector2d!T other)
+		bool opEqual()(auto ref const vector2d!T other) const
 		{
 			return equals(other);
 		}
@@ -244,7 +233,7 @@ struct vector2d(T)
 		*
 		*   Returns: True if the two vector are (almost) equal, else false.
 		*/
-		bool equals()(auto ref const vector2d!T other)
+		bool equals()(auto ref const vector2d!T other) const
 		{
 			return X == other.X && Y == other.Y;
 		}
@@ -267,7 +256,7 @@ struct vector2d(T)
 		/**
 		*	Returns: The length of the vector.
 		*/
-		T getLength()
+		T getLength() const
 		{
 			return cast(T)sqrt(cast(double)(X*X + Y*Y));
 		}
@@ -277,7 +266,7 @@ struct vector2d(T)
 		*	This is useful vecause it is much faster than getLength().
 		*	Returns: The squared length of the vector.
 		*/
-		T getLengthSQ()
+		T getLengthSQ() const
 		{
 			return X*X + Y*Y;
 		}
@@ -289,7 +278,7 @@ struct vector2d(T)
 		*
 		*	Returns: The dot product of the two vectors.
 		*/
-		T dotProduct()(auto ref const vector2d!T other)
+		T dotProduct()(auto ref const vector2d!T other) const
 		{
 			return X*other.X + Y*other.Y;
 		}
@@ -302,7 +291,7 @@ struct vector2d(T)
 		*
 		* Returns: Distance from other point.
 		*/
-		T getDistanceFrom()(auto ref const vector2d!T other)
+		T getDistanceFrom()(auto ref const vector2d!T other) const
 		{
 			return vector2d!T(X - other.X, Y - other.Y).getLength();
 		}
@@ -315,7 +304,7 @@ struct vector2d(T)
 		*
 		* Returns: Squared distance from other point.
 		*/
-		T getDistanceFromSQ()(auto ref const vector2d!T other)
+		T getDistanceFromSQ()(auto ref const vector2d!T other) const
 		{
 			return vector2d!T(X - other.X, Y - other.Y).getLengthSQ();
 		}
@@ -369,7 +358,7 @@ struct vector2d(T)
 		* This method has been suggested by Pr3t3nd3r.
 		* Returns: a value between 0 and 360.
 		*/
-		double getAngleTrig()
+		double getAngleTrig() const
 		{
 			if (Y == 0)
 				return X < 0 ? 180 : 0;
@@ -394,7 +383,7 @@ struct vector2d(T)
 		* 0 is to the right (3 o'clock), values increase clockwise.
 		* Returns: a value between 0 and 360.
 		*/
-		double getAngle()
+		double getAngle() const
 		{
 			if (Y == 0) // corrected thanks to a suggestion by Jox
 				return X < 0 ? 180 : 0;
@@ -428,7 +417,7 @@ struct vector2d(T)
 		* 
 		* Returns: a value between 0 and 90.
 		*/
-		double getAngleWith()(auto ref const vector2d!T b)
+		double getAngleWith()(auto ref const vector2d!T b) const
 		{
 			double tmp = cast(double)(X*b.X + Y*b.Y);
 
@@ -452,7 +441,7 @@ struct vector2d(T)
 		* end 		Ending vector to compare between.
 		* Returns: True if this vector is between begin and end, false if not.
 		*/
-		bool isBetweenPoints()(auto ref const vector2d!T begin, auto ref const vector2d!T end)
+		bool isBetweenPoints()(auto ref const vector2d!T begin, auto ref const vector2d!T end) const
 		{
 			if (begin.X != end.X)
 			{
@@ -476,7 +465,7 @@ struct vector2d(T)
 		*
 		* Returns: An interpolated vector.  This vector is not modified. 
 		*/
-		vector2d!T getInterpolated()(auto ref const vector2d!T other, double d)
+		vector2d!T getInterpolated()(auto ref const vector2d!T other, double d) const
 		{
 			double inv = 1.0 - d;
 			return vector2d!T(cast(T)(other.X*inv + X*d), cast(T)(other.Y*inv + Y*d));
@@ -492,7 +481,7 @@ struct vector2d(T)
 		* Note that this is the opposite direction of interpolation to getInterpolated() and interpolate()
 		* Returns: An interpolated vector. This vector is not modified. 
 		*/
-		vector2d!T getInterpolated_quadratic()(auto ref const vector2d!T v2, auto ref const vector2d!T v3, double d)
+		vector2d!T getInterpolated_quadratic()(auto ref const vector2d!T v2, auto ref const vector2d!T v3, double d) const
 		{
 			// this*(1-d)*(1-d) + 2 * v2 * (1-d) + v3 * d * d;
 			immutable double inv = 1.0 - d;
@@ -526,7 +515,7 @@ struct vector2d(T)
 		/// Y coordinate of vector;
 		T Y;
 
-		vector2d!T opBinaryRight(string op, S)(const S scalar)
+		vector2d!T opBinaryRight(string op, S)(const S scalar) const
 		{
 			return vector*scalar;
 		}

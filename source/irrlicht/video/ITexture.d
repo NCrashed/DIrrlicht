@@ -3,10 +3,10 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.video.ITexture;
 
-import irrlicht.IReferenceCounted;
 import irrlicht.video.IImage;
-import irrlicht.core.dimension2d;
 import irrlicht.video.EDriverTypes;
+import irrlicht.video.SColor;
+import irrlicht.core.dimension2d;
 import irrlicht.io.path;
 
 /// Enumeration flags telling the video driver in which format textures should be created.
@@ -22,7 +22,7 @@ enum E_TEXTURE_CREATION_FLAG
 	* ETCF_ALWAYS_32_BIT, ETCF_OPTIMIZED_FOR_QUALITY, or
 	* ETCF_OPTIMIZED_FOR_SPEED at the same time. 
 	*/
-	ETCF_ALWAYS_16_BIT = x00000001,
+	ETCF_ALWAYS_16_BIT = 0x00000001,
 
 	/**
 	* Forces the driver to create 32 bit textures always, independent of
@@ -33,7 +33,7 @@ enum E_TEXTURE_CREATION_FLAG
 	* ETCF_ALWAYS_16_BIT, ETCF_OPTIMIZED_FOR_QUALITY, or
 	* ETCF_OPTIMIZED_FOR_SPEED at the same time. 
 	*/
-	ETCF_ALWAYS_32_BIT = x00000002,
+	ETCF_ALWAYS_32_BIT = 0x00000002,
 
 	/**
 	* Lets the driver decide in which format the textures are created and
@@ -43,7 +43,7 @@ enum E_TEXTURE_CREATION_FLAG
 	* ETCF_ALWAYS_16_BIT, ETCF_ALWAYS_32_BIT, or ETCF_OPTIMIZED_FOR_SPEED at
 	* the same time. 
 	*/
-	ETCF_OPTIMIZED_FOR_QUALITY = x00000004,
+	ETCF_OPTIMIZED_FOR_QUALITY = 0x00000004,
 
 	/**
 	* Lets the driver decide in which format the textures are created and
@@ -107,12 +107,12 @@ enum E_TEXTURE_LOCK_MODE
 * created by one device with an other device, the device will refuse to do that
 * and write a warning or an error message to the output buffer.
 */
-abstract class ITexture : IReferenceCounted
+abstract class ITexture
 {
 	/// constructor
 	this(const Path name)
 	{
-		NamedPath = name;
+		NamedPath = SNamedPath(name);
 	}
 
 	/// Lock function.
@@ -228,7 +228,7 @@ abstract class ITexture : IReferenceCounted
 	}
 
 	/// Get name of texture (in most cases this is the filename)
-	const SNamedPath getName() 
+	ref const(SNamedPath) getName() const
 	{ 
 		return NamedPath; 
 	}
@@ -242,15 +242,15 @@ protected:
 	*/
 	E_TEXTURE_CREATION_FLAG getTextureFormatFromFlags(uint flags)
 	{
-		if (flags & ETCF_OPTIMIZED_FOR_SPEED)
-			return ETCF_OPTIMIZED_FOR_SPEED;
-		if (flags & ETCF_ALWAYS_16_BIT)
-			return ETCF_ALWAYS_16_BIT;
-		if (flags & ETCF_ALWAYS_32_BIT)
-			return ETCF_ALWAYS_32_BIT;
-		if (flags & ETCF_OPTIMIZED_FOR_QUALITY)
-			return ETCF_OPTIMIZED_FOR_QUALITY;
-		return ETCF_OPTIMIZED_FOR_SPEED;
+		if (flags & E_TEXTURE_CREATION_FLAG.ETCF_OPTIMIZED_FOR_SPEED)
+			return E_TEXTURE_CREATION_FLAG.ETCF_OPTIMIZED_FOR_SPEED;
+		if (flags & E_TEXTURE_CREATION_FLAG.ETCF_ALWAYS_16_BIT)
+			return E_TEXTURE_CREATION_FLAG.ETCF_ALWAYS_16_BIT;
+		if (flags & E_TEXTURE_CREATION_FLAG.ETCF_ALWAYS_32_BIT)
+			return E_TEXTURE_CREATION_FLAG.ETCF_ALWAYS_32_BIT;
+		if (flags & E_TEXTURE_CREATION_FLAG.ETCF_OPTIMIZED_FOR_QUALITY)
+			return E_TEXTURE_CREATION_FLAG.ETCF_OPTIMIZED_FOR_QUALITY;
+		return E_TEXTURE_CREATION_FLAG.ETCF_OPTIMIZED_FOR_SPEED;
 	}
 
 	SNamedPath NamedPath;

@@ -3,11 +3,10 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.io.IReadFile;
 
-//import irrlicht.IReferenceCounted; //TODO:
 import irrlicht.io.path;
 
 /// Interface providing read acess to a file
-interface IReadFile //: IReferenceCounted //TODO:
+interface IReadFile
 {
 	/// Reads an amount of bytes from the file.
 	/**

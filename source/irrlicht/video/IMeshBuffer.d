@@ -5,6 +5,8 @@ module irrlicht.video.IMeshBuffer;
 
 import irrlicht.video.SMaterial;
 import irrlicht.core.aabbox3d;
+import irrlicht.core.vector3d;
+import irrlicht.core.vector2d;
 import irrlicht.video.S3DVertex;
 import irrlicht.video.SVertexIndex;
 import irrlicht.scene.EHardwareBufferFlags;
@@ -29,7 +31,7 @@ import irrlicht.scene.EPrimitiveTypes;
 * passed to a video driver and only drop the buffer once it's not used in
 * the current code block anymore.
 */
-interface IMeshBuffer //: public IReferenceCounted
+interface IMeshBuffer
 {
 	/// Get the material of this meshbuffer
 	/**

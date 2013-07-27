@@ -4,9 +4,8 @@
 module irrlicht.io.IWriteFile;
 
 import irrlicht.io.path;
-import irrlicht.IReferenceCounted;
 
-interface IWriteFile //: IReferenceCounted
+interface IWriteFile
 {
 	/// Writes an amount of bytes to the file.
 	/** 

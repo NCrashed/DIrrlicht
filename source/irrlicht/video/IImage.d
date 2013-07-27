@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.video.IImage;
 
-//import irrlicht.IReferenceCounted;
 import irrlicht.core.vector2d;
 import irrlicht.core.dimension2d;
 import irrlicht.core.rect;
@@ -14,7 +13,7 @@ import irrlicht.video.SColor;
 *	Image loaders create these images from files. IVideoDrivers
 * convert these images into their (hardware) textures.
 */
-interface IImage //: IReferenceCounted
+interface IImage 
 {
 	/// Lock function. Use this to get a pointer to the image data.
 	/** 

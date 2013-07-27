@@ -45,7 +45,7 @@ immutable(string[]) aTextureClampNames =
 class SMaterialLayer
 {
 	/// Default constructor
-	this()()
+	this() pure
 	{
 		Texture = null;
 		TextureWrapU = E_TEXTURE_CLAMP.ETC_REPEAT;
@@ -54,7 +54,7 @@ class SMaterialLayer
 		TrilinearFilter = false;
 		AnisotropicFilter = 0;
 		LODBias = 0;
-		TextureMatrix = null;
+		TextureMatrix = matrix4(matrix4.eConstructor.EM4CONST_IDENTITY);
 	}
 
 	/// Copy constructor
@@ -62,18 +62,17 @@ class SMaterialLayer
 	* Params:
 	* 	other=  Material layer to copy from. 
 	*/
-	this()(const SMaterialLayer other)
+	this(const SMaterialLayer other) pure
 	{
+		Texture = cast(ITexture)other.Texture;
+		TextureWrapU = other.TextureWrapU;
+		TextureWrapV = other.TextureWrapV;
+		BilinearFilter = other.BilinearFilter;
+		TrilinearFilter = other.TrilinearFilter;
+		AnisotropicFilter = other.AnisotropicFilter;
+		LODBias = other.LODBias;		
 		// This pointer is checked during assignment
-		TextureMatrix = null;
-		this = other;
-	}
-
-	/// Destructor
-	~this()
-	{
-		MatrixAllocator.destruct(TextureMatrix);
-		MatrixAllocator.deallocate(TextureMatrix); 
+		TextureMatrix = other.TextureMatrix;
 	}
 
 	/// Assignment operator
@@ -82,34 +81,14 @@ class SMaterialLayer
 	* 	other=  Material layer to copy from.
 	* Returns: This material layer, updated. 
 	*/
-	auto ref SMaterialLayer opAssign(const SMaterialLayer other)
+	SMaterialLayer set(const SMaterialLayer other)
 	{
 		// Check for self-assignment!
 		if (this == other)
 			return this;
 
-		Texture = other.Texture;
-		if (TextureMatrix !is null)
-		{
-			if (other.TextureMatrix !is null)
-				*TextureMatrix = *other.TextureMatrix;
-			else
-			{
-				MatrixAllocator.destruct(TextureMatrix);
-				MatrixAllocator.deallocate(TextureMatrix); 
-				TextureMatrix = null;
-			}
-		}
-		else
-		{
-			if (other.TextureMatrix !is null)
-			{
-				TextureMatrix = MatrixAllocator.allocate(1);
-				MatrixAllocator.construct(TextureMatrix,*other.TextureMatrix);
-			}
-			else
-				TextureMatrix = null;
-		}
+		Texture = cast(ITexture)other.Texture;
+		TextureMatrix = other.TextureMatrix;
 		TextureWrapU = other.TextureWrapU;
 		TextureWrapV = other.TextureWrapV;
 		BilinearFilter = other.BilinearFilter;
@@ -120,30 +99,13 @@ class SMaterialLayer
 		return this;
 	}
 
-	/// Gets the texture transformation matrix
-	/**
-	* Returns: Texture matrix of this layer. 
-	*/
-	auto ref matrix4 getTextureMatrix()
-	{
-		if (TextureMatrix is null)
-		{
-			TextureMatrix = MatrixAllocator.allocate(1);
-			MatrixAllocator.construct(TextureMatrix, IdentityMatrix);
-		}
-		return *TextureMatrix;
-	}
-
 	/// Gets the immutable texture transformation matrix
 	/**
 	* Returns: Texture matrix of this layer. 
 	*/
-	auto ref const matrix4 getTextureMatrix()
+	auto ref const matrix4 getTextureMatrix() const
 	{
-		if (TextureMatrix !is null)
-			return *TextureMatrix;
-		else
-			return IdentityMatrix;
+		return TextureMatrix;
 	}
 
 	/// Sets the texture transformation matrix to mat
@@ -153,13 +115,7 @@ class SMaterialLayer
 	*/
 	void setTextureMatrix()(auto ref const matrix4 mat)
 	{
-		if (TextureMatrix is null)
-		{
-			TextureMatrix = MatrixAllocator.allocate(1);
-			MatrixAllocator.construct(TextureMatrix,mat);
-		}
-		else
-			*TextureMatrix = mat;
+		TextureMatrix = mat;
 	}
 
 	/// Equality operator
@@ -168,7 +124,7 @@ class SMaterialLayer
 	* 	b=  Layer to compare to.
 	* Returns: True if layers are not different, else false. 
 	*/
-	bool opEqual(const SMaterialLayer b)
+	bool opEqual(const SMaterialLayer b) const
 	{
 		bool different =
 			Texture != b.Texture ||
@@ -181,9 +137,7 @@ class SMaterialLayer
 		if (different)
 			return false;
 		else
-			different |= (TextureMatrix != b.TextureMatrix) &&
-				TextureMatrix && b.TextureMatrix &&
-				(*TextureMatrix != *(b.TextureMatrix));
+			different |= (TextureMatrix != b.TextureMatrix);
 		return !different;
 	}
 
@@ -226,16 +180,10 @@ class SMaterialLayer
 	*/
 	byte LODBias;
 
-
-	private
-	{
-		irrAllocator!matrix4 MatrixAllocator;
-
-		/// Texture Matrix
-		/**
-		* Do not access this element directly as the internal
-		* ressource management has to cope with Null pointers etc. 
-		*/
-		matrix4* TextureMatrix;
-	}
+	/// Texture Matrix
+	/**
+	* Do not access this element directly as the internal
+	* ressource management has to cope with Null pointers etc. 
+	*/
+	package matrix4 TextureMatrix;
 };

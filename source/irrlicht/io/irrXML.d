@@ -229,9 +229,6 @@ interface IFileReadCallBack
 /** 
 * If you need another class as base class for the xml reader, you can do this by creating
 * the reader using for example new CXMLReaderImpl!(char, YourBaseClass)(yourcallback);
-* The Irrlicht Engine for example needs IReferenceCounted as base class for every object to
-* let it automaticly reference countend, hence it replaces IXMLBase with IReferenceCounted.
-* See irrXML.cpp on how this can be done in detail. 
 */
 interface IXMLBase
 {

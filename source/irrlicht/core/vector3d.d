@@ -4,7 +4,7 @@
 module irrlicht.core.vector3d;
 
 import std.math;
-import irrlicht.irrTypes;
+import irrlicht.irrMath;
 
 //! 3d vector template class with lots of operators and methods.
 /** The vector3d class is used in Irrlicht for three main purposes:
@@ -15,7 +15,7 @@ import irrlicht.irrTypes;
 struct vector3d(T)
 {
 	/// Constructor with three different values
-	this()(T nx = 0, T ny = 0, T nz = 0)
+	this()(T nx = 0, T ny = 0, T nz = 0) pure
 	{
 		X = nx;
 		Y = ny;
@@ -23,13 +23,13 @@ struct vector3d(T)
 	}
 
 	/// Constructor with the same value for all elements
-	this()(T n) 
+	this()(T n) pure
 	{
 		X = Y = Z = n;
 	}
 
 	/// Copy constructor
-	this()(auto ref const vector3d!T other)
+	this()(auto ref const vector3d!T other) pure
 	{
 		X = other.X;
 		Y = other.Y;
@@ -52,13 +52,13 @@ struct vector3d(T)
 		return this;
 	}
 
-	vector3d!T opBinary(string op)(auto ref const vector3d!T other)
+	vector3d!T opBinary(string op)(auto ref const vector3d!T other) const
 		if(op == "+" || op == "-" || op == "*" || op == "/")
 	{
 		return vector3d!T(mixin("X "~op~" other.X"), mixin("Y "~op~" other.Y"), mixin("Z "~op~" other.Z"));
 	}
 
-	vector3d!T opBinary(string op)(const T v)
+	vector3d!T opBinary(string op)(auto ref const T v) const
 		if(op == "+" || op == "-" || op == "*" || op == "/")
 	{
 		return vector3d!T(mixin("X "~op~" v"), mixin("Y "~op~" v"), mixin("Z "~op~" v"));
@@ -73,7 +73,7 @@ struct vector3d(T)
 		return this;
 	}
 
-	auto ref vector3d!T opOpAssign(string op)(const T v)
+	auto ref vector3d!T opOpAssign(string op)(auto ref const T v)
 		if(op == "+" || op == "-" || op == "*" || op == "/")
 	{
 		mixin("X"~op~"=v");
@@ -82,7 +82,7 @@ struct vector3d(T)
 		return this;
 	}
 
-	vector3d!T opBinaryRight(string op)(const T scalar)
+	vector3d!T opBinaryRight(string op)(const T scalar) const
 		if(op == "*")
 	{
 		return vector3d!T(scalar * X, scalar * Y, scalar * Z);
@@ -90,7 +90,7 @@ struct vector3d(T)
 
 	/// sort in order X, Y, Z. Equality with rounding tolerance.
 	/// Difference must be above rounding tolerance.
-	bool opCmp()(auto ref const vector3d!T other)
+	bool opCmp()(auto ref const vector3d!T other) const
 	{
 		if ((X<other.X && !approxEqual(X, other.X)) ||
 					(approxEqual(X, other.X) && Y<other.Y && !approxEqual(Y, other.Y)) ||
@@ -108,20 +108,20 @@ struct vector3d(T)
 			return 0;
 	}
 
-	bool opEqual()(auto ref const vector3d!T other)
+	bool opEqual()(auto ref const vector3d!T other) const
 	{
 		return equals(other);
 	}
 
 	/// returns if this vector equals the other one, taking floating point rounding errors into account
-	bool equals()(auto ref const vector3d!T other, const T tolerance = 1e-05)
+	bool equals()(auto ref const vector3d!T other, const T tolerance = 1e-05) const
 	{
 		return approxEqual(X, other.X, tolerance) &&
 			approxEqual(Y, other.Y, tolerance) &&
 			approxEqual(Z, other.Z, tolerance);
 	}
 
-	auto ref vector3d!T set(const T nx, const T ny, const T nz)
+	auto ref vector3d!T set()(const T nx, const T ny, const T nz)
 	{
 		X = nx;
 		Y = ny;
@@ -129,7 +129,7 @@ struct vector3d(T)
 		return this;
 	}
 
-	auto ref vector3d!T set(auto ref const vector3d!T p)
+	auto ref vector3d!T set()(auto ref const vector3d!T p)
 	{
 		X = p.X;
 		Y = p.Y;
@@ -138,9 +138,9 @@ struct vector3d(T)
 	}
 
 	/// Get length of the vector
-	T getLength() 
+	T getLength() const
 	{
-		return cast(T)sqrt(X*X + Y*Y + Z*Z);
+		return cast(T)sqrt(cast(real)(X*X + Y*Y + Z*Z));
 	}
 
 	/// Get squared length of the vector
@@ -148,13 +148,13 @@ struct vector3d(T)
 	* This is useful vecause it is much faster than getLength().
 	* Returns: Squared length of the vector.
 	*/
-	T getLengthSQ()
+	T getLengthSQ() const
 	{
 		return X*X + Y*Y + Z*Z;
 	}
 
 	/// Get the dot product with another vector.
-	T dotProduct()(auto ref const vector3d!T other)
+	T dotProduct()(auto ref const vector3d!T other) const
 	{
 		return X*other.X + Y*other.Y + Z*other.Z;
 	}
@@ -163,7 +163,7 @@ struct vector3d(T)
 	/**
 	* Here, the vector is interpreted as point in 3 dimensional space.
 	*/
-	T getDistanceFrom(auto ref const vector3d!T other)
+	T getDistanceFrom()(auto ref const vector3d!T other) const
 	{
 		return vector3d!T(X - other.X, Y-other.Y, Z-other.Z).getLength();
 	}
@@ -172,7 +172,7 @@ struct vector3d(T)
 	/**
 	* Here, the vector is interpreted as point in 3 dimensional space.
 	*/
-	T getDistanceFromSQ(auto ref const vector3d!T other)
+	T getDistanceFromSQ()(auto ref const vector3d!T other) const
 	{
 		return vector3d!T(X - other.X, Y-other.Y, Z-other.Z).getLengthSQ();
 	}
@@ -183,7 +183,7 @@ struct vector3d(T)
 	* p = Vector to multiply with.
 	* Returns: Crossproduct of this vector with p. 
 	*/
-	vector3d!T crossProduct()(auto ref const vector3d!T p)
+	vector3d!T crossProduct()(auto ref const vector3d!T p) const
 	{
 		return vector3d!T(Y * p.Z - Z * p.Y, Z * p.X - X * p.Z, X * p.Y - Y * p.X);
 	}
@@ -196,7 +196,7 @@ struct vector3d(T)
 	* end = Ending vector to compare between.
 	* Returns: True if this vector is between begin and end, false if not. 
 	*/
-	bool isBetweenPoints()(auto ref const vector3d!T begin, auto ref const vector3d!T end)
+	bool isBetweenPoints()(auto ref const vector3d!T begin, auto ref const vector3d!T end) const
 	{
 		immutable T f = (end - begin).getLengthSQ();
 		return getDistanceFromSQ(begin) <= f &&
@@ -283,7 +283,7 @@ struct vector3d(T)
 	* Note that this is the opposite direction of interpolation to getInterpolated_quadratic()
 	* Returns: An interpolated vector.  This vector is not modified. 
 	*/
-	vector3d!T getInterpolated()(auto ref const vector3d!T other, double d)
+	vector3d!T getInterpolated()(auto ref const vector3d!T other, double d) const
 	{
 		immutable double inv = 1.0 - d;
 		return vector3d!T(cast(T)(other.X*inv + X*d), cast(T)(other.Y*inv + Y*d), cast(T)(other.Z*inv + Z*d));
@@ -298,7 +298,7 @@ struct vector3d(T)
 	* Note that this is the opposite direction of interpolation to getInterpolated() and interpolate()
 	* Returns: An interpolated vector. This vector is not modified. 
 	*/
-	vector3d!T getInterpolated_quadratic()(auto ref const vector3d!T v2, auto ref const vector3d!T v3, double d)
+	vector3d!T getInterpolated_quadratic()(auto ref const vector3d!T v2, auto ref const vector3d!T v3, double d) const
 	{
 		// this*(1-d)*(1-d) + 2 * v2 * (1-d) + v3 * d * d;
 		immutable double inv = cast(T) 1.0 - d;
@@ -345,7 +345,7 @@ struct vector3d(T)
 	* +Z (e.g. 0, 0, 1) direction vector would make it point in the same direction as this vector. The Z (roll) rotation
 	* is always 0, since two Euler rotations are sufficient to point in any given direction. 
 	*/
-	vector3d!T getHorizontalAngle()
+	vector3d!T getHorizontalAngle() const
 	{
 		vector3d!T angle;
 
@@ -357,7 +357,7 @@ struct vector3d(T)
 		if (angle.Y >= 360)
 			angle.Y -= 360;
 
-		immutable double z1 = cast(double)sqrt(X*X + Z*Z);
+		immutable double z1 = cast(double)sqrt(cast(real)(X*X + Z*Z));
 
 		angle.X = cast(T)(atan2(cast(double)z1, cast(double)Y) * RADTODEG - 90.0);
 
@@ -375,7 +375,7 @@ struct vector3d(T)
 	* this vector.  The calculation assumes the pole at (0,1,0) and
 	* returns the angles in X and Y.
 	*/
-	vector3d!T getSphericalCoordinateAngles()()
+	vector3d!T getSphericalCoordinateAngles()() const
 		if(!is(T == int))
 	{
 		vector3d!T angle;
@@ -401,7 +401,7 @@ struct vector3d(T)
 	* this vector.  The calculation assumes the pole at (0,1,0) and
 	* returns the angles in X and Y.
 	*/
-	vector3d!T getSphericalCoordinateAngles()()
+	vector3d!T getSphericalCoordinateAngles()() const
 		if(is(T == int))
 	{
 		vector3d!int angle;
@@ -432,7 +432,7 @@ struct vector3d(T)
 	* Returns: A direction vector calculated by rotating the forwards direction by the 3 Euler angles
 	* (in degrees) represented by this vector. 
 	*/
-	vector3d!T rotationToDirection()(auto ref const vector3d!T forwards)
+	vector3d!T rotationToDirection()(auto ref const vector3d!T forwards) const
 	{
 		immutable double cr = cast(double)cos( DEGTORAD * X );
 		immutable double sr = cast(double)sin( DEGTORAD * X );
@@ -467,7 +467,7 @@ struct vector3d(T)
 	* Useful for setting in shader constants for example. The fourth value
 	* will always be 0. 
 	*/
-	void getAs4Values(out T[4] array)
+	void getAs4Values(out T[4] array) const
 	{
 		array[0] = X;
 		array[1] = Y;

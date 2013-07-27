@@ -209,7 +209,7 @@ struct SColor
 	/** 
 	* Must be values between 0 and 255. 
 	*/
-	this(uint a, uint r, uint g, uint b)
+	this(uint a, uint r, uint g, uint b) pure
 	{
 		color = ((a & 0xFF) << 24 |
 			((r & 0xFF) << 16) |
@@ -218,7 +218,7 @@ struct SColor
 	}
 
 	/// Constructs the color from a 32 bit value. Could be another color.
-	this(uint clr)
+	this(uint clr) pure
 	{
 		color = clr;
 	}
@@ -228,7 +228,7 @@ struct SColor
 	* The alpha component defines how opaque a color is.
 	* Returns: The alpha value of the color. 0 is fully transparent, 255 is fully opaque
 	*/
-	uint getAlpha() 
+	uint getAlpha() pure
 	{
 		return color >> 24;
 	}
@@ -238,7 +238,7 @@ struct SColor
 	* Returns: Value between 0 and 255, specifying how red the color is.
 	* 0 means no red, 255 means full red.
 	*/
-	uint getRed()
+	uint getRed() pure
 	{
 		return (color >> 16) & 0xFF;
 	}
@@ -248,7 +248,7 @@ struct SColor
 	* Returns: Value between 0 and 255, specifying how green the color is.
 	* 0 means no green, 255 means full green.
 	*/
-	uint getGreen()
+	uint getGreen() pure
 	{
 		return (color >> 8) & 0xFF;
 	}
@@ -258,25 +258,25 @@ struct SColor
 	* Returns: Value between 0 and 255, specifying how blue the color is.
 	* 0 means no blue, 255 means full blue.
 	*/
-	uint getBlue()
+	uint getBlue() pure
 	{
 		return color & 0xFF;
 	}
 
 	/// Get lightness of the color in the range [0, 255]
-	float getLightness()
+	float getLightness() pure
 	{
 		return 0.5f*cast(float)(fmax(fmax(getRed(), getGreen()), getBlue()) + fmin(fmin(getRed(), getGreen()), getBlue()));
 	}
 
 	/// Get luminance of the color in the range [0, 255]
-	float getLuminance()
+	float getLuminance() pure
 	{
 		return 0.3f*getRed() + 0.59f*getGreen() + 0.11f*getBlue();
 	}
 
 	/// Get average intensity of the color in the range [0, 255].
-	uint getAverage()
+	uint getAverage() pure
 	{
 		return (getRed() + getGreen() + getBlue()) / 3;
 	}
@@ -557,7 +557,7 @@ class SColorf
 	* a value between 0.0f and 1.0f, 1.0f means not transparent
 	* (opaque), 0.0f means fully transparent. 
 	*/
-	this(float r, float g, float b, float a = 1.0f)
+	this(float r, float g, float b, float a = 1.0f) pure
 	{
 		this.r = r;
 		this.g = g;
@@ -571,7 +571,7 @@ class SColorf
 	* c 	32 bit color from which this SColorf clas is
 	* constructed from.
 	*/
-	this(SColor c)
+	this(SColor c) pure
 	{
 		immutable float inv = 1.0f / 255.0f;
 		r = c.getRed() * inv;
@@ -725,7 +725,7 @@ class SColorf
 */
 struct SColorHSL
 {
-	this(float h = 0.0f, float s = 0.0f, float l = 0.0f)
+	this(float h = 0.0f, float s = 0.0f, float l = 0.0f) pure
 	{
 		Hue = h;
 		Saturation = s;

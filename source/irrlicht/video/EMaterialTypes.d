@@ -1,7 +1,7 @@
 // Copyright (C) 2002-2012 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
-module irrlicht.video.EMaterialsTypes;
+module irrlicht.video.EMaterialTypes;
 
 /// Abstracted and easy to use fixed function/programmable pipeline material modes.
 enum E_MATERIAL_TYPE
