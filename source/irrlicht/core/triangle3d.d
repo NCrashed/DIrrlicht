@@ -9,10 +9,10 @@ import irrlicht.core.plane3d;
 import irrlicht.core.aabbox3d;
 import irrlicht.irrMath;
 
-//! 3d triangle template struct for doing collision detection and other things.
+/// 3d triangle template struct for doing collision detection and other things.
 struct triangle3d(T)
 {
-	//! Constructor for triangle with given three vertices
+	/// Constructor for triangle with given three vertices
 	this()(auto ref const vector3d!T v1, auto ref const vector3d!T v2, auto ref const vector3d!T v3)
 	{
 		pointA = v1;
@@ -20,15 +20,18 @@ struct triangle3d(T)
 		pointC = v3;
 	}
 
-	//! Equality operator
+	/// Equality operator
 	bool opEqual()(auto ref const triangle3d!T other) 
 	{
 		return other.pointA==pointA && other.pointB==pointB && other.pointC==pointC;
 	}
 
-	//! Determines if the triangle is totally inside a bounding box.
-	/** \param box Box to check.
-	\return True if triangle is within the box, otherwise false. */
+	/// Determines if the triangle is totally inside a bounding box.
+	/**
+	* Params:
+	* 	box=  Box to check.
+	* Returns: True if triangle is within the box, otherwise false. 
+	*/
 	bool isTotalInsideBox()(auto ref const aabbox3d!T box)
 	{
 		return (box.isPointInside(pointA) &&
@@ -36,9 +39,12 @@ struct triangle3d(T)
 			box.isPointInside(pointC));
 	}
 
-	//! Determines if the triangle is totally outside a bounding box.
-	/** \param box Box to check.
-	\return True if triangle is outside the box, otherwise false. */
+	/// Determines if the triangle is totally outside a bounding box.
+	/**
+	* Params:
+	* 	box=  Box to check.
+	* Returns: True if triangle is outside the box, otherwise false. 
+	*/
 	bool isTotalOutsideBox()(auto ref const aabbox3d!T box)
 	{
 		return ((pointA.X > box.MaxEdge.X && pointB.X > box.MaxEdge.X && pointC.X > box.MaxEdge.X) ||
@@ -49,9 +55,12 @@ struct triangle3d(T)
 			(pointA.Z < box.MinEdge.Z && pointB.Z < box.MinEdge.Z && pointC.Z < box.MinEdge.Z));
 	}
 
-	//! Get the closest point on a triangle to a point on the same plane.
-	/** \param p Point which must be on the same plane as the triangle.
-	\return The closest point of the triangle */
+	/// Get the closest point on a triangle to a point on the same plane.
+	/**
+	* Params:
+	* 	p=  Point which must be on the same plane as the triangle.
+	* Returns: The closest point of the triangle 
+	*/
 	vector3d!T closestPointOnTriangle()(auto ref const vector3d!T p)
 	{
 		immutable vector3d!T rab = line3d!T(pointA, pointB).getClosestPoint(p);
@@ -68,7 +77,7 @@ struct triangle3d(T)
 		return d2 < d3 ? rbc : rca;
 	}
 
-	//! Check if a point is inside the triangle (border-points count also as inside)
+	/// Check if a point is inside the triangle (border-points count also as inside)
 	/*
 	\param p Point to test. Assumes that this point is already
 	on the plane of the triangle.
@@ -84,14 +93,17 @@ struct triangle3d(T)
 				isOnSameSide(pf64, cf64, af64, bf64));
 	}
 
-	//! Check if a point is inside the triangle (border-points count also as inside)
-	/** This method uses a barycentric coordinate system.
-	It is faster than isPointInside but is more susceptible to floating point rounding
-	errors. This will especially be noticable when the FPU is in single precision mode
-	(which is for example set on default by Direct3D).
-	\param p Point to test. Assumes that this point is already
-	on the plane of the triangle.
-	\return True if point is inside the triangle, otherwise false. */
+	/// Check if a point is inside the triangle (border-points count also as inside)
+	/**
+	* This method uses a barycentric coordinate system.
+	* It is faster than isPointInside but is more susceptible to floating point rounding
+	* errors. This will especially be noticable when the FPU is in single precision mode
+	* (which is for example set on default by Direct3D).
+	* Params:
+	* 	p=  Point to test. Assumes that this point is already
+	* on the plane of the triangle.
+	* Returns: True if point is inside the triangle, otherwise false. 
+	*/
 	bool isPointInsideFast()(auto ref const vector3d!T p)
 	{
 		immutable vector3d!T a = pointC - pointA;
@@ -115,10 +127,13 @@ struct triangle3d(T)
 	}
 
 
-	//! Get an intersection with a 3d line.
-	/** \param line Line to intersect with.
-	\param outIntersection Place to store the intersection point, if there is one.
-	\return True if there was an intersection, false if not. */
+	/// Get an intersection with a 3d line.
+	/**
+	* Params:
+	* 	line=  Line to intersect with.
+	* 	outIntersection=  Place to store the intersection point, if there is one.
+	* Returns: True if there was an intersection, false if not. 
+	*/
 	bool getIntersectionWithLimitedLine()(auto ref const line3d!T line,
 		out vector3d!T outIntersection)
 	{
@@ -128,15 +143,18 @@ struct triangle3d(T)
 	}
 
 
-	//! Get an intersection with a 3d line.
-	/** Please note that also points are returned as intersection which
-	are on the line, but not between the start and end point of the line.
-	If you want the returned point be between start and end
-	use getIntersectionWithLimitedLine().
-	\param linePoint Point of the line to intersect with.
-	\param lineVect Vector of the line to intersect with.
-	\param outIntersection Place to store the intersection point, if there is one.
-	\return True if there was an intersection, false if there was not. */
+	/// Get an intersection with a 3d line.
+	/**
+	* Please note that also points are returned as intersection which
+	* are on the line, but not between the start and end point of the line.
+	* If you want the returned point be between start and end
+	* use getIntersectionWithLimitedLine().
+	* Params:
+	* 	linePoint=  Point of the line to intersect with.
+	* 	lineVect=  Vector of the line to intersect with.
+	* 	outIntersection=  Place to store the intersection point, if there is one.
+	* Returns: True if there was an intersection, false if there was not. 
+	*/
 	bool getIntersectionWithLine()(auto ref const vector3d!T linePoint,
 		auto ref const vector3d!T lineVect, out vector3d!T outIntersection)
 	{
@@ -147,11 +165,14 @@ struct triangle3d(T)
 	}
 
 
-	//! Calculates the intersection between a 3d line and the plane the triangle is on.
-	/** \param lineVect Vector of the line to intersect with.
-	\param linePoint Point of the line to intersect with.
-	\param outIntersection Place to store the intersection point, if there is one.
-	\return True if there was an intersection, else false. */
+	/// Calculates the intersection between a 3d line and the plane the triangle is on.
+	/**
+	* Params:
+	* 	lineVect=  Vector of the line to intersect with.
+	* 	linePoint=  Point of the line to intersect with.
+	* 	outIntersection=  Place to store the intersection point, if there is one.
+	* Returns: True if there was an intersection, else false. 
+	*/
 	bool getIntersectionOfPlaneWithLine()(auto ref const vector3d!T linePoint,
 		auto ref const vector3d!T lineVect, out vector3d!T outIntersection)
 	{
@@ -180,19 +201,24 @@ struct triangle3d(T)
 	}
 
 
-	//! Get the normal of the triangle.
-	/** Please note: The normal is not always normalized. */
+	/// Get the normal of the triangle.
+	/**
+	* Please note: The normal is not always normalized. 
+	*/
 	vector3d!T getNormal()
 	{
 		return (pointB - pointA).crossProduct(pointC - pointA);
 	}
 
-	//! Test if the triangle would be front or backfacing from any point.
-	/** Thus, this method assumes a camera position from which the
-	triangle is definitely visible when looking at the given direction.
-	Do not use this method with points as it will give wrong results!
-	\param lookDirection Look direction.
-	\return True if the plane is front facing and false if it is backfacing. */
+	/// Test if the triangle would be front or backfacing from any point.
+	/**
+	* Thus, this method assumes a camera position from which the
+	* triangle is definitely visible when looking at the given direction.
+	* Do not use this method with points as it will give wrong results!
+	* Params:
+	* 	lookDirection=  Look direction.
+	* Returns: True if the plane is front facing and false if it is backfacing. 
+	*/
 	bool isFrontFacing()(auto ref const vector3d!T lookDirection)
 	{
 		immutable vector3d!T n = getNormal().normalize();
@@ -200,20 +226,20 @@ struct triangle3d(T)
 		return F32_LOWER_EQUAL_0(d);
 	}
 
-	//! Get the plane of this triangle.
+	/// Get the plane of this triangle.
 	plane3d!T getPlane()
 	{
 		return plane3d!T(pointA, pointB, pointC);
 	}
 
-	//! Get the area of the triangle
+	/// Get the area of the triangle
 	T getArea()
 	{
 		return (pointB - pointA).crossProduct(pointC - pointA).getLength() * 0.5f;
 
 	}
 
-	//! sets the triangle's points
+	/// sets the triangle's points
 	void set()(auto ref const vector3d!T a, auto ref const vector3d!T b, auto ref const vector3d!T c)
 	{
 		pointA = a;
@@ -221,11 +247,11 @@ struct triangle3d(T)
 		pointC = c;
 	}
 
-	//! the first point of the triangle
+	/// the first point of the triangle
 	vector3d!T pointA;
-	//! the second point of the triangle
+	/// the second point of the triangle
 	vector3d!T pointB;
-	//! the third point of the triangle
+	/// the third point of the triangle
 	vector3d!T pointC;
 
 	// Using double instead of !T to avoid integer overflows when T=int (maybe also less floating point troubles).
