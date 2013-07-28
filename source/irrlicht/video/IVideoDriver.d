@@ -19,6 +19,7 @@ import irrlicht.io.IReadFile;
 import irrlicht.io.IWriteFile;
 import irrlicht.video.IMeshBuffer;
 import irrlicht.video.IMesh;
+import irrlicht.scene.IMeshManipulator;
 
 interface IVideoDriver
 {

@@ -3,12 +3,8 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.video.SColor;
 
-import std.math : fmin, fmax, round, approxEqual;
-
-private static pure nothrow T clamp(T)(T val, T min, T max)
-{
-	return fmin(fmax(T, min), max);
-}
+import irrlicht.irrMath;
+import std.math : fmin, fmax, round, approxEqual, floor;
 
 /// An enum for the color format of textures used by the Irrlicht Engine.
 /**
@@ -228,7 +224,7 @@ struct SColor
 	* The alpha component defines how opaque a color is.
 	* Returns: The alpha value of the color. 0 is fully transparent, 255 is fully opaque
 	*/
-	uint getAlpha() pure
+	uint getAlpha() pure const
 	{
 		return color >> 24;
 	}
@@ -238,7 +234,7 @@ struct SColor
 	* Returns: Value between 0 and 255, specifying how red the color is.
 	* 0 means no red, 255 means full red.
 	*/
-	uint getRed() pure
+	uint getRed() pure const
 	{
 		return (color >> 16) & 0xFF;
 	}
@@ -248,7 +244,7 @@ struct SColor
 	* Returns: Value between 0 and 255, specifying how green the color is.
 	* 0 means no green, 255 means full green.
 	*/
-	uint getGreen() pure
+	uint getGreen() pure const
 	{
 		return (color >> 8) & 0xFF;
 	}
@@ -258,25 +254,25 @@ struct SColor
 	* Returns: Value between 0 and 255, specifying how blue the color is.
 	* 0 means no blue, 255 means full blue.
 	*/
-	uint getBlue() pure
+	uint getBlue() pure const
 	{
 		return color & 0xFF;
 	}
 
 	/// Get lightness of the color in the range [0, 255]
-	float getLightness() pure
+	float getLightness() pure const
 	{
 		return 0.5f*cast(float)(fmax(fmax(getRed(), getGreen()), getBlue()) + fmin(fmin(getRed(), getGreen()), getBlue()));
 	}
 
 	/// Get luminance of the color in the range [0, 255]
-	float getLuminance() pure
+	float getLuminance() pure const
 	{
 		return 0.3f*getRed() + 0.59f*getGreen() + 0.11f*getBlue();
 	}
 
 	/// Get average intensity of the color in the range [0, 255].
-	uint getAverage() pure
+	uint getAverage() pure const
 	{
 		return (getRed() + getGreen() + getBlue()) / 3;
 	}
@@ -329,7 +325,7 @@ struct SColor
 	/**
 	* Returns: 16 bit A1R5G5B5 value of this color.
 	*/
-	ushort toA1R5G5B5()
+	ushort toA1R5G5B5() const
 	{
 		return A8R8G8B8toA1R5G5B5(color);
 	}
@@ -341,7 +337,7 @@ struct SColor
 	* Params:
 	* dest 	address where the 4x8 bit OpenGL color is stored.
 	*/
-	void toOpenGLColor(ubyte* dest)
+	void toOpenGLColor(ubyte* dest) const
 	{
 		*dest = cast(ubyte)getRed();
 		*++dest = cast(ubyte)getGreen();
@@ -381,13 +377,13 @@ struct SColor
 	/**
 	* Returns: True if ther colors are the same, and false if not.
 	*/
-	bool opEqual()(auto ref const SColor other)
+	bool opEqual()(auto ref const SColor other) const
 	{
 		return other.color == color;
 	}
 
 	/// Comparison operator
-	int opCmp()(auto ref const SColor other)
+	int opCmp()(auto ref const SColor other) const
 	{
 		if (color < other.color)
 			return -1;
@@ -404,7 +400,7 @@ struct SColor
 	*
 	* Returns: Addition of the two colors, clamped to 0..255 values.
 	*/
-	SColor opBinary(string op)(auto ref const SColor other)
+	SColor opBinary(string op)(auto ref const SColor other) const
 		if(op == "+")
 	{
 		return SColor(fmin(getAlpha() + other.getAlpha(), 255u),
@@ -421,14 +417,14 @@ struct SColor
 	*
 	* Returns: Interpolated color. 
 	*/
-	SColor getInterpolated()(auto ref const SColor other, float d)
+	SColor getInterpolated()(auto ref const SColor other, float d) const
 	{
 		d = clamp(d, 0.0f, 1.0f);
 		immutable float inv = 1.0f - d;
 		return SColor(cast(uint)round(other.getAlpha()*inv + getAlpha()*d),
 			cast(uint)round(other.getRed()*inv + getRed()*d),
 			cast(uint)round(other.getGreen()*inv + getGreen()*d),
-			cast(uint)round(other.getBlud()*inv + getBlue()*d));
+			cast(uint)round(other.getBlue()*inv + getBlue()*d));
 	}
 
 	/// Returns interpolated color. (quadratic)
@@ -438,7 +434,7 @@ struct SColor
 	* c2 	second color to interpolate with
 	* d 	value between 0.0f and 1.0f.
 	*/
-	SColor getInterpolated_quadratic()(auto ref const SColor c1, auto ref const SColor c2, float d)
+	SColor getInterpolated_quadratic()(auto ref const SColor c1, auto ref const SColor c2, float d) const
 	{
 		// this*(1-d)*(1-d) + 2 * c1 * (1-d) + c2 * d * d;
 		d = clamp(d, 0.0f, 1.0f);
@@ -448,13 +444,13 @@ struct SColor
 		immutable float mul2 = d * d;
 
 		return SColor(
-			clamp(floor(
+			cast(uint)clamp(floor(
 				getAlpha() * mul0 + c1.getAlpha() * mul1 + c2.getAlpha() * mul2), 0, 255),
-			clamp(floor(
+			cast(uint)clamp(floor(
 				getRed()   * mul0 + c1.getRed()   * mul1 + c2.getRed()   * mul2), 0, 255),
-			clamp(floor(
+			cast(uint)clamp(floor(
 				getGreen() * mul0 + c1.getGreen() * mul1 + c2.getGreen() * mul2), 0, 255),
-			clamp(floor(
+			cast(uint)clamp(floor(
 				getBlue()  * mul0 + c1.getBlue()  * mul1 + c2.getBlue()  * mul2), 0, 255));
 	}
 
@@ -494,7 +490,7 @@ struct SColor
 	* data 		target to write the color. Must contain sufficiently large memory to receive the number of bytes for format.
 	* format 	tells the format used to write the color int data.
 	*/
-	void getData(void* data, ECOLOR_FORMAT format)
+	void getData(void* data, ECOLOR_FORMAT format) const
 	{
 		switch(format)
 		{
