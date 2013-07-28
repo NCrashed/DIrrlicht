@@ -87,8 +87,8 @@ interface IMesh
 	int opApplyReverse(int delegate(IMeshBuffer) dg);
 
 	/// foreach implementation with indexing
-	int opApply(int delegate(IMeshBuffer, size_t) dg);
+	int opApply(int delegate(size_t, IMeshBuffer) dg);
 
 	/// foreach_reverse implementation with indexing
-	int opApplyReverse(int delegate(IMeshBuffer, size_t) dg);
+	int opApplyReverse(int delegate(size_t, IMeshBuffer) dg);
 }

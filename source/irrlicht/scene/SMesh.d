@@ -143,13 +143,13 @@ class SMesh : IMesh
 	}
 
 	/// foreach implementation with indexing
-	int opApply(int delegate(IMeshBuffer, size_t) dg)
+	int opApply(int delegate(size_t, IMeshBuffer) dg)
 	{
 		int result = 0; 
 
 		foreach(i, meshBuffer; MeshBuffers) 
 		{ 
-			result = dg(meshBuffer, i); 
+			result = dg(i, meshBuffer); 
 			if (result) break; 
 		}
 
@@ -157,13 +157,13 @@ class SMesh : IMesh
 	}
 
 	/// foreach_reverse implementation with indexing
-	int opApplyReverse(int delegate(IMeshBuffer, size_t) dg)
+	int opApplyReverse(int delegate(size_t, IMeshBuffer) dg)
 	{
 		int result = 0; 
 
 		foreach_reverse(i, meshBuffer; MeshBuffers) 
 		{ 
-			result = dg(meshBuffer, i); 
+			result = dg(i, meshBuffer); 
 			if (result) break; 
 		}
 
