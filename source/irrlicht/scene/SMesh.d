@@ -6,8 +6,8 @@ module irrlicht.scene.SMesh;
 import irrlicht.scene.EHardwareBufferFlags;
 import irrlicht.video.EMaterialFlags;
 import irrlicht.video.SMaterial;
-import irrlicht.video.IMesh;
-import irrlicht.video.IMeshBuffer;
+import irrlicht.scene.IMesh;
+import irrlicht.scene.IMeshBuffer;
 import irrlicht.core.aabbox3d;
 
 /// Simple implementation of the IMesh interface.

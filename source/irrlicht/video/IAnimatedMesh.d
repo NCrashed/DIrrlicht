@@ -4,7 +4,7 @@
 module irrlicht.video.IAnimatedMesh;
 
 import irrlicht.core.aabbox3d;
-import irrlicht.video.IMesh;
+import irrlicht.scene.IMesh;
 
 /// Possible types of (animated) meshes.
 enum E_ANIMATED_MESH_TYPE

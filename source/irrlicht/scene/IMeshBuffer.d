@@ -1,7 +1,7 @@
 // Copyright (C) 2002-2012 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
-module irrlicht.video.IMeshBuffer;
+module irrlicht.scene.IMeshBuffer;
 
 import irrlicht.video.SMaterial;
 import irrlicht.core.aabbox3d;

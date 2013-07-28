@@ -5,8 +5,8 @@ module irrlicht.scene.SVertexManipulator;
 
 import irrlicht.video.S3DVertex;
 import irrlicht.video.SColor;
-import irrlicht.video.IMesh;
-import irrlicht.video.IMeshBuffer;
+import irrlicht.scene.IMesh;
+import irrlicht.scene.IMeshBuffer;
 import irrlicht.scene.SMesh;
 import irrlicht.core.vector3d;
 import irrlicht.core.vector2d;
