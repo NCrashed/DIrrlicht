@@ -154,7 +154,7 @@ interface IrrlichtDevice : IReferenceCounted
 	/** 
 	*Returns: Pointer to the IRandomizer object. 
 	*/
-	IRandomizer getRandomizer();
+	IRandomizer getRandomizer() const;
 
 	/// Sets a new randomizer.
 	/**
@@ -171,7 +171,7 @@ interface IrrlichtDevice : IReferenceCounted
 	*Irrlicht versions and is the initial randomizer set on device creation.
 	*Returns: Pointer to the default IRandomizer object. 
 	*/
-	IRandomizer createDefaultRandomizer();
+	IRandomizer createDefaultRandomizer() const;
 
 	/// Sets the caption of the window.
 	/**
@@ -199,30 +199,30 @@ interface IrrlichtDevice : IReferenceCounted
 	*------
 	*Returns: True if window is active. 
 	*/
-	bool isWindowActive();
+	bool isWindowActive() const;
 
 	/// Checks if the Irrlicht window has focus
 	/** 
 	*Returns: True if window has focus. 
 	*/
-	bool isWindowFocused();
+	bool isWindowFocused() const;
 
 	/// Checks if the Irrlicht window is minimized
 	/** 
 	*Returns: True if window is minimized. 
 	*/
-	bool isWindowMinimized();
+	bool isWindowMinimized() const;
 
 	/// Checks if the Irrlicht window is running in fullscreen mode
 	/** 
 	*Returns: True if window is fullscreen. */
-	bool isFullscreen();
+	bool isFullscreen() const;
 
 	/// Get the current color format of the window
 	/**
 	*Returns: Color format of the window. 
 	*/
-	ECOLOR_FORMAT getColorFormat();
+	ECOLOR_FORMAT getColorFormat() const;
 
 	/// Notifies the device that it should close itself.
 	/** 
@@ -235,7 +235,7 @@ interface IrrlichtDevice : IReferenceCounted
 	*The returned string
 	*will look like this: "1.2.3" or this: "1.2".
 	*Returns: String which contains the version. */
-	string getVersion();
+	string getVersion() const;
 
 	/// Sets a new user event receiver which will receive events from the engine.
 	/** 
@@ -328,14 +328,14 @@ interface IrrlichtDevice : IReferenceCounted
 	*This allows the user to check which windowing system is currently being
 	*used. 
 	*/
-	E_DEVICE_TYPE getType();
+	E_DEVICE_TYPE getType() const;
 
 	/// Check if a driver type is supported by the engine.
 	/** 
 	*Even if true is returned the driver may not be available
 	*for a configuration requested when creating the device. 
 	*/
-	static final bool isDriverSupported(E_DRIVER_TYPE driver)
+	static bool isDriverSupported(E_DRIVER_TYPE driver)
 	{
 		switch (driver)
 		{

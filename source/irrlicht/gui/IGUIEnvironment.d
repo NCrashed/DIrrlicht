@@ -1,6 +1,5 @@
 module irrlicht.gui.IGUIEnvironment;
 
-import irrlicht.IReferenceCounted;
 import irrlicht.gui.IGUIElement;
 import irrlicht.gui.IGUISkin;
 import irrlicht.gui.IGUIImageList;
@@ -49,7 +48,7 @@ import irrlicht.core.rect;
 *<li> EGET_ELEMENT_LEFT</li>
 *<li> EGET_ELEMENT_HOVERED</li>
 */
-class IGUIEnvironment : IReferenceCounted
+interface IGUIEnvironment
 {
 	//// Draws all gui elements by traversing the GUI environment starting at the root node.
 	void drawAll();
@@ -69,7 +68,7 @@ class IGUIEnvironment : IReferenceCounted
 	/** 
 	*Returns: Pointer to the element with focus. 
 	*/
-	IGUIElement getFocus();
+	IGUIElement getFocus() const;
 
 	/// Returns the element which was last under the mouse cursor
 	/** 
@@ -79,7 +78,7 @@ class IGUIEnvironment : IReferenceCounted
 	*IGUIEnvironment.getRootGUIElement().getElementFromPoint(mousePos);
 	*Returns: Pointer to the element under the mouse. 
 	*/
-	IGUIElement getHovered();
+	IGUIElement getHovered() const;
 
 	/// Removes the focus from an element.
 	/** 
@@ -97,25 +96,25 @@ class IGUIEnvironment : IReferenceCounted
 	*	element Pointer to the element which is tested.
 	*Returns: True if the element has focus, else false. 
 	*/
-	bool hasFocus(IGUIElement element);
+	bool hasFocus(IGUIElement element) const;
 
 	/// Returns the current video driver.
 	/** 
 	*Returns: Pointer to the video driver. 
 	*/
-	IVideoDriver getVideoDriver();
+	IVideoDriver getVideoDriver() const;
 
 	/// Returns the file system.
 	/** 
 	*Returns: Pointer to the file system. 
 	*/
-	IFileSystem getFileSystem();
+	IFileSystem getFileSystem() const;
 
 	/// returns a pointer to the OS operator
 	/** 
 	*Returns: Pointer to the OS operator. 
 	*/
-	IOSOperator getOSOperator();
+	IOSOperator getOSOperator() const;
 
 	/// Removes all elements from the environment.
 	void clear();
@@ -143,7 +142,7 @@ class IGUIEnvironment : IReferenceCounted
 	/** 
 	*Returns: Pointer to the GUI skin. 
 	*/
-	IGUISkin getSkin();
+	IGUISkin getSkin() const;
 
 	/// Sets a new GUI Skin
 	/** 
@@ -221,7 +220,7 @@ class IGUIEnvironment : IReferenceCounted
 	*This pointer should not be dropped. See IReferenceCounted::drop() for
 	*more information. 
 	*/
-	IGUIFont getBuiltInFont();
+	IGUIFont getBuiltInFont() const;
 
 	/// Returns pointer to the sprite bank with the specified file name.
 	/** 
@@ -680,7 +679,7 @@ class IGUIEnvironment : IReferenceCounted
 	*See_Also:
 	*	IReferenceCounted.drop() for more information. 
 	*/
-	IGUIElementFactory getDefaultGUIElementFactory();
+	IGUIElementFactory getDefaultGUIElementFactory() const;
 
 	/// Adds an element factory to the gui environment.
 	/**
@@ -704,7 +703,7 @@ class IGUIEnvironment : IReferenceCounted
 	*	index= Index of the factory.
 	*Returns: Factory at given index, or null if no such factory exists. 
 	*/
-	IGUIElementFactory getGUIElementFactory(uint index);
+	IGUIElementFactory getGUIElementFactory(uint index) const;
 
 	/// Adds a GUI element by its name
 	/**
@@ -760,7 +759,7 @@ class IGUIEnvironment : IReferenceCounted
 	bool loadGUI(IReadFile file, IGUIElement parent = null);
 
 	/// Writes attributes of the gui environment
-	void serializeAttributes(IAttributes outAttr, SAttributeReadWriteOptions options = null);
+	void serializeAttributes(out IAttributes outAttr, SAttributeReadWriteOptions options = null) const;
 
 	/// Reads attributes of the gui environment
 	void deserializeAttributes(IAttributes inAttr, SAttributeReadWriteOptions options = null);
