@@ -155,7 +155,7 @@ interface IFileSystem
 	bool addFileArchive(IFileArchive archive);
 
 	/// Get the number of archives currently attached to the file system
-	uint getFileArchiveCount();
+	uint getFileArchiveCount() const;
 
 	/// Removes an archive from the file system.
 	/** 
@@ -215,7 +215,7 @@ interface IFileSystem
 	void addArchiveLoader(IArchiveLoader loader);
 
 	/// Gets the number of archive loaders currently added
-	uint getArchiveLoaderCount();
+	uint getArchiveLoaderCount() const;
 
 	/// Retrieve the given archive loader
 	/** 
@@ -224,7 +224,7 @@ interface IFileSystem
 	*			array index.
 	* Returns: A pointer to the specified loader, 0 if the index is incorrect. 
 	*/
-	IArchiveLoader getArchiveLoader(uint index);
+	IArchiveLoader getArchiveLoader(uint index) const;
 
 	/// Adds a zip archive to the file system.
 	/** 
@@ -313,7 +313,7 @@ interface IFileSystem
 	*	filename= Possibly relative file or directory name to query.
 	* Results: Absolute filename which points to the same file. 
 	*/
-	Path getAbsolutePath(const Path filename);
+	Path getAbsolutePath(const Path filename) const;
 
 	/// Get the directory a file is located in.
 	/** 
@@ -321,7 +321,7 @@ interface IFileSystem
 	*	filename= The file to get the directory from.
 	* Returns: String containing the directory of the file. 
 	*/
-	Path getFileDir(const Path filename);
+	Path getFileDir(const Path filename) const;
 
 	/// Get the base part of a filename, i.e. the name without the directory part.
 	/** 
@@ -331,13 +331,13 @@ interface IFileSystem
 	*	keepExtension= True if filename with extension is returned otherwise everything
 	*					after the final '.' is removed as well. 
 	*/
-	Path getFileBasename(const Path filename, bool keepExtension=true);
+	Path getFileBasename(const Path filename, bool keepExtension=true) const;
 
 	/// flatten a path and file name for example: "/you/me/../." becomes "/you"
 	Path flattenFilename(Path directory, const Path root="/");
 
 	/// Get the relative filename, relative to the given directory
-	Path getRelativeFilename(const Path filename, const Path directory);
+	Path getRelativeFilename(const Path filename, const Path directory) const;
 
 	/// Creates a list of files and directories in the current working directory and returns it.
 	/** 
@@ -360,7 +360,7 @@ interface IFileSystem
 	*	filename= is the string identifying the file which should be tested for existence.
 	* Returns: True if file exists, and false if it does not exist or an error occured. 
 	*/
-	bool existFile(const Path filename);
+	bool existFile(const Path filename) const;
 
 	/// Creates a XML Reader from a file which returns all parsed strings as wide characters (wchar_t*).
 	/** 

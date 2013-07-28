@@ -2,6 +2,8 @@
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
+module irrlicht.gui.IGUIElement;
+
 import irrlicht.core.dimension2d;
 import irrlicht.core.rect;
 
@@ -876,7 +878,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* Implement this to set the attributes of your scene node for
 	* scripting languages, editors, debuggers or xml deserialization purposes. 
 	*/
-	void deserializeAttributes(in IAttributes inAttr, SAttributeReadWriteOptions options = SAttributeReadWriteOptions())
+	void deserializeAttributes(IAttributes inAttr, SAttributeReadWriteOptions options = SAttributeReadWriteOptions())
 	{
 		setName(inAttr.getAttributeAsString("Name"));
 		setID(inAttr.getAttributeAsInt("Id"));
