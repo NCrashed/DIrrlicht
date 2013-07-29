@@ -7,3 +7,6 @@ import irrlicht.io.IAttributeExchangingObject;
 import irrlicht.scene.ESceneNodeTypes;
 import irrlicht.scene.ECullingTypes;
 import irrlicht.scene.ISceneNodeAnimator;
+
+
+class ISceneNode {}

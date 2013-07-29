@@ -7,3 +7,6 @@ import irrlicht.core.vector3d;
 import irrlicht.scene.ESceneNodeAnimatorTypes;
 import irrlicht.io.IAttributeExchangingObject;
 import irrlicht.IEventReceiver;
+import irrlicht.io.IAttributes;
+import irrlicht.scene.ISceneNode;
+import irrlicht.scene.ISceneManager;

@@ -8,7 +8,7 @@ import irrlicht.core.aabbox3d;
 import irrlicht.core.matrix4;
 import irrlicht.video.SColor;
 import irrlicht.video.S3DVertex;
-import irrlicht.video.IAnimatedMesh;
+import irrlicht.scene.IAnimatedMesh;
 import irrlicht.scene.IMeshBuffer;
 import irrlicht.scene.IMesh;
 import irrlicht.scene.SVertexManipulator;

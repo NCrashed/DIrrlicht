@@ -46,14 +46,14 @@ interface IMesh
 	/**
 	* Returns: Bounding box of this mesh. 
 	*/
-	aabbox3df getBoundingBox() const;
+	auto ref aabbox3df getBoundingBox()() const;
 
 	/// Set user-defined axis aligned bounding box
 	/**
 	* Params:
 	* 	box=  New bounding box to use for the mesh. 
 	*/
-	void setBoundingBox(const aabbox3df box);
+	void setBoundingBox()(auto ref const aabbox3df box);
 
 	/// Sets a flag of all contained materials to a new value.
 	/**

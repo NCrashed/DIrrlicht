@@ -537,7 +537,7 @@ struct SColor
 * Another, faster way to define colors is using the class SColor, which
 * stores the color values in a single 32 bit integer.
 */
-class SColorf
+struct SColorf
 {
 	/// Constructs a color from up to four color values: red, green, blue, and alpha.
 	/** 

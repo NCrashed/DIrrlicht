@@ -43,20 +43,20 @@ interface IMeshBuffer
 	/**
 	* Returns: Material of this buffer. 
 	*/
-	const SMaterial getMaterial();
+	const(SMaterial) getMaterial() const;
 
 	/// Get type of vertex data which is stored in this meshbuffer.
 	/**
 	* Returns: Vertex type of this buffer. 
 	*/
-	E_VERTEX_TYPE getVertexType();
+	E_VERTEX_TYPE getVertexType() const;
 
 	/// Get access to vertex data. The data is an array of vertices.
 	/**
 	* Which vertex type is used can be determined by getVertexType().
 	* Returns: Pointer to array of vertices. 
 	*/
-	const void* getVertices();
+	const(void*) getVertices() const;
 
 	/// Get access to vertex data. The data is an array of vertices.
 	/**
@@ -69,37 +69,43 @@ interface IMeshBuffer
 	/**
 	* Returns: Number of vertices in this buffer. 
 	*/
-	uint getVertexCount();
+	size_t getVertexCount() const;
 
 	/// Get type of index data which is stored in this meshbuffer.
 	/**
 	* Returns: Index type of this buffer. 
 	*/
-	E_INDEX_TYPE getIndexType();
+	E_INDEX_TYPE getIndexType() const;
 
 	/// Get access to Indices.
 	/**
 	* Returns: Pointer to indices array. 
 	*/
-	const ushort* getIndices();
+	const(ushort[]) getIndices() const;
 
 	/// Get access to Indices.
 	/**
 	* Returns: Pointer to indices array. 
 	*/
-	ushort* getIndices();
+	ref ushort[] getIndices();
 
 	/// Get amount of indices in this meshbuffer.
 	/**
 	* Returns: Number of indices in this buffer. 
 	*/
-	uint getIndexCount();
+	size_t getIndexCount() const;
 
 	/// Get the axis aligned bounding box of this meshbuffer.
 	/**
 	* Returns: Axis aligned bounding box of this buffer. 
 	*/
-	const ref aabbox3df getBoundingBox();
+	auto ref const aabbox3df getBoundingBox()() const;
+
+	/// Get the axis aligned bounding box of this meshbuffer.
+	/**
+	* Returns: Axis aligned bounding box of this buffer. 
+	*/
+	auto ref aabbox3df getBoundingBox()();
 
 	/// Set axis aligned bounding box
 	/**
@@ -107,36 +113,28 @@ interface IMeshBuffer
 	* 	box=  User defined axis aligned bounding box to use
 	* for this buffer. 
 	*/
-	void setBoundingBox(ref const aabbox3df box);
-
-	/// Set axis aligned bounding box
-	/**
-	* Params:
-	* 	box=  User defined axis aligned bounding box to use
-	* for this buffer. 
-	*/
-	void setBoundingBox(const aabbox3df box);
+	void setBoundingBox()(auto ref const aabbox3df box);
 
 	/// Recalculates the bounding box. Should be called if the mesh changed.
 	void recalculateBoundingBox();
 
-	/// returns position of vertex i
-	const ref vector3df getPosition(uint i);
+	/// returns position of vertex i, const version
+	auto ref const vector3df getPosition()(size_t i) const;
 
 	/// returns position of vertex i
-	vector3df getPosition(uint i);
+	auto ref vector3df getPosition()(size_t i);
+
+	/// returns normal of vertex i, const version
+	auto ref const vector3df getNormal()(size_t i) const;
 
 	/// returns normal of vertex i
-	const ref vector3df getNormal(uint i);
+	auto ref vector3df getNormal()(size_t i);
 
-	/// returns normal of vertex i
-	vector3df getNormal(uint i);
-
-	/// returns texture coord of vertex i
-	const ref vector2df getTCoords(uint i);
+	/// returns texture coord of vertex i, const version
+	auto ref const vector2df getTCoords()(size_t i) const;
 
 	/// returns texture coord of vertex i
-	vector2df getTCoords(uint i);
+	auto ref vector2df getTCoords()(size_t i);
 
 	/// Append the vertices and indices to the current buffer
 	/**
@@ -147,7 +145,7 @@ interface IMeshBuffer
 	* 	indices=  Pointer to index array.
 	* 	numIndices=  Number of indices in array. 
 	*/
-	void append(const(void*) vertices, uint numVertices, const(ushort*) indices, uint numIndices);
+	void append(const(void*) vertices, size_t numVertices, const(ushort[]) indices);
 
 	/// Append the meshbuffer to the current buffer
 	/**
