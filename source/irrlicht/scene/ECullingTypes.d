@@ -4,14 +4,14 @@
 module irrlicht.scene.ECullingTypes;
 
 /// An enumeration for all types of automatic culling for built-in scene nodes
-enum E_CULLING_TYPE
+enum E_CULLING_TYPE : uint
 {
 	EAC_OFF = 0,
 	EAC_BOX = 1,
 	EAC_FRUSTUM_BOX = 2,
 	EAC_FRUSTUM_SPHERE = 4,
 	EAC_OCC_QUERY = 8
-};
+}
 
 /// Names for culling type
 immutable(string[]) AutomaticCullingNames =

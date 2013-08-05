@@ -70,7 +70,7 @@ struct CMatrix4(T)
 			definitelyIdentityMatrix = false;
 		}
 
-		switch(constructor)
+		final switch(constructor)
 		{
 			case eConstructor.EM4CONST_IDENTITY:
 				makeIdentity();
@@ -79,9 +79,12 @@ struct CMatrix4(T)
 				break;
 			case eConstructor.EM4CONST_COPY:
 				this = other;
+				goto case eConstructor.EM4CONST_TRANSPOSED;
 			case eConstructor.EM4CONST_TRANSPOSED:
 				other.getTransposed(this);
 				break;
+			case eConstructor.EM4CONST_INVERSE_TRANSPOSED:
+				goto case eConstructor.EM4CONST_INVERSE;
 			case eConstructor.EM4CONST_INVERSE:
 				if (!other.getInverse(this))
 					M[] = 0;
@@ -106,13 +109,13 @@ struct CMatrix4(T)
 	}
 
 	/// Simple operator for directly accessing every element of the matrix.
-	T opIndex()(const size_t row, const size_t col)
+	T opIndex()(const size_t row, const size_t col) const
 	{
 		return M[ row * 4 + col ];
 	}
 
 	/// Simple operator for linearly accessing every element of the matrix.
-	T opIndex()(const size_t index)
+	T opIndex()(const size_t index) const 
 	{
 		return M[index];
 	}
@@ -299,7 +302,7 @@ struct CMatrix4(T)
 	/** 
 	* Calculate other*this 
 	*/
-	CMatrix4!T opBinary(string op)(auto ref const CMatrix4!T other)
+	CMatrix4!T opBinary(string op)(auto ref const CMatrix4!T m2)
 		if(op == "*")
 	{
 		static if(USE_MATRIX_TEST)
@@ -438,7 +441,7 @@ struct CMatrix4(T)
 	}
 
 	/// Returns true if the matrix is the identity matrix
-	bool isIdentity()
+	bool isIdentity() const
 	{
 		static if( USE_MATRIX_TEST )
 		{
@@ -459,7 +462,7 @@ struct CMatrix4(T)
 			return false;
 
 		static if( USE_MATRIX_TEST )
-			definitelyIdentityMatrix=true;
+			*cast(bool*)&definitelyIdentityMatrix = true;
 
 		return true;
 	}
@@ -535,7 +538,7 @@ struct CMatrix4(T)
 	}
 
 	/// Gets the current translation
-	vector3d!T getTranslation()
+	vector3d!T getTranslation() const
 	{
 		return vector3d!T(M[12], M[13], M[14]);
 	}
@@ -737,7 +740,7 @@ struct CMatrix4(T)
 		static if(USE_MATRIX_TEST)
 			definitelyIdentityMatrix=false;
 
-		return *this;
+		return this;
 	}
 
 	/// Set Scale
@@ -1045,7 +1048,7 @@ struct CMatrix4(T)
 	* 
 	* Returns: false if there is no inverse matrix. 
 	*/
-	bool getInverse(out CMatrix4!T outMatrix)
+	bool getInverse(out CMatrix4!T outMatrix) const
 	{
 		/// Calculates the inverse of this Matrix
 		/// The inverse is calculated using Cramers rule.
@@ -1597,7 +1600,7 @@ struct CMatrix4(T)
 	}
 
 	/// Gets transposed matrix
-	CMatrix4!T getTransposed()
+	CMatrix4!T getTransposed() const
 	{
 		CMatrix4!T t = CMatrix4!T( eConstructor.EM4CONST_NOTHING );
 		getTransposed ( t );
@@ -1605,7 +1608,7 @@ struct CMatrix4(T)
 	}
 
 	/// Gets transposed matrix
-	void getTransposed(out CMatrix4!T dest)
+	void getTransposed(out CMatrix4!T dest) const
 	{
 		dest[ 0] = M[ 0];
 		dest[ 1] = M[ 4];

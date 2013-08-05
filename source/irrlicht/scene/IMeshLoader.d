@@ -5,8 +5,7 @@ module irrlicht.scene.IMeshLoader;
 
 import irrlicht.io.path;
 import irrlicht.io.IReadFile;
-
-interface IAnimatedMesh {};
+import irrlicht.scene.IAnimatedMesh;
 
 /// Class which is able to load an animated mesh from a file.
 /** 

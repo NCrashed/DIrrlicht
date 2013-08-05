@@ -85,7 +85,7 @@ struct plane3d(T)
 	*/
 	bool getIntersectionWithLine()(auto ref const vector3d!T linePoint,
 		auto ref const vector3d!T lineVect,
-		out vector3d!T outIntersection)
+		out vector3d!T outIntersection) const
 	{
 		T t2 = Normal.dotProduct(lineVect);
 
@@ -108,7 +108,7 @@ struct plane3d(T)
 	* For example, 0.5 is returned if the intersection happened exactly in the middle of the two points.
 	*/
 	float getKnownIntersectionWithLine()(auto ref const vector3d!T linePoint1,
-		auto ref const vector3d!T linePoint2)
+		auto ref const vector3d!T linePoint2) const
 	{
 		vector3d!T vect = linePoint2 - linePoint1;
 		float t2 = cast(float)Normal.dotProduct(vect);
@@ -124,10 +124,10 @@ struct plane3d(T)
 	*
 	* Returns: True if there was an intersection, false if there was not.
 	*/
-	bool getIntersectionWithLimitedLine()(
-		auto ref const vector3d!T linePoint1,
-		auto ref const vector3d!T linePoint2,
-		out vector3d!T outIntersection)
+	bool getIntersectionWithLimitedLine(U : T)(
+		auto ref const vector3d!U linePoint1,
+		auto ref const vector3d!U linePoint2,
+		out vector3d!U outIntersection)
 	{
 		return (getIntersectionWithLine(linePoint1, linePoint2 - linePoint1, outIntersection) && 
 			outIntersection.isBetweenPoints(linePoint1, linePoint2));
@@ -142,7 +142,7 @@ struct plane3d(T)
 	* ISREL3D_BACK if the point is behind of the plane, and
 	* ISREL3D_PLANAR if the point is within the plane. 
 	*/
-	EIntersectionRelation3D classifyPointRelation()(auto ref const vector3d!T point)
+	EIntersectionRelation3D classifyPointRelation()(auto ref const vector3d!T point) const
 	{
 		immutable T d = Normal.dotProduct(point) + D;
 
@@ -187,7 +187,7 @@ struct plane3d(T)
 	*/
 	bool getIntersectionWithPlane()(auto ref const plane3d!T other,
 		out vector3d!T outLinePoint,
-		out vector3d!T outLineVect)
+		out vector3d!T outLineVect) const
 	{
 		immutable T fn00 = Normal.getLength();
 		immutable T fn01 = Normal.dotProduct(other.Normal);
@@ -209,7 +209,7 @@ struct plane3d(T)
 	/// Get the intersection point with two other planes if there is one.
 	bool getIntersectionWithPlanes()(auto ref const plane3d!T o1,
 		auto ref const plane3d!T o2,
-		out vector3d!T outPoint)
+		out vector3d!T outPoint) const
 	{
 		vector3d!T linePoint, lineVect;
 		if (getIntersectionWithPlane(o1, linePoint, lineVect))

@@ -83,16 +83,16 @@ abstract class IBoneSceneNode : ISceneNode
 	auto ref const aabbox3d!float getBoundingBox()() const;
 
 	/// Returns the relative transformation of the scene node.
-	//core::matrix4 getRelativeTransformation() const;
+	//matrix4 getRelativeTransformation() const;
 
 	/// The animation method.
-	void OnAnimate(uint timeMs);
+	override void OnAnimate(uint timeMs);
 
 	/// The render method.
 	/**
 	* Does nothing as bones are not visible. 
 	*/
-	void render() 
+	override void render() 
 	{ 
 
 	}
