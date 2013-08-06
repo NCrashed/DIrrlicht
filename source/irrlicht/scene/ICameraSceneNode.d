@@ -230,7 +230,7 @@ abstract class ICameraSceneNode : ISceneNode, IEventReceiver
 
 		if (outAttr is null)
 			return;
-		outAttr.addBool	("IsOrthogonal", IsOrthogonal );
+		outAttr.add("IsOrthogonal", IsOrthogonal );
 	}
 
 	/// Reads attributes of the camera node
@@ -241,7 +241,7 @@ abstract class ICameraSceneNode : ISceneNode, IEventReceiver
 			return;
 
 		if ( inAttr.findAttribute("IsOrthogonal") )
-			IsOrthogonal = inAttr.getAttributeAsBool("IsOrthogonal");
+			IsOrthogonal = inAttr.getAttribute!bool("IsOrthogonal");
 	}
 
 	protected void cloneMembers(ICameraSceneNode toCopyFrom)

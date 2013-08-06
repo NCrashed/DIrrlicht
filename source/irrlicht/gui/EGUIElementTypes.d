@@ -8,7 +8,7 @@ module irrlicht.gui.EGUIElementTypes;
 /**
 * An IGUIElement returns this when calling IGUIElement::getType(); 
 */
-enum EGUI_ELEMENT_TYPE
+enum EGUI_ELEMENT_TYPE : uint
 {
 	/// A button (IGUIButton)
 	EGUIET_BUTTON = 0,
@@ -87,39 +87,34 @@ enum EGUI_ELEMENT_TYPE
 
 	/// Not an element, amount of elements in there
 	EGUIET_COUNT,
-
-	/// This enum is never used, it only forces the compiler to compile this enumeration to 32 bit.
-	EGUIET_FORCE_32_BIT = 0x7fffffff
-
 }
 
 /// Names for built-in element types
-immutable string[] GUIElementTypeNames =
-	[
-		"button",
-		"checkBox",
-		"comboBox",
-		"contextMenu",
-		"menu",
-		"editBox",
-		"fileOpenDialog",
-		"colorSelectDialog",
-		"inOutFader",
-		"image",
-		"listBox",
-		"meshViewer",
-		"messageBox",
-		"modalScreen",
-		"scrollBar",
-		"spinBox",
-		"staticText",
-		"tab",
-		"tabControl",
-		"table",
-		"toolBar",
-		"treeview",
-		"window",
-		"element",
-		"root",
-		null
-	];
+immutable(string[]) GUIElementTypeNames =
+[
+	"button",
+	"checkBox",
+	"comboBox",
+	"contextMenu",
+	"menu",
+	"editBox",
+	"fileOpenDialog",
+	"colorSelectDialog",
+	"inOutFader",
+	"image",
+	"listBox",
+	"meshViewer",
+	"messageBox",
+	"modalScreen",
+	"scrollBar",
+	"spinBox",
+	"staticText",
+	"tab",
+	"tabControl",
+	"table",
+	"toolBar",
+	"treeview",
+	"window",
+	"element",
+	"root"
+];

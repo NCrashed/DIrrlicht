@@ -55,10 +55,8 @@ import irrlicht.scene.ITextSceneNode;
 import irrlicht.scene.ITriangleSelector;
 import irrlicht.scene.IVolumeLightSceneNode;
 import irrlicht.scene.quake3.IQ3Shader;
-
-/// TODO: Fix this when gui porting will be done!
-interface IGUIFont {}
-interface IGUIEnvironment {}
+import irrlicht.gui.IGUIFont;
+import irrlicht.gui.IGUIEnvironment;
 
 /// Enumeration for render passes.
 /** 

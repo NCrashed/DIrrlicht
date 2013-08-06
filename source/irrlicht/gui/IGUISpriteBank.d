@@ -1,35 +1,26 @@
 // Copyright (C) 2002-2012 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
-
 module irrlicht.gui.IGUISpriteBank;
 
-import irrlicht.core.irrArray;
-import irrlicht.core.rect;
 import irrlicht.video.SColor;
 import irrlicht.video.ITexture;
+import irrlicht.core.rect;
+import irrlicht.core.vector2d;
 
 /// A single sprite frame.
 struct SGUISpriteFrame
 {
-	u32 textureNumber;
-	u32 rectNumber;
-};
+	uint textureNumber;
+	uint rectNumber;
+}
 
 /// A sprite composed of several frames.
 struct SGUISprite
 {
-	this()
-	{
-		Frames = array!SGUISpriteFrame();
-		
-		frameTime = 0;
-	}
-
-	array!SGUISpriteFrame Frames;
-	u32 frameTime;
+	SGUISpriteFrame[] Frames = [];
+	uint frameTime = 0;
 }
-
 
 /// Sprite bank interface.
 /**
@@ -39,22 +30,22 @@ struct SGUISprite
 interface IGUISpriteBank
 {
 	/// Returns the list of rectangles held by the sprite bank
-	array!(rect!int) getPositions();
+	rect!(int)[] getPositions();
 
 	/// Returns the array of animated sprites within the sprite bank
-	array!SGUISprite getSprites();
+	SGUISprite[] getSprites();
 
 	/// Returns the number of textures held by the sprite bank
-	uint getTextureCount() const;
+	size_t getTextureCount() const;
 
 	/// Gets the texture with the specified index
-	ITexture getTexture(uint index) const;
+	ITexture getTexture(size_t index) const;
 
 	/// Adds a texture to the sprite bank
 	void addTexture(ITexture texture);
 
 	/// Changes one of the textures in the sprite bank
-	void setTexture(uint index, ITexture texture);
+	void setTexture(size_t index, ITexture texture);
 
 	/// Add the texture and use it for a single non-animated sprite.
 	/// The texture and the corresponding rectangle and sprite will all be added to the end of each array.
@@ -65,16 +56,16 @@ interface IGUISpriteBank
 	void clear();
 
 	/// Draws a sprite in 2d with position and color
-	void draw2DSprite(uint index, const ref position2di pos,
-			const ref rect!int clip = rect!int(),
-			const ref SColor color= SColor(255,255,255,255),
+	void draw2DSprite()(size_t index, auto ref const vector2di pos,
+			const rect!(int)* clip = null,
+			const SColor color= SColor(255,255,255,255),
 			uint starttime = 0, uint currenttime = 0,
 			bool loop = true, bool center = false);
 
 	/// Draws a sprite batch in 2d using an array of positions and a color
-	void draw2DSpriteBatch(const ref array!int indices, const ref array!position2di pos,
-			const ref rect!int clip = rect!int(),
-			const ref SColor color= SColor(255,255,255,255),
+	void draw2DSpriteBatch(const size_t[] indices, const vector2di[] pos,
+			const rect!(int)* clip = null,
+			const SColor color = SColor(255,255,255,255),
 			uint starttime = 0, uint currenttime = 0,
 			bool loop = true, bool center = false);
 }

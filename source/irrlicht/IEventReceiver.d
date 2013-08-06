@@ -3,12 +3,10 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.IEventReceiver;
 
+import irrlicht.gui.IGUIElement;
+import irrlicht.gui.IGUITreeView;
 import irrlicht.ILogger;
 import irrlicht.Keycodes;
-//import irrlicht.gui.IGUIElement;
-/// TODO: change this!
-interface IGUIElement {};
-interface IGUITreeView {};
 
 /// Enumeration for all event types there are.
 enum EEVENT_TYPE : uint

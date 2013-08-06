@@ -6,6 +6,14 @@
 	"license": "zlib",
 
 	"targetType": "library",
+	"versions": 
+	[
+		"IRR_COMPILE_WITH_SOFTWARE",
+		"IRR_COMPILE_WITH_BURNINGSVIDEO",
+		"IRR_COMPILE_WITH_DIRECT3D_8",
+		"IRR_COMPILE_WITH_DIRECT3D_9",
+		"IRR_COMPILE_WITH_OPENGL"
+	],
 
 	"configurations": [
 		{

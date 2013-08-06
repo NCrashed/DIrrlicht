@@ -20,7 +20,7 @@ interface IVideoModeList
 	/** 
 	* Returns: Returns amount of video modes. 
 	*/
-	int getVideoModeCount();
+	size_t getVideoModeCount();
 	
 	/// Get the screen size of a video mode in pixels.
 	/** 
@@ -28,7 +28,7 @@ interface IVideoModeList
 	*	modeNumber= zero based index of the video mode.
 	* Returns: Size of screen in pixels of the specified video mode. 
 	*/
-	dimension2d!uint getVideoModeResolution(int modeNumber);
+	dimension2d!uint getVideoModeResolution(size_t modeNumber);
 	
 	/// Get a supported screen size with certain constraints.
 	/**

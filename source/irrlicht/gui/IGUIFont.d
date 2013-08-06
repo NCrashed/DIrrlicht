@@ -1,11 +1,11 @@
 // Copyright (C) 2002-2012 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
-
 module irrlicht.gui.IGUIFont;
 
-import irrlicht.core.rect;
 import irrlicht.video.SColor;
+import irrlicht.core.rect;
+import irrlicht.core.dimension2d;
 
 /// An enum for the different types of GUI font.
 enum EGUI_FONT_TYPE
@@ -45,9 +45,9 @@ interface IGUIFont
 	* 	clip=  Optional pointer to a rectangle against which the text will be clipped.
 	* If the pointer is null, no clipping will be done. 
 	*/
-	void draw(const string text, const ref rect!int position,
+	void draw()(const wstring text, auto ref const rect!int position,
 		SColor color, bool hcenter = false, bool vcenter = false,
-		const ref rect!int clip = rect!int());
+		const rect!int clip = rect!int(0,0,0,0));
 
 	/// Calculates the width and height of a given string of text.
 	/**
@@ -67,7 +67,7 @@ interface IGUIFont
 	int getCharacterFromPos(const string text, int pixel_x) const;
 
 	/// Returns the type of this font
-	abstract EGUI_FONT_TYPE getType() const { return EGFT_CUSTOM; }
+	abstract EGUI_FONT_TYPE getType() const;
 
 	/// Sets global kerning width for the font.
 	void setKerningWidth (int kerning);
@@ -88,7 +88,7 @@ interface IGUIFont
 	* which supports kerning pairs a string such as 'Wo' may have the 'o'
 	* tucked neatly under the 'W'.
 	*/
-	int getKerningWidth(const string thisLetter = "", const string previousLetter = "") const;
+	int getKerningWidth(const wstring thisLetter = "", const wstring previousLetter = "") const;
 
 	/// Returns the distance between letters
 	int getKerningHeight() const;
@@ -100,5 +100,5 @@ interface IGUIFont
 	* Params:
 	* 	s=  String of symbols which are not send down to the videodriver
 	*/
-	void setInvisibleCharacters( const string s );
+	void setInvisibleCharacters( const wstring s );
 }

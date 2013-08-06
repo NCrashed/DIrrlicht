@@ -1,16 +1,16 @@
 // Copyright (C) 2002-2012 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
-
 module irrlicht.gui.IGUIButton;
 
 import irrlicht.gui.IGUIElement;
-import irrlicht.video.ITexture;
+import irrlicht.gui.EGUIElementTypes;
 import irrlicht.gui.IGUIFont;
 import irrlicht.gui.IGUISpriteBank;
 import irrlicht.gui.EGUIElementTypes;
 import irrlicht.gui.IGUIFont;
-
+import irrlicht.video.ITexture;
+import irrlicht.video.SColor;
 
 enum EGUI_BUTTON_STATE
 {
@@ -31,7 +31,7 @@ enum EGUI_BUTTON_STATE
 }
 
 /// Names for gui button state icons
-immutable string[] GUIButtonStateNames =
+immutable(string[]) GUIButtonStateNames =
 [
 	"buttonUp",
 	"buttonDown",
@@ -43,13 +43,13 @@ immutable string[] GUIButtonStateNames =
 
 /// GUI Button interface.
 /**
-* \par This element can create the following events of type EGUI_EVENT_TYPE:
+* This element can create the following events of type EGUI_EVENT_TYPE:
 * \li EGET_BUTTON_CLICKED
 */
-interface IGUIButton: IGUIElement
+abstract class IGUIButton: IGUIElement
 {
 	/// constructor
-	abstract this(IGUIEnvironment environment, IGUIElement parent, int id, rect!int rectangle)
+	this()(IGUIEnvironment environment, IGUIElement parent, size_t id, auto ref const rect!int rectangle)
 	{
 		super(EGUI_ELEMENT_TYPE.EGUIET_BUTTON, environment, parent. id, rectangle);
 	}
@@ -66,7 +66,7 @@ interface IGUIButton: IGUIElement
 	/**
 	* Returns: The override font (may be 0) 
 	*/
-	IGUIFont getOverrideFont(void) const;
+	IGUIFont getOverrideFont() const;
 
 	/// Get the font which is used right now for drawing
 	/**
@@ -80,7 +80,7 @@ interface IGUIButton: IGUIElement
 	* Params:
 	* 	image=  Image to be displayed 
 	*/
-	void setImage(ITexture image = null);
+	void setImage()(ITexture image = null);
 
 	/// Sets a background image for the button when it is in normal state.
 	/**
@@ -88,7 +88,7 @@ interface IGUIButton: IGUIElement
 	* 	image=  Texture containing the image to be displayed
 	* 	pos=  Position in the texture, where the image is located 
 	*/
-	void setImage(ITexture image, const ref rect!int pos);
+	void setImage()(ITexture image, auto ref const rect!int pos);
 
 	/// Sets a background image for the button when it is in pressed state.
 	/**
@@ -97,7 +97,7 @@ interface IGUIButton: IGUIElement
 	* Params:
 	* 	image=  Image to be displayed 
 	*/
-	void setPressedImage(ITexture image = null);
+	void setPressedImage()(ITexture image = null);
 
 	/// Sets an image which should be displayed on the button when it is in pressed state.
 	/**
@@ -105,7 +105,7 @@ interface IGUIButton: IGUIElement
 	* 	image=  Texture containing the image to be displayed
 	* 	pos=  Position in the texture, where the image is located 
 	*/
-	void setPressedImage(ITexture image, const rect!int pos);
+	void setPressedImage()(ITexture image, auto ref const rect!int pos);
 
 	/// Sets the sprite bank used by the button
 	void setSpriteBank(IGUISpriteBank bank = null);

@@ -5,7 +5,7 @@ module irrlicht.gui.IGUIImageList;
 
 import irrlicht.gui.IGUIElement;
 import irrlicht.core.rect;
-import irrlicht.irrTypes;
+import irrlicht.core.dimension2d;
 
 /// Font interface.
 interface IGUIImageList
@@ -19,14 +19,14 @@ interface IGUIImageList
 	* 
 	* If the pointer is null, no clipping will be done.
 	*/
-	void draw(int index, const  ref position2d!int destPos,
-		const ref rect!int clip = rect!int(0));
+	void draw()(int index, auto ref const position2d!int destPos,
+		const ref rect!int clip = rect!int(0,0,0,0));
 
 	/// Returns the count of Images in the list.
 	/**
 	* Returns: Returns the count of Images in the list.
 	*/
-	int getImageCount() const;
+	size_t getImageCount() const;
 
 	/// Returns the size of the images in the list.
 	/**

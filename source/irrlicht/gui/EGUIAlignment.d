@@ -1,8 +1,7 @@
 // Copyright (C) 2002-2012 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
-
-module irrlicht.gui.EGUIAligment;
+module irrlicht.gui.EGUIAlignment;
 
 enum EGUI_ALIGNMENT
 {
@@ -17,12 +16,11 @@ enum EGUI_ALIGNMENT
 }
 
 /// Names for alignments
-immutable string[] GUIAlignmentNames =
-	[
-		"upperLeft",
-		"lowerRight",
-		"center",
-		"scale",
-		null
-	];
+immutable(string[]) GUIAlignmentNames =
+[
+	"upperLeft",
+	"lowerRight",
+	"center",
+	"scale"
+];
 

@@ -742,17 +742,17 @@ abstract class ISceneNode : IAttributeExchangingObject
 		if (outAttr is null)
 			return;
 
-		outAttr.addString("Name", Name);
-		outAttr.addInt	("Id", ID );
+		outAttr.add("Name", Name);
+		outAttr.add("Id", ID );
 
-		outAttr.addVector3d("Position", getPosition() );
-		outAttr.addVector3d("Rotation", getRotation() );
-		outAttr.addVector3d("Scale", getScale() );
+		outAttr.add("Position", getPosition() );
+		outAttr.add("Rotation", getRotation() );
+		outAttr.add("Scale", getScale() );
 
-		outAttr.addBool	("Visible", IsVisible );
-		outAttr.addInt	("AutomaticCulling", AutomaticCullingState);
-		outAttr.addInt	("DebugDataVisible", DebugDataVisible );
-		outAttr.addBool	("IsDebugObject", IsDebugObject );
+		outAttr.add("Visible", IsVisible );
+		outAttr.add("AutomaticCulling", AutomaticCullingState);
+		outAttr.add("DebugDataVisible", DebugDataVisible );
+		outAttr.add("IsDebugObject", IsDebugObject );
 	}
 
 
@@ -771,23 +771,23 @@ abstract class ISceneNode : IAttributeExchangingObject
 		if (inAttr is null)
 			return;
 
-		Name = inAttr.getAttributeAsString("Name");
-		ID = inAttr.getAttributeAsInt("Id");
+		Name = inAttr.getAttribute!string("Name");
+		ID = inAttr.getAttribute!int("Id");
 
-		setPosition(inAttr.getAttributeAsVector3d("Position"));
-		setRotation(inAttr.getAttributeAsVector3d("Rotation"));
-		setScale(inAttr.getAttributeAsVector3d("Scale"));
+		setPosition(inAttr.getAttribute!vector3df("Position"));
+		setRotation(inAttr.getAttribute!vector3df("Rotation"));
+		setScale(inAttr.getAttribute!vector3df("Scale"));
 
-		IsVisible = inAttr.getAttributeAsBool("Visible");
+		IsVisible = inAttr.getAttribute!bool("Visible");
 		int tmpState = inAttr.getAttributeAsEnumeration("AutomaticCulling",
 				AutomaticCullingNames);
 		if (tmpState != -1)
 			AutomaticCullingState = cast(uint)tmpState;
 		else
-			AutomaticCullingState = inAttr.getAttributeAsInt("AutomaticCulling");
+			AutomaticCullingState = inAttr.getAttribute!int("AutomaticCulling");
 
-		DebugDataVisible = inAttr.getAttributeAsInt("DebugDataVisible");
-		IsDebugObject = inAttr.getAttributeAsBool("IsDebugObject");
+		DebugDataVisible = inAttr.getAttribute!int("DebugDataVisible");
+		IsDebugObject = inAttr.getAttribute!bool("IsDebugObject");
 
 		updateAbsolutePosition();
 	}

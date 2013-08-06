@@ -1,13 +1,19 @@
-import irrlicht.core;
-import irrlicht.scene;
-import irrlicht.video;
-import irrlicht.io;
-import irrlicht.gui;
+module example01;
+
+import irrlicht.IrrlichtDevice;
+import irrlicht.video.IVideoDriver;
+import irrlicht.video.EMaterialFlags;
+import irrlicht.video.EDriverTypes;
+import irrlicht.scene.ISceneManager;
+import irrlicht.scene.IAnimatedMesh;
+import irrlicht.scene.IAnimatedMeshSceneNode;
+import irrlicht.gui.IGUIEnvironment;
+import irrlicht.core.dimension2d;
 
 int main()
 {
 	IrrlichtDevice device = 
-		createDevice(Renderer.EDT_SOFTWARE, dimension2d!uint(640, 480),
+		createDevice(E_DRIVER_TYPE.EDT_SOFTWARE, dimension2d!uint(640, 480),
 			false, false, false, 0);
 
 	if(device is null)
@@ -30,8 +36,8 @@ int main()
 	}
 	IAnimatedMeshSceneNode node = smgr.addAnimatedMeshSceneNode(mesh);
 
-	if(node)
+	if(node !is null)
 	{
-		node.setMaterialFlag(MaterialFlag.EMF_LIGHTING, false);
+		node.setMaterialFlag(E_MATERIAL_FLAG.EMF_LIGHTING, false);
 	}
 }

@@ -178,13 +178,13 @@ struct rect(T)
 	}
 
 	/// Get width of rectangle
-	T getWidth()
+	T getWidth() const
 	{
 		return LowerRightCorner.X - UpperLeftCorner.X;
 	}
 
 	/// Get height of rectangle
-	T getHeight()
+	T getHeight() const
 	{
 		return LowerRightCorner.Y - UpperLeftCorner.Y;
 	}
@@ -208,14 +208,14 @@ struct rect(T)
 	* It would be invalid if the UpperLeftCorner is lower or more
 	* right than the LowerRightCorner.
 	*/
-	bool isValid()
+	bool isValid() const
 	{
 		return ((LowerRightCorner.X >= UpperLeftCorner.X) &&
 			(LowerRightCorner.Y >= UpperLeftCorner.Y));
 	}
 
 	/// Get the center of the rectangle
-	vector2d!T getCenter()
+	vector2d!T getCenter() const
 	{
 		return vector2d!T(
 			(UpperLeftCorner.X + LowerRightCorner.X) / 2,
@@ -223,7 +223,7 @@ struct rect(T)
 	}
 
 	/// Get the dimensions of the rectangle
-	vector2d!T getSize()
+	vector2d!T getSize() const
 	{
 		return vector2d!T(getWidth(), getHeight());
 	}

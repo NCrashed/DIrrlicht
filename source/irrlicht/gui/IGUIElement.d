@@ -1,37 +1,34 @@
 // Copyright (C) 2002-2012 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
-
 module irrlicht.gui.IGUIElement;
 
-import irrlicht.core.dimension2d;
-import irrlicht.core.rect;
-
+import irrlicht.IEventReceiver;
 import irrlicht.io.IAttributeExchangingObject;
 import irrlicht.io.IAttributes;
 import irrlicht.io.IAttributeExchangingObject;
-
-import irrlicht.gui.EGUIAligment;
+import irrlicht.gui.EGUIAlignment;
 import irrlicht.gui.EGUIElementTypes;
 import irrlicht.gui.IGUIEnvironment;
-
-import irrlicht.IEventReceiver;
-
-import std.math;
+import irrlicht.core.dimension2d;
+import irrlicht.core.vector2d;
+import irrlicht.core.rect;
 import std.container;
-
+import std.algorithm;
+import std.range;
+import std.math;
 
 /// Base class of all GUI elements.
-class IGUIElement : IAttributeExchangingObject, IEventReceiver
+abstract class IGUIElement : IAttributeExchangingObject, IEventReceiver
 {
 	/// Constructor
-	this(EGUI_ELEMENT_TYPE type, IGUIEnvironment environment, IGUIElement parent,
-		int id, const ref rect!int rectangle)
+	this()(EGUI_ELEMENT_TYPE type, IGUIEnvironment environment, IGUIElement parent,
+		size_t id, auto ref const rect!int rectangle)
 	{
 		// Init
 		Parent = null;
 		
-		RealativeRect = rectangle;
+		RelativeRect = rectangle;
 		
 		AbsoluteRect = rectangle;
 		
@@ -70,13 +67,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 		Environment = environment;
 		
 		Type = type;
-		
-		// body
-		version( _DEBUG )
-		{
-			setDebugName("IGUIElement");
-		}
-
+	
 		// if we were given a parent to attach to
 		if (parent !is null)
 		{
@@ -98,14 +89,19 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 
 
 	/// Returns parent of this element.
-	final IGUIElement getParent() const
+	const(IGUIElement) getParent() const
 	{
 		return Parent;
 	}
 
+	/// Returns parent of this element.
+	IGUIElement getParent()
+	{
+		return Parent;
+	}
 
 	/// Returns the relative rectangle of this element.
-	final rect!int getRelativePosition() const
+	rect!int getRelativePosition() const
 	{
 		return RelativeRect;
 	}
@@ -116,24 +112,24 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* Params:
 	* 	r=  The absolute position to set 
 	*/
-	final void setRelativePosition(const ref rect!int r)
+	void setRelativePosition()(auto ref const rect!int r)
 	{
 		if (Parent !is null)
 		{
-			const rect!int r2 = Parent.getAbsolutePosition();
+			immutable rect!int r2 = Parent.getAbsolutePosition();
 
-			auto d = dimension2df(cast(float) r2.getSizer().Width, cast(float) r2.getSize().Height);
+			auto d = dimension2df(cast(float) r2.getSize().X, cast(float) r2.getSize().Y);
 
-			if (AlignLeft == EGUI_ALIGMENT.EGUIA_SCALE)
+			if (AlignLeft == EGUI_ALIGNMENT.EGUIA_SCALE)
 				ScaleRect.UpperLeftCorner.X = cast(float) r.UpperLeftCorner.X / d.Width;
 			
-			if (AlignRight == EGUI_ALIGMENT.EGUIA_SCALE)
+			if (AlignRight == EGUI_ALIGNMENT.EGUIA_SCALE)
 				ScaleRect.LowerRightCorner.X = cast (float) r.LowerRightCorner.X / d.Width;
 			
-			if (AlignTop == EGUI_ALIGMENT.EGUIA_SCALE)
+			if (AlignTop == EGUI_ALIGNMENT.EGUIA_SCALE)
 				ScaleRect.UpperLeftCorner.Y = cast (float) r.UpperLeftCorner.Y / d.Height;
 			
-			if (AlignBottom == EGUI_ALIGMENT.EGUIA_SCALE)
+			if (AlignBottom == EGUI_ALIGNMENT.EGUIA_SCALE)
 				ScaleRect.LowerRightCorner.Y = cast (float) r.LowerRightCorner.Y / d.Height;
 		}
 
@@ -146,11 +142,11 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* Params:
 	* 	position=  The new relative position to set. Width and height will not be changed. 
 	*/
-	final void setRelativePosition(const ref position2di position)
+	void setRelativePosition()(auto ref const vector2di position)
 	{
-		auto mySize = RelativeRect.getSize();
+		immutable mySize = RelativeRect.getSize();
 		
-		auto rectangle = rect!int(position.X, position.Y,
+		immutable rectangle = rect!int(position.X, position.Y,
 						position.X + mySize.Width, position.Y + mySize.Height);
 		
 		setRelativePosition(rectangle);
@@ -165,18 +161,18 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* Meaningful values are in the range [0...1], unless you intend this element to spill
 	* outside its parent. 
 	*/
-	final void setRelativePositionProportional(const ref rect!int r)
+	void setRelativePositionProportional()(auto ref const rect!int r)
 	{
 		if (Parent is null)
 			return;
 
-		auto d = Parent.getAbsolutePosition().getSize();
+		immutable d = Parent.getAbsolutePosition().getSize();
 
-		auto DesiredRect = rect!int(
-					floor(cast(float)d.Width * r.UpperLeftCorner.X),
-					floor(cast(float)d.Height * r.UpperLeftCorner.Y),
-					floor(cast(float)d.Width * r.LowerRightCorner.X),
-					floor(cast(float)d.Height * r.LowerRightCorner.Y));
+		DesiredRect = rect!int(
+					cast(int)floor(cast(float)d.Width * r.UpperLeftCorner.X),
+					cast(int)floor(cast(float)d.Height * r.UpperLeftCorner.Y),
+					cast(int)floor(cast(float)d.Width * r.LowerRightCorner.X),
+					cast(int)floor(cast(float)d.Height * r.LowerRightCorner.Y));
 
 		ScaleRect = r;
 
@@ -185,14 +181,14 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 
 
 	/// Gets the absolute rectangle of this element
-	final rect!int getAbsolutePosition() const
+	rect!int getAbsolutePosition() const
 	{
 		return AbsoluteRect;
 	}
 
 
 	/// Returns the visible area of the element.
-	final rect!int getAbsoluteClippingRect() const
+	rect!int getAbsoluteClippingRect() const
 	{
 		return AbsoluteClippingRect;
 	}
@@ -203,7 +199,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* Params:
 	* 	noClip=  If true, the element will not be clipped by its parent's clipping rectangle. 
 	*/
-	final void setNotClipped(bool noClip)
+	void setNotClipped(bool noClip)
 	{
 		NoClip = noClip;
 		updateAbsolutePosition();
@@ -214,7 +210,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	/**
 	* Returns: true if the element is not clipped by its parent's clipping rectangle. 
 	*/
-	final bool isNotClipped() const
+	bool isNotClipped() const
 	{
 		return NoClip;
 	}
@@ -224,7 +220,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	/**
 	* If set to 0,0, there is no maximum size 
 	*/
-	final void setMaxSize(dimension2du size)
+	void setMaxSize()(auto ref const dimension2du size)
 	{
 		MaxSize = size;
 		updateAbsolutePosition();
@@ -232,7 +228,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 
 
 	/// Sets the minimum size allowed for this element
-	final void setMinSize(dimension2du size)
+	void setMinSize()(auto ref const dimension2du size)
 	{
 		MinSize = size;
 		if (MinSize.Width < 1)
@@ -244,7 +240,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 
 
 	/// The alignment defines how the borders of this element will be positioned when the parent element is resized.
-	final void setAlignment(EGUI_ALIGNMENT left, EGUI_ALIGNMENT right, EGUI_ALIGNMENT top, EGUI_ALIGNMENT bottom)
+	void setAlignment(EGUI_ALIGNMENT left, EGUI_ALIGNMENT right, EGUI_ALIGNMENT top, EGUI_ALIGNMENT bottom)
 	{
 		AlignLeft = left;
 		AlignRight = right;
@@ -255,15 +251,15 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 		{
 			auto r = Parent.getAbsolutePosition();
 
-			auto d = dimension2df(cast(float)r.getSize().Width, cast(float)r.getSize().Height);
+			auto d = dimension2df(cast(float)r.getSize().X, cast(float)r.getSize().Y);
 
-			if (AlignLeft   == EGUI_ALIGMENT.EGUIA_SCALE)
+			if (AlignLeft   == EGUI_ALIGNMENT.EGUIA_SCALE)
 				ScaleRect.UpperLeftCorner.X = cast(float)DesiredRect.UpperLeftCorner.X / d.Width;
-			if (AlignRight  == EGUI_ALIGMENT.EGUIA_SCALE)
+			if (AlignRight  == EGUI_ALIGNMENT.EGUIA_SCALE)
 				ScaleRect.LowerRightCorner.X = cast(float)DesiredRect.LowerRightCorner.X / d.Width;
-			if (AlignTop    == EGUI_ALIGMENT.EGUIA_SCALE)
+			if (AlignTop    == EGUI_ALIGNMENT.EGUIA_SCALE)
 				ScaleRect.UpperLeftCorner.Y = cast(float)DesiredRect.UpperLeftCorner.Y / d.Height;
-			if (AlignBottom == EGUI_ALIGMENT.EGUIA_SCALE)
+			if (AlignBottom == EGUI_ALIGNMENT.EGUIA_SCALE)
 				ScaleRect.LowerRightCorner.Y = cast(float)DesiredRect.LowerRightCorner.Y / d.Height;
 		}
 	}
@@ -286,7 +282,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	/**
 	* This will check this GUI element and all of its descendants, so it
 	* may return this GUI element.  To check all GUI elements, call this
-	* function on device->getGUIEnvironment()->getRootGUIElement(). Note
+	* function on device.getGUIEnvironment().getRootGUIElement(). Note
 	* that the root element is the size of the screen, so doing so (with
 	* an on-screen point) will always return the root element if no other
 	* element is above it at that point.
@@ -295,7 +291,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* Returns: The topmost GUI element at that point, or 0 if there are
 	* no candidate elements at this point.
 	*/
-	final IGUIElement getElementFromPoint(const ref position2d!int point)
+	IGUIElement getElementFromPoint()(auto ref const vector2d!int point)
 	{
 		IGUIElement target = null;
 
@@ -324,7 +320,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	/**
 	* Elements with a shape other than a rectangle should override this method 
 	*/
-	bool isPointInside(const ref position2d!int point) const
+	bool isPointInside()(auto ref const vector2d!int point) const
 	{
 		return AbsoluteClippingRect.isPointInside(point);
 	}
@@ -334,7 +330,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	void addChild(IGUIElement child)
 	{
 		addChildToEnd(child);
-		if (child)
+		if (child !is null)
 		{
 			child.updateAbsolutePosition();
 		}
@@ -343,17 +339,8 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	/// Removes a child.
 	void removeChild(IGUIElement child)
 	{		
-		foreach(each; Children)
-		{
-			if(each == child)
-			{
-				each.Parent = null;
-				
-				Children.erase(each);
-				
-				return;
-			}
-		}
+		auto findResult = find(Children[], child);
+		Children.linearRemove(findResult.take(1));
 	}
 
 
@@ -392,7 +379,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 
 
 	/// Moves this element.
-	void move(position2d!int absoluteMovement)
+	void move(vector2d!int absoluteMovement)
 	{
 		setRelativePosition(DesiredRect + absoluteMovement);
 	}
@@ -422,7 +409,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	/// Sets whether this control was created as part of its parent.
 	/**
 	* For example, it is true when a scrollbar is part of a listbox.
-	* SubElements are not saved to disk when calling guiEnvironment->saveGUI() 
+	* SubElements are not saved to disk when calling guiEnvironment.saveGUI() 
 	*/
 	void setSubElement(bool subElement)
 	{
@@ -435,14 +422,14 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* If this element is a tab group (see isTabGroup/setTabGroup) then
 	* ctrl+tab will be used instead. 
 	*/
-	final void setTabStop(bool enable)
+	void setTabStop(bool enable)
 	{
 		IsTabStop = enable;
 	}
 
 
 	/// Returns true if this element can be focused by navigating with the tab key
-	final bool isTabStop() const
+	bool isTabStop() const
 	{
 		return IsTabStop;
 	}
@@ -454,7 +441,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* 	setTabGroup, isTabGroup and getTabGroup for information on tab groups.
 	* Elements with a lower number are focused first 
 	*/
-	final void setTabOrder(int index)
+	void setTabOrder(int index)
 	{
 		// negative = autonumber
 		if (index < 0)
@@ -470,7 +457,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 			{
 				// find the highest element number
 				el.getNextElement(-1, true, IsTabGroup, first, closest, true);
-				if (first)
+				if (first !is null)
 				{
 					TabOrder = first.getTabOrder() + 1;
 				}
@@ -483,7 +470,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 
 
 	/// Returns the number in the tab order sequence
-	final int getTabOrder() const
+	int getTabOrder() const
 	{
 		return TabOrder;
 	}
@@ -494,21 +481,21 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* For example, windows are tab groups.
 	* Groups can be navigated using ctrl+tab, providing isTabStop is true. 
 	*/
-	final void setTabGroup(bool isGroup)
+	void setTabGroup(bool isGroup)
 	{
 		IsTabGroup = isGroup;
 	}
 
 
 	/// Returns true if this element is a tab group.
-	final bool isTabGroup() const
+	bool isTabGroup() const
 	{
 		return IsTabGroup;
 	}
 
 
 	/// Returns the container element which holds all elements in this element's tab group.
-	final IGUIElement getTabGroup()
+	IGUIElement getTabGroup()
 	{
 		IGUIElement ret = this;
 
@@ -542,49 +529,49 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 
 
 	/// Sets the new caption of this element.
-	void setText(string text)
+	void setText(wstring text)
 	{
 		Text = text;
 	}
 
 
 	/// Returns caption of this element.
-	const string getText() const
+	const wstring getText() const
 	{
 		return Text;
 	}
 
 
 	/// Sets the new caption of this element.
-	void setToolTipText(const string text)
+	void setToolTipText(const wstring text)
 	{
 		ToolTipText = text;
 	}
 
 
 	/// Returns caption of this element.
-	const string getToolTipText() const
+	const wstring getToolTipText() const
 	{
 		return ToolTipText;
 	}
 
 
 	/// Returns id. Can be used to identify the element.
-	int getID() const
+	size_t getID() const
 	{
 		return ID;
 	}
 
 
 	/// Sets the id of this element
-	void setID(int id)
+	void setID(size_t id)
 	{
 		ID = id;
 	}
 
 
 	/// Called if an event happened.
-	bool OnEvent(const ref SEvent event)
+	bool OnEvent()(auto ref const SEvent event)
 	{
 		return (Parent !is null) ? Parent.OnEvent(event) : false;
 	}
@@ -596,22 +583,17 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	*/
 	bool bringToFront(IGUIElement element)
 	{
-			
-		foreach(child; Children)
+		auto findResult = find(Children[], element);
+		if(!findResult.empty)
 		{
-			if (element == child)
-			{
-				Children.erase(child);
-				
-				Children.push_back(element);
-				
-				return true;
-			}
+			Children.linearRemove(findResult.take(1));
+			Children.insertBack(element);
+			return true;
+		} else
+		{
+			return false;
 		}
-
-		return false;
 	}
-
 
 	/// Moves a child to the back, so it's siblings are drawn on top of it
 	/**
@@ -619,27 +601,25 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	*/
 	bool sendToBack(IGUIElement child)
 	{
-		
 		if (child == Children.front()) //already there
 		{
 			return true;
 		}
 		
-		foreach(each; Children)
+		auto findResult = find(Children[], child);
+		if(!findResult.empty)
 		{
-			if (each == child)
-			{
-				Children.erase(each);
-				Children.push_front(each);
-				return true;
-			}
+			Children.linearRemove(findResult.take(1));
+			Children.insertFront(child);
+			return true;
+		} else
+		{
+			return false;
 		}
-
-		return false;
 	}
 
 	/// Returns list with children of this element
-	const ref DList!IGUIElement getChildren() const
+	const(DList!IGUIElement) getChildren() const
 	{
 		return Children;
 	}
@@ -653,13 +633,13 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* element may contain the element with the searched id and they
 	* should be searched too.
 	* Returns: Returns the first element with the given id. If no element
-	* with this id was found, 0 is returned. 
+	* with this id was found, null is returned. 
 	*/
-	IGUIElement getElementFromId(int id, bool searchchildren = false) const
+	IGUIElement getElementFromId(size_t id, bool searchchildren = false) const
 	{
 		IGUIElement e = null;
 		
-		foreach(child; Children)
+		foreach(child; cast(DList!IGUIElement)Children)
 		{
 			if (child.getID() == id)
 				return child;
@@ -706,7 +686,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* 	includeInvisible=  includes invisible elements in the search (default=false)
 	* Returns: true if successfully found an element, false to continue searching/fail 
 	*/
-	final bool getNextElement(int startOrder, bool reverse, bool group,
+	bool getNextElement(int startOrder, bool reverse, bool group,
 		out IGUIElement first, out IGUIElement closest, bool includeInvisible=false) const
 	{
 		// we'll stop searching if we find this number
@@ -717,7 +697,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 		int closestOrder;
 		int currentOrder;
 
-		foreach(child; Children)
+		foreach(child; cast(DList!IGUIElement)Children)
 		{
 			// ignore invisible elements and their children
 			if ( ( child.isVisible() || includeInvisible ) &&
@@ -784,7 +764,7 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* If you wrote your own GUIElements, you need to set the type for your element as first parameter
 	* in the constructor of IGUIElement. For own (=unknown) elements, simply use EGUIET_ELEMENT as type 
 	*/
-	final EGUI_ELEMENT_TYPE getType() const
+	EGUI_ELEMENT_TYPE getType() const
 	{
 		return Type;
 	}
@@ -835,18 +815,6 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 		Name = name;
 	}
 
-
-	/// Sets the name of the element.
-	/**
-	* Params:
-	* 	name=  New name of the gui element. 
-	*/
-	void setName(const string name)
-	{
-		Name = name;
-	}
-
-
 	/// Writes attributes of the scene node.
 	/**
 	* Implement this to expose the attributes of your scene node for
@@ -854,22 +822,22 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	*/
 	void serializeAttributes(out IAttributes outAttr, SAttributeReadWriteOptions options = SAttributeReadWriteOptions()) const
 	{
-		outAttr.addString("Name", Name);		
-		outAttr.addInt("Id", ID );
-		outAttr.addString("Caption", getText());
-		outAttr.addRect("Rect", DesiredRect);
-		outAttr.addPosition2d("MinSize", position2di(MinSize.Width, MinSize.Height));
-		outAttr.addPosition2d("MaxSize", position2di(MaxSize.Width, MaxSize.Height));
+		outAttr.add("Name", Name);		
+		outAttr.add("Id", cast(ulong)ID ); // aware cross machine incompabilites
+		outAttr.add("Caption", getText());
+		outAttr.add("Rect", DesiredRect);
+		outAttr.add("MinSize", vector2di(MinSize.Width, MinSize.Height));
+		outAttr.add("MaxSize", vector2di(MaxSize.Width, MaxSize.Height));
 		outAttr.addEnum("LeftAlign", AlignLeft, GUIAlignmentNames);
 		outAttr.addEnum("RightAlign", AlignRight, GUIAlignmentNames);
 		outAttr.addEnum("TopAlign", AlignTop, GUIAlignmentNames);
 		outAttr.addEnum("BottomAlign", AlignBottom, GUIAlignmentNames);
-		outAttr.addBool("Visible", IsVisible);
-		outAttr.addBool("Enabled", IsEnabled);
-		outAttr.addBool("TabStop", IsTabStop);
-		outAttr.addBool("TabGroup", IsTabGroup);
-		outAttr.addInt("TabOrder", TabOrder);
-		outAttr.addBool("NoClip", NoClip);
+		outAttr.add("Visible", IsVisible);
+		outAttr.add("Enabled", IsEnabled);
+		outAttr.add("TabStop", IsTabStop);
+		outAttr.add("TabGroup", IsTabGroup);
+		outAttr.add("TabOrder", TabOrder);
+		outAttr.add("NoClip", NoClip);
 	}
 
 
@@ -880,19 +848,19 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	*/
 	void deserializeAttributes(IAttributes inAttr, SAttributeReadWriteOptions options = SAttributeReadWriteOptions())
 	{
-		setName(inAttr.getAttributeAsString("Name"));
-		setID(inAttr.getAttributeAsInt("Id"));
-		setText(inAttr.getAttributeAsStringW("Caption").c_str());
-		setVisible(inAttr.getAttributeAsBool("Visible"));
-		setEnabled(inAttr.getAttributeAsBool("Enabled"));
-		IsTabStop = inAttr.getAttributeAsBool("TabStop");
-		IsTabGroup = inAttr.getAttributeAsBool("TabGroup");
-		TabOrder = inAttr.getAttributeAsInt("TabOrder");
+		setName(inAttr.getAttribute!string("Name"));
+		setID(cast(size_t)inAttr.getAttribute!ulong("Id"));
+		setText(inAttr.getAttribute!wstring("Caption"));
+		setVisible(inAttr.getAttribute!bool("Visible"));
+		setEnabled(inAttr.getAttribute!bool("Enabled"));
+		IsTabStop = inAttr.getAttribute!bool("TabStop");
+		IsTabGroup = inAttr.getAttribute!bool("TabGroup");
+		TabOrder = inAttr.getAttribute!int("TabOrder");
 
-		position2di p = inAttr.getAttributeAsPosition2d("MaxSize");
+		vector2di p = inAttr.getAttribute!vector2di("MaxSize");
 		setMaxSize(dimension2du(p.X,p.Y));
 
-		p = inAttr.getAttributeAsPosition2d("MinSize");
+		p = inAttr.getAttribute!vector2di("MinSize");
 		setMinSize(dimension2du(p.X,p.Y));
 
 		setAlignment(cast(EGUI_ALIGNMENT) inAttr.getAttributeAsEnumeration("LeftAlign", GUIAlignmentNames),
@@ -900,41 +868,37 @@ class IGUIElement : IAttributeExchangingObject, IEventReceiver
 			cast (EGUI_ALIGNMENT) inAttr.getAttributeAsEnumeration("TopAlign", GUIAlignmentNames),
 			cast (EGUI_ALIGNMENT) inAttr.getAttributeAsEnumeration("BottomAlign", GUIAlignmentNames));
 
-		setRelativePosition(inAttr.getAttributeAsRect("Rect"));
+		setRelativePosition(inAttr.getAttribute!(rect!int)("Rect"));
 
-		setNotClipped(inAttr.getAttributeAsBool("NoClip"));
+		setNotClipped(inAttr.getAttribute!bool("NoClip"));
 	}
 
-protected:
 	// not virtual because needed in constructor
-	final void addChildToEnd(IGUIElement child)
+	protected final void addChildToEnd(IGUIElement child)
 	{
 		if (child !is null)
 		{
-			child.grab(); // prevent destruction when removed
 			child.remove(); // remove from old parent
 			child.LastParentRect = getAbsolutePosition();
 			child.Parent = this;
-			Children.push_back(child);
+			Children.insertBack(child);
 		}
 	}
 
 	// not virtual because needed in constructor
-	final void recalculateAbsolutePosition(bool recursive)
+	protected final void recalculateAbsolutePosition(bool recursive)
 	{
 		auto parentAbsolute = rect!int(0,0,0,0);
-		
 		rect!int parentAbsoluteClip;
 		
-		float fw = 0.f;
-		
-		flaot fh = 0.f;
+		float fw = 0.0f;
+		float fh = 0.0f;
 
 		if (Parent !is null)
 		{
 			parentAbsolute = Parent.AbsoluteRect;
 
-			if (NoClip !is null)
+			if (NoClip)
 			{
 				IGUIElement p = this;
 				
@@ -950,69 +914,69 @@ protected:
 		immutable int diffx = parentAbsolute.getWidth() - LastParentRect.getWidth();
 		immutable int diffy = parentAbsolute.getHeight() - LastParentRect.getHeight();
 
-		if (AlignLeft == EGUI_ALIGMENT.EGUIA_SCALE || AlignRight == EGUI_ALIGMENT.EGUIA_SCALE)
+		if (AlignLeft == EGUI_ALIGNMENT.EGUIA_SCALE || AlignRight == EGUI_ALIGNMENT.EGUIA_SCALE)
 			fw = cast(float) parentAbsolute.getWidth();
 
-		if (AlignTop == EGUI_ALIGMENT.EGUIA_SCALE || AlignBottom == EGUI_ALIGMENT.EGUIA_SCALE)
+		if (AlignTop == EGUI_ALIGNMENT.EGUIA_SCALE || AlignBottom == EGUI_ALIGNMENT.EGUIA_SCALE)
 			fh = cast(float) parentAbsolute.getHeight();
 
-		switch (AlignLeft)
+		final switch (AlignLeft)
 		{
-			case EGUI_ALIGMENT.EGUIA_UPPERLEFT:
+			case EGUI_ALIGNMENT.EGUIA_UPPERLEFT:
 				break;
-			case EGUI_ALIGMENT.EGUIA_LOWERRIGHT:
+			case EGUI_ALIGNMENT.EGUIA_LOWERRIGHT:
 				DesiredRect.UpperLeftCorner.X += diffx;
 				break;
-			case EGUI_ALIGMENT.EGUIA_CENTER:
+			case EGUI_ALIGNMENT.EGUIA_CENTER:
 				DesiredRect.UpperLeftCorner.X += diffx/2;
 				break;
-			case EGUI_ALIGMENT.EGUIA_SCALE:
-				DesiredRect.UpperLeftCorner.X = round(ScaleRect.UpperLeftCorner.X * fw);
+			case EGUI_ALIGNMENT.EGUIA_SCALE:
+				DesiredRect.UpperLeftCorner.X = cast(int)round(ScaleRect.UpperLeftCorner.X * fw);
 				break;
 		}
 
-		switch (AlignRight)
+		final switch (AlignRight)
 		{
-			case EGUI_ALIGMENT.EGUIA_UPPERLEFT:
+			case EGUI_ALIGNMENT.EGUIA_UPPERLEFT:
 				break;
-			case EGUI_ALIGMENT.EGUIA_LOWERRIGHT:
+			case EGUI_ALIGNMENT.EGUIA_LOWERRIGHT:
 				DesiredRect.LowerRightCorner.X += diffx;
 				break;
-			case EGUI_ALIGMENT.EGUIA_CENTER:
+			case EGUI_ALIGNMENT.EGUIA_CENTER:
 				DesiredRect.LowerRightCorner.X += diffx/2;
 				break;
-			case EGUI_ALIGMENT.EGUIA_SCALE:
-				DesiredRect.LowerRightCorner.X = round(ScaleRect.LowerRightCorner.X * fw);
+			case EGUI_ALIGNMENT.EGUIA_SCALE:
+				DesiredRect.LowerRightCorner.X = cast(int)round(ScaleRect.LowerRightCorner.X * fw);
 				break;
 		}
 
-		switch (AlignTop)
+		final switch (AlignTop)
 		{
-			case EGUI_ALIGMENT.EGUIA_UPPERLEFT:
+			case EGUI_ALIGNMENT.EGUIA_UPPERLEFT:
 				break;
-			case EGUI_ALIGMENT.EGUIA_LOWERRIGHT:
+			case EGUI_ALIGNMENT.EGUIA_LOWERRIGHT:
 				DesiredRect.UpperLeftCorner.Y += diffy;
 				break;
-			case EGUI_ALIGMENT.EGUIA_CENTER:
+			case EGUI_ALIGNMENT.EGUIA_CENTER:
 				DesiredRect.UpperLeftCorner.Y += diffy/2;
 				break;
-			case EGUI_ALIGMENT.EGUIA_SCALE:
-				DesiredRect.UpperLeftCorner.Y = round(ScaleRect.UpperLeftCorner.Y * fh);
+			case EGUI_ALIGNMENT.EGUIA_SCALE:
+				DesiredRect.UpperLeftCorner.Y = cast(int)round(ScaleRect.UpperLeftCorner.Y * fh);
 				break;
 		}
 
-		switch (AlignBottom)
+		final switch (AlignBottom)
 		{
-			case EGUI_ALIGMENT.EGUIA_UPPERLEFT:
+			case EGUI_ALIGNMENT.EGUIA_UPPERLEFT:
 				break;
-			case EGUI_ALIGMENT.EGUIA_LOWERRIGHT:
+			case EGUI_ALIGNMENT.EGUIA_LOWERRIGHT:
 				DesiredRect.LowerRightCorner.Y += diffy;
 				break;
-			case EGUI_ALIGMENT.EGUIA_CENTER:
+			case EGUI_ALIGNMENT.EGUIA_CENTER:
 				DesiredRect.LowerRightCorner.Y += diffy/2;
 				break;
-			case EGUI_ALIGMENT.EGUIA_SCALE:
-				DesiredRect.LowerRightCorner.Y = round(ScaleRect.LowerRightCorner.Y * fh);
+			case EGUI_ALIGNMENT.EGUIA_SCALE:
+				DesiredRect.LowerRightCorner.Y = cast(int)round(ScaleRect.LowerRightCorner.Y * fh);
 				break;
 		}
 
@@ -1052,77 +1016,79 @@ protected:
 			}
 		}
 	}
-protected:
 
-	/// List of all children of this element
-	DList!IGUIElement Children;
+	protected
+	{
+		/// List of all children of this element
+		DList!IGUIElement Children;
 
-	/// Pointer to the parent
-	IGUIElement Parent;
+		/// Pointer to the parent
+		IGUIElement Parent;
 
-	/// relative rect of element
-	rect!int RelativeRect;
+		/// relative rect of element
+		rect!int RelativeRect;
 
-	/// absolute rect of element
-	rect!int AbsoluteRect;
+		/// absolute rect of element
+		rect!int AbsoluteRect;
 
-	/// absolute clipping rect of element
-	rect!int AbsoluteClippingRect;
+		/// absolute clipping rect of element
+		rect!int AbsoluteClippingRect;
 
-	/// the rectangle the element would prefer to be,
-	/// if it was not constrained by parent or max/min size
-	rect!int DesiredRect;
+		/// the rectangle the element would prefer to be,
+		/// if it was not constrained by parent or max/min size
+		rect!int DesiredRect;
 
-	/// for calculating the difference when resizing parent
-	rect!int LastParentRect;
+		/// for calculating the difference when resizing parent
+		rect!int LastParentRect;
 
-	/// relative scale of the element inside its parent
-	rect!float ScaleRect;
+		/// relative scale of the element inside its parent
+		rect!float ScaleRect;
 
-	/// maximum and minimum size of the element
-	dimension2du MaxSize; 
+		/// maximum and minimum size of the element
+		dimension2du MaxSize; 
+		
+		dimension2du MinSize;
+
+		/// is visible?
+		bool IsVisible;
+
+		/// is enabled?
+		bool IsEnabled;
+
+		/// is a part of a larger whole and should not be serialized?
+		bool IsSubElement;
+
+		/// does this element ignore its parent's clipping rectangle?
+		bool NoClip;
+
+		/// caption
+		wstring Text;
+
+		/// tooltip
+		wstring ToolTipText;
 	
-	dimension2du MinSize;
+		/// users can set this for identificating the element by string
+		string Name;
 
-	/// is visible?
-	bool IsVisible;
+		/// users can set this for identificating the element by integer
+		size_t ID;
 
-	/// is enabled?
-	bool IsEnabled;
+		/// tab stop like in windows
+		bool IsTabStop;
 
-	/// is a part of a larger whole and should not be serialized?
-	bool IsSubElement;
+		/// tab order
+		int TabOrder;
 
-	/// does this element ignore its parent's clipping rectangle?
-	bool NoClip;
+		/// tab groups are containers like windows, use ctrl+tab to navigate
+		bool IsTabGroup;
 
-	/// caption
-	string Text;
+		/// tells the element how to act when its parent is resized
+		EGUI_ALIGNMENT AlignLeft, AlignRight, AlignTop, AlignBottom;
 
-	/// tooltip
-	string ToolTipText;
-	
-	/// users can set this for identificating the element by string
-	string Name;
+		/// GUI Environment
+		IGUIEnvironment Environment;
 
-	/// users can set this for identificating the element by integer
-	int ID;
-
-	/// tab stop like in windows
-	bool IsTabStop;
-
-	/// tab order
-	int TabOrder;
-
-	/// tab groups are containers like windows, use ctrl+tab to navigate
-	bool IsTabGroup;
-
-	/// tells the element how to act when its parent is resized
-	EGUI_ALIGNMENT AlignLeft, AlignRight, AlignTop, AlignBottom;
-
-	/// GUI Environment
-	IGUIEnvironment Environment;
-
-	/// type of element
-	EGUI_ELEMENT_TYPE Type;
+		/// type of element
+		EGUI_ELEMENT_TYPE Type;
+	}
 }

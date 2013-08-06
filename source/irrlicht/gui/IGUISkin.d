@@ -5,10 +5,9 @@
 module irrlicht.gui.IGUISkin;
 
 import irrlicht.io.IAttributeExchangingObject;
-import irrlicht.gui.EGUIAligment;
+import irrlicht.gui.EGUIAlignment;
 import irrlicht.gui.IGUIFont;
 import irrlicht.gui.IGUISpriteBank;
-import irrlicht.gui.EGUIAligment;
 import irrlicht.video.SColor;
 import irrlicht.core.rect;
 
@@ -18,9 +17,8 @@ import irrlicht.core.rect;
 * the Windows classic skin:
 * Examples:
 * ------
-* gui::IGUISkin* newskin = environment->createSkin(gui::EGST_WINDOWS_CLASSIC);
-* environment->setSkin(newskin);
-* newskin->drop();
+* IGUISkin newskin = environment.createSkin(EGUI_SKIN_TYPE.EGST_WINDOWS_CLASSIC);
+* environment.setSkin(newskin);
 * ------
 */
 enum EGUI_SKIN_TYPE
@@ -42,7 +40,7 @@ enum EGUI_SKIN_TYPE
 }
 
 /// Names for gui element types
-immutable string[] GUISkinTypeNames =
+immutable(string[]) GUISkinTypeNames =
 [
 	"windowsClassic",
 	"windowsMetallic",
@@ -111,7 +109,7 @@ enum EGUI_DEFAULT_COLOR
 }
 
 /// Names for default skin colors
-immutable string[] GUISkinColorNames =
+immutable(string[]) GUISkinColorNames =
 [
 	"3DDarkShadow",
 	"3DShadow",
@@ -193,7 +191,7 @@ enum EGUI_DEFAULT_SIZE
 
 
 /// Names for default skin sizes
-immutable string[] GUISkinSizeNames =
+immutable(string[]) GUISkinSizeNames =
 [
 	"ScrollBarSize",
 	"MenuHeight",
@@ -243,7 +241,7 @@ enum EGUI_DEFAULT_TEXT
 }
 
 /// Names for default skin sizes
-immutable string[] GUISkinTextNames =
+immutable(string[]) GUISkinTextNames =
 [
 	"MessageBoxOkay",
 	"MessageBoxCancel",
@@ -310,7 +308,7 @@ enum EGUI_DEFAULT_ICON
 	EGDI_COUNT
 }
 
-immutable string[] GUISkinIconNames =
+immutable(string[]) GUISkinIconNames =
 [
 	"windowMaximize",
 	"windowRestore",
@@ -355,7 +353,7 @@ enum EGUI_DEFAULT_FONT
 	EGDF_COUNT
 }
 
-immutable string[] GUISkinFontNames =
+immutable(string[]) GUISkinFontNames =
 [
 	"defaultFont",
 	"buttonFont",
@@ -381,23 +379,23 @@ interface IGUISkin : IAttributeExchangingObject
 	* For example for Message box button captions:
 	* "OK", "Cancel", "Yes", "No" and so on. 
 	*/
-	const string getDefaultText(EGUI_DEFAULT_TEXT text) const;
+	const wstring getDefaultText(EGUI_DEFAULT_TEXT text) const;
 
 	/// Sets a default text.
 	/**
 	* For example for Message box button captions:
 	* "OK", "Cancel", "Yes", "No" and so on. 
 	*/
-	void setDefaultText(EGUI_DEFAULT_TEXT which, const string newText);
+	void setDefaultText(EGUI_DEFAULT_TEXT which, const wstring newText);
 
 	/// sets a default size
 	void setSize(EGUI_DEFAULT_SIZE which, int size);
 
 	/// returns the default font
-	IGUIFont getFont(EGUI_DEFAULT_FONT which=EGDF_DEFAULT) const;
+	IGUIFont getFont(EGUI_DEFAULT_FONT which = EGUI_DEFAULT_FONT.EGDF_DEFAULT) const;
 
 	/// sets a default font
-	void setFont(IGUIFont font, EGUI_DEFAULT_FONT which=EGUI_DEFAULT_FONT.EGDF_DEFAULT);
+	void setFont(IGUIFont font, EGUI_DEFAULT_FONT which = EGUI_DEFAULT_FONT.EGDF_DEFAULT);
 
 	/// returns the sprite bank
 	IGUISpriteBank getSpriteBank() const;
@@ -409,7 +407,7 @@ interface IGUISkin : IAttributeExchangingObject
 	/**
 	* Returns the sprite index within the sprite bank 
 	*/
-	uint getIcon(EGUI_DEFAULT_ICON icon) const;
+	size_t getIcon(EGUI_DEFAULT_ICON icon) const;
 
 	/// Sets a default icon
 	/**
@@ -419,7 +417,7 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	icon=  Enum specifying which icon to change
 	* 	index=  The sprite index used to draw this icon 
 	*/
-	void setIcon(EGUI_DEFAULT_ICON icon, uint index);
+	void setIcon(EGUI_DEFAULT_ICON icon, size_t index);
 
 	/// draws a standard 3d button pane
 	/**
@@ -433,9 +431,9 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	rect=  Defining area where to draw.
 	* 	clip=  Clip area. 
 	*/
-	void draw3DButtonPaneStandard(IGUIElement element,
-		const ref rect!int rectPar,
-		const ref rect!int clip = rect!int());
+	void draw3DButtonPaneStandard()(IGUIElement element,
+		auto ref const rect!int rectPar,
+		const rect!(int)* clip = null);
 
 	/// draws a pressed 3d button pane
 	/**
@@ -449,9 +447,9 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	rect=  Defining area where to draw.
 	* 	clip=  Clip area. 
 	*/
-	void draw3DButtonPanePressed(IGUIElement element,
-		const ref rect!int rectPar,
-		const ref rect!int clip = rect!int());
+	void draw3DButtonPanePressed()(IGUIElement element,
+		auto ref const rect!int rectPar,
+		const rect!(int)* clip = null);
 
 	/// draws a sunken 3d pane
 	/**
@@ -468,10 +466,10 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	rect=  Defining area where to draw.
 	* 	clip=  Clip area. 
 	*/
-	void draw3DSunkenPane(IGUIElement element,
+	void draw3DSunkenPane()(IGUIElement element,
 		SColor bgcolor, bool flat, bool fillBackGround,
-		const ref rect!int rectPar,
-		const ref rect!int clip= rect!int());
+		auto ref const rect!int rectPar,
+		const rect!(int)* clip = null);
 
 	/// draws a window background
 	/**
@@ -490,11 +488,11 @@ interface IGUISkin : IAttributeExchangingObject
 	* Returns: Returns rect where it would be good to draw title bar text. This will
 	* work even when checkClientArea is set to a non-null value.
 	*/
-	rect!int draw3DWindowBackground(IGUIElement element,
+	rect!int draw3DWindowBackground()(IGUIElement element,
 		bool drawTitleBar, SColor titleBarColor,
-		const ref rect!int rectPar,
-		const ref rect!int clip = rect!int(),
-		const ref rect!int checkClientArea = rect!int());
+		auto ref const rect!int rectPar,
+		const rect!(int)* clip = null,
+		const rect!(int)* checkClientArea = null);
 
 	/// draws a standard 3d menu pane
 	/**
@@ -508,9 +506,9 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	rect=  Defining area where to draw.
 	* 	clip=  Clip area. 
 	*/
-	void draw3DMenuPane(IGUIElement element,
-		const ref rect!int rectPar,
-		const ref rect!int clip = rect!int());
+	void draw3DMenuPane()(IGUIElement element,
+		auto ref const rect!int rectPar,
+		const rect!(int)* clip = null);
 
 	/// draws a standard 3d tool bar
 	/**
@@ -522,9 +520,9 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	rect=  Defining area where to draw.
 	* 	clip=  Clip area. 
 	*/
-	void draw3DToolBar(IGUIElement element,
-		const ref rect!int rectPar,
-		const ref rect!int clip = rect!int());
+	void draw3DToolBar()(IGUIElement element,
+		auto ref const rect!int rectPar,
+		const rect!(int)* clip = null);
 
 	/// draws a tab button
 	/**
@@ -538,9 +536,9 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	clip=  Clip area.
 	* 	alignment=  Alignment of GUI element. 
 	*/
-	void draw3DTabButton(IGUIElement element, bool active,
-		const ref rect!int rectPar, const ref rect!int clip = rect!int(), 
-		EGUI_ALIGNMENT alignment=EGUI_ALIGNMENT.EGUIA_UPPERLEFT);
+	void draw3DTabButton()(IGUIElement element, bool active,
+		auto ref const rect!int rectPar, const ref rect!(int)* clip = null, 
+		EGUI_ALIGNMENT alignment = EGUI_ALIGNMENT.EGUIA_UPPERLEFT);
 
 	/// draws a tab control body
 	/**
@@ -555,8 +553,8 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	tabHeight=  Height of tab.
 	* 	alignment=  Alignment of GUI element. 
 	*/
-	void draw3DTabBody(IGUIElement element, bool border, bool background,
-		const ref rect!int rectPar, const ref rect!int clip = rect!int(), 
+	void draw3DTabBody()(IGUIElement element, bool border, bool background,
+		auto ref const rect!int rectPar, const rect!(int)* clip = null, 
 		int tabHeight = -1, EGUI_ALIGNMENT alignment = EGUI_ALIGNMENT.EGUIA_UPPERLEFT );
 
 	/// draws an icon, usually from the skin's sprite bank
@@ -572,9 +570,9 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	loop=  Whether the animation should loop or not
 	* 	clip=  Clip area. 
 	*/
-	void drawIcon(IGUIElement element, EGUI_DEFAULT_ICON icon,
-		const position2di position, uint starttime = 0, uint currenttime = 0,
-		bool loop = false, const ref rect!int clip = rect!int());
+	void drawIcon()(IGUIElement element, EGUI_DEFAULT_ICON icon,
+		auto ref const vector2di position, uint starttime = 0, uint currenttime = 0,
+		bool loop = false, const rect!(int)* clip = null);
 
 	/// draws a 2d rectangle.
 	/**
@@ -588,10 +586,10 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	clip=  Pointer to rectangle against which the rectangle will be clipped.
 	* If the pointer is null, no clipping will be performed. 
 	*/
-	void draw2DRectangle(IGUIElement element, const ref SColor color,
-		const ref rect!int pos, const ref rect!int clip = rect!int());
+	void draw2DRectangle()(IGUIElement element, auto ref const SColor color,
+		auto ref const rect!int pos, const rect!(int)* clip = null);
 
 	/// get the type of this skin
-	abstract EGUI_SKIN_TYPE getType() const {return EGUI_SKIN_TYPE.EGST_UNKNOWN; }
+	EGUI_SKIN_TYPE getType() const;
 }
 
