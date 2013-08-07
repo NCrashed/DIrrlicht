@@ -50,19 +50,7 @@ read a detailed description of them in the documentation by clicking on the top
 menu item 'Namespace List' or by using this link:
 http://irrlicht.sourceforge.net/docu/namespaces.html
 */
-import irrlicht.IrrlichtDevice;
-import irrlicht.video.IVideoDriver;
-import irrlicht.video.EMaterialFlags;
-import irrlicht.video.EDriverTypes;
-import irrlicht.video.SColor;
-import irrlicht.scene.ISceneManager;
-import irrlicht.scene.IAnimatedMesh;
-import irrlicht.scene.IAnimatedMeshMD2;
-import irrlicht.scene.IAnimatedMeshSceneNode;
-import irrlicht.gui.IGUIEnvironment;
-import irrlicht.core.dimension2d;
-import irrlicht.core.rect;
-import irrlicht.core.vector3d;
+import irrlicht.d;
 
 /*
 This is the main method. We can now use main() on every platform.

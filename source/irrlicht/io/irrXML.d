@@ -142,7 +142,7 @@
 	separate version of it, to be able to use it in non Irrlicht projects. With
 	irrXML 1.0, this has now been done.
 */
-module irrlicht.irrXML;
+module irrlicht.io.irrXML;
 
 import std.stream;
 import std.utf;

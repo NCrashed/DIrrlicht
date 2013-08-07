@@ -1,6 +1,6 @@
-// Copyright (C) 2002-2012 Nikolaus Gebhardt
-// This file is part of the "Irrlicht Engine".
-// For conditions of distribution and use, see copyright notice in irrlicht.h
+// Copyright (C) 2002-2013 Nikolaus Gebhardt
+// This file is part of the "Irrlicht Engine" for the D programming language.
+// For conditions of distribution and use, see copyright notice in irrlicht.d module.
 /**
 * Header file containing all scene parameters for modifying mesh loading etc.
 *	This file includes all parameter names which can be set using ISceneManager::getParameters()
