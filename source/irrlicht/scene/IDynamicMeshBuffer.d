@@ -13,17 +13,18 @@ import irrlicht.video.SVertexIndex;
 import irrlicht.core.vector3d;
 import irrlicht.core.vector2d;
 import irrlicht.core.aabbox3d;
+import std.range;
 
 /**
 * a dynamic meshBuffer 
 */
 interface IDynamicMeshBuffer : IMeshBuffer
 {
-	IVertexBuffer getVertexBuffer() const;
-	IIndexBuffer  getIndexBuffer() const;
+	IVertexBuffer   getVertexBuffer() const;
+	IIndexBuffer  getIndexBuffer()() const;
 
 	void setVertexBuffer(IVertexBuffer vertexBuffer);
-	void setIndexBuffer(IIndexBuffer indexBuffer);
+	void setIndexBuffer()(IIndexBuffer indexBuffer);
 
 	/// Get the material of this meshbuffer
 	/**
@@ -170,18 +171,20 @@ interface IDynamicMeshBuffer : IMeshBuffer
 	/**
 	* Returns: Pointer to indices array. 
 	*/
-	deprecated final const ushort* getIndices() const
+	deprecated final Range getIndices(Range)() const
+		if(isRandomAccessRange!Range)
 	{
-		return cast(ushort*)getIndexBuffer().getData();
+		return getIndexBuffer().getData();
 	}
 
 	/// Get access to Indices.
 	/**
 	* Returns: Pointer to indices array. 
 	*/
-	deprecated final ushort* getIndices()
+	deprecated final Range getIndices(Range)()
+		if(isRandomAccessRange!Range)
 	{
-		return cast(ushort*)getIndexBuffer().getData();
+		return getIndexBuffer().getData();
 	}
 
 	/// Get amount of indices in this meshbuffer.

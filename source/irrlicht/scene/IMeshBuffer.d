@@ -56,14 +56,14 @@ interface IMeshBuffer
 	* Which vertex type is used can be determined by getVertexType().
 	* Returns: Pointer to array of vertices. 
 	*/
-	const(void*) getVertices() const;
+	const(void[]) getVertices() const;
 
 	/// Get access to vertex data. The data is an array of vertices.
 	/**
 	* Which vertex type is used can be determined by getVertexType().
 	* Returns: Pointer to array of vertices. 
 	*/
-	void* getVertices();
+	void[] getVertices();
 
 	/// Get amount of vertices in meshbuffer.
 	/**
@@ -87,7 +87,7 @@ interface IMeshBuffer
 	/**
 	* Returns: Pointer to indices array. 
 	*/
-	ref ushort[] getIndices();
+	ushort[] getIndices();
 
 	/// Get amount of indices in this meshbuffer.
 	/**
@@ -145,7 +145,7 @@ interface IMeshBuffer
 	* 	indices=  Pointer to index array.
 	* 	numIndices=  Number of indices in array. 
 	*/
-	void append(const(void*) vertices, size_t numVertices, const(ushort[]) indices);
+	void append(const(void[]) vertices, const(ushort[]) indices);
 
 	/// Append the meshbuffer to the current buffer
 	/**

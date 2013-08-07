@@ -24,5 +24,16 @@
 				"IRR_COMPILE_WITH_BMP_LOADER"
 			],
 		}
+	],
+
+	"subPackages": [
+		{
+			"name": "example_01_HelloWorld",
+			"targetType": "executable",
+			"sourcePaths": ["examples/01_HelloWorld"],
+			"dependencies": {
+				"dirrlicht": "~master"
+			}
+		}
 	]
 }

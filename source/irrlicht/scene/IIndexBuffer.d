@@ -5,10 +5,30 @@ module irrlicht.scene.IIndexBuffer;
 
 import irrlicht.video.SVertexIndex;
 import irrlicht.scene.EHardwareBufferFlags;
+import std.range;
 
 interface IIndexBuffer
 {
-	void* getData();
+	interface IndexRange
+	{
+		bool empty() @property;
+		uint front() @property;
+		void popFront();
+		uint back() @property;
+		void popBack();
+		IndexRange save() @property;
+		uint opIndex(size_t n);
+		size_t length()  @property;
+		
+		final size_t opDollar()
+		{
+			return length();
+		}
+	}
+
+	static assert(isRandomAccessRange!IndexRange);
+
+	IndexRange getData();
 
 	E_INDEX_TYPE getType() const;
 
@@ -18,7 +38,7 @@ interface IIndexBuffer
 
 	size_t size() const;
 
-	void push_back (const uint element);
+	void insertBack(const uint element);
 
 	uint opIndex(size_t index) const;
 
@@ -26,13 +46,14 @@ interface IIndexBuffer
 
 	void setValue(size_t index, uint value);
 
-	void set_used(size_t usedNow);
+	void setCapacity(size_t usedNow);
 
 	void reallocate(size_t new_size);
 
-	size_t allocated_size() const;
+	size_t capacity() const;
 
-	void* pointer();
+	IndexRange opSlice(size_t a, size_t b);
+	size_t opDollar() const;
 
 	/// get the current hardware mapping hint
 	E_HARDWARE_MAPPING getHardwareMappingHint() const;

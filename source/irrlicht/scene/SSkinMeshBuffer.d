@@ -52,30 +52,30 @@ class SSkinMeshBuffer : IMeshBuffer
 	}
 
 	/// Get pointer to vertex array
-	const(void*) getVertices() const
+	const(void[]) getVertices() const
 	{
 		switch (VertexType)
 		{
 			case E_VERTEX_TYPE.EVT_2TCOORDS:
-				return Vertices_2TCoords.ptr;
+				return cast(const(void[]))Vertices_2TCoords;
 			case E_VERTEX_TYPE.EVT_TANGENTS:
-				return Vertices_Tangents.ptr;
+				return cast(const(void[]))Vertices_Tangents;
 			default:
-				return Vertices_Standard.ptr;
+				return cast(const(void[]))Vertices_Standard;
 		}
 	}
 
 	/// Get pointer to vertex array
-	void* getVertices()
+	void[] getVertices()
 	{
 		switch (VertexType)
 		{
 			case E_VERTEX_TYPE.EVT_2TCOORDS:
-				return Vertices_2TCoords.ptr;
+				return cast(void[])Vertices_2TCoords;
 			case E_VERTEX_TYPE.EVT_TANGENTS:
-				return Vertices_Tangents.ptr;
+				return cast(void[])Vertices_Tangents;
 			default:
-				return Vertices_Standard.ptr;
+				return cast(void[])Vertices_Standard;
 		}
 	}
 
@@ -109,7 +109,7 @@ class SSkinMeshBuffer : IMeshBuffer
 	}
 
 	/// Get pointer to index array
-	ref ushort[] getIndices()
+	ushort[] getIndices()
 	{
 		return Indices;
 	}
@@ -330,7 +330,7 @@ class SSkinMeshBuffer : IMeshBuffer
 	}
 
 	/// append the vertices and indices to the current buffer
-	void append(const(void*) vertices, size_t numVertices, const(ushort[]) indices) {}
+	void append(const(void[]) vertices, const(ushort[]) indices) {}
 
 	/// append the meshbuffer to the current buffer
 	void append(const IMeshBuffer other) {}

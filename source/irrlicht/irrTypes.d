@@ -11,3 +11,4 @@ static uint MAKE_IRR_ID(ubyte c0, ubyte c1, ubyte c2, ubyte c3)
 }
 
 enum _IRR_MATERIAL_MAX_TEXTURES_ = 10;
+enum IRRLICHT_SDK_VERSION = "1.8";
