@@ -171,11 +171,11 @@ interface IMeshBuffer
 	/**
 	* This shouldn't be used for anything outside the VideoDriver. 
 	*/
-	uint getChangedID_Vertex();
+	size_t getChangedID_Vertex();
 
 	/// Get the currently used ID for identification of changes.
 	/**
 	* This shouldn't be used for anything outside the VideoDriver. 
 	*/
-	uint getChangedID_Index();
-};
+	size_t getChangedID_Index();
+}

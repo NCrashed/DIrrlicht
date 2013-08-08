@@ -370,12 +370,12 @@ class SSkinMeshBuffer : IMeshBuffer
 			++ChangedID_Index;
 	}
 
-	uint getChangedID_Vertex() const 
+	size_t getChangedID_Vertex() const 
 	{
 		return ChangedID_Vertex;
 	}
 
-	uint getChangedID_Index() const 
+	size_t getChangedID_Index() const 
 	{
 		return ChangedID_Index;
 	}
@@ -391,8 +391,8 @@ class SSkinMeshBuffer : IMeshBuffer
 	S3DVertex[]			Vertices_Standard;
 	ushort[] 			Indices;
 
-	uint ChangedID_Vertex;
-	uint ChangedID_Index;
+	size_t ChangedID_Vertex;
+	size_t ChangedID_Index;
 
 	//ISkinnedMesh::SJoint *AttachedJoint;
 	matrix4 Transformation;

@@ -246,14 +246,14 @@ static void getBlendFunc ( string inputString, out SBlendFunc blendfunc )
 		"gt0",
 	];
 
-	int srcFact = countUntil!"startsWith(b, a)"(funclist, inputString);
+	ptrdiff_t srcFact = countUntil!"startsWith(b, a)"(funclist, inputString);
 	if ( srcFact < 0 )
 		return;
 
 	
 	bool resolved = false;
 	string factString = funclist[cast(size_t)srcFact];
-	int dstFact = -1;
+	ptrdiff_t dstFact = -1;
 
 	if(inputString.length > factString.length)
 	{
@@ -555,7 +555,7 @@ struct SVariable
 		content = "";
 	}
 
-	int isValid () const
+	ptrdiff_t isValid () const
 	{
 		return name.length;
 	}
@@ -599,7 +599,7 @@ struct SVarGroup
 	string get( string name ) const
 	{
 		auto search = SVariable( name );
-		int index = countUntil(Variable, search);
+		ptrdiff_t index = countUntil(Variable, search);
 		if ( index < 0 )
 			return "";
 
