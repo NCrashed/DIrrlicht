@@ -1,7 +1,7 @@
 {
 	"name": "dirrlicht",
 	"description": "Irrlicht engine port to D2.",
-	"authors": ["Nikolaus Gebhardt", "Gushcha Anton"],
+	"authors": ["Nikolaus Gebhardt", "Gushcha Anton", "Shamyan Roman"],
 	"homepage": "https://github.com/NCrashed/DIrrlicht",
 	"license": "zlib",
 
