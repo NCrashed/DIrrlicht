@@ -29,7 +29,7 @@ import irrlicht.core.dimension2d;
 * Returns: Returns pointer to the created IrrlichtDevice or null if the
 * device could not be created.
 */
-extern(C) IrrlichtDevice createDevice(
+IrrlichtDevice createDevice(
 	E_DRIVER_TYPE deviceType = E_DRIVER_TYPE.EDT_SOFTWARE,
 	// parantheses are necessary for some compilers
 	const dimension2du windowSize = dimension2du(640,480),
@@ -40,7 +40,7 @@ extern(C) IrrlichtDevice createDevice(
 	IEventReceiver receiver = null);
 
 /// alias for Function Pointer
-alias extern(C) IrrlichtDevice function(
+alias IrrlichtDevice function(
 		E_DRIVER_TYPE deviceType,
 		const dimension2du windowSize,
 		uint bits,
@@ -62,9 +62,9 @@ alias extern(C) IrrlichtDevice function(
 * Returns: Returns pointer to the created IrrlichtDevice or null if the
 * device could not be created. 
 */
-extern(C) IrrlichtDevice createDeviceEx()(
+IrrlichtDevice createDeviceEx(
 	const SIrrlichtCreationParameters parameters);
 
 /// alias for Function Pointer
-alias extern(C) IrrlichtDevice function( 
+alias IrrlichtDevice function( 
 	const SIrrlichtCreationParameters parameters ) funcptr_createDeviceEx;

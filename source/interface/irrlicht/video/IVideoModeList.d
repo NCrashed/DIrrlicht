@@ -20,7 +20,7 @@ interface IVideoModeList
 	/** 
 	* Returns: Returns amount of video modes. 
 	*/
-	size_t getVideoModeCount();
+	size_t getVideoModeCount() const;
 	
 	/// Get the screen size of a video mode in pixels.
 	/** 
@@ -28,7 +28,7 @@ interface IVideoModeList
 	*	modeNumber= zero based index of the video mode.
 	* Returns: Size of screen in pixels of the specified video mode. 
 	*/
-	dimension2d!uint getVideoModeResolution(size_t modeNumber);
+	dimension2d!uint getVideoModeResolution()(size_t modeNumber) const;
 	
 	/// Get a supported screen size with certain constraints.
 	/**
@@ -38,8 +38,8 @@ interface IVideoModeList
 	* Returns: Size of screen in pixels which matches the requirements.
 	* as good as possible. 
 	*/
-	dimension2d!uint getVideoModeResolution(const ref dimension2d!uint minSize, 
-		const ref dimension2d!uint maxSize);
+	dimension2d!uint getVideoModeResolution()(auto ref const dimension2d!uint minSize, 
+		auto ref const dimension2d!uint maxSize) const;
 	
 	/// Get the pixel depth of a video mode in bits.
 	/**
@@ -47,17 +47,17 @@ interface IVideoModeList
 	*	modeNumber= zero based index of the video mode.
 	* Returns: Size of each pixel of the specified video mode in bits. 
 	*/
-	int getVideoModeDepth(int modeNumber);
+	int getVideoModeDepth(size_t modeNumber) const;
 	
 	/// Get current desktop screen resolution.
 	/** 
 	* Returns: Size of screen in pixels of the current desktop video mode. 
 	*/
-	const dimension2d!uint getDesktopResolution();
+	auto ref const dimension2d!uint getDesktopResolution()() const;
 	
 	/// Get the pixel depth of a video mode in bits.
 	/** 
 	* Returns: Size of each pixel of the current desktop video mode in bits. 
 	*/
-	int getDesktopDepth();
+	int getDesktopDepth() const;
 }

@@ -4,29 +4,60 @@
 	"authors": ["Nikolaus Gebhardt", "Gushcha Anton", "Shamyan Roman"],
 	"homepage": "https://github.com/NCrashed/DIrrlicht",
 	"license": "zlib",
+	"dependencies" : {
+		"dirrlicht:interface": "~master",
+		"dirrlicht:implementation": "~master"
+	},
 
 	"targetType": "library",
-	"versions": 
-	[
-		"IRR_COMPILE_WITH_SOFTWARE",
-		"IRR_COMPILE_WITH_BURNINGSVIDEO",
-		"IRR_COMPILE_WITH_DIRECT3D_8",
-		"IRR_COMPILE_WITH_DIRECT3D_9",
-		"IRR_COMPILE_WITH_OPENGL"
-	],
-
-	"configurations": [
-		{
-			"name": "manualmem",
-			"versions": [
-				"CUSTOM_MEMORY_MANAGMENT", 
-				"IRR_COMPILE_WITH_GUI", 
-				"IRR_COMPILE_WITH_BMP_LOADER"
-			],
-		}
-	],
 
 	"subPackages": [
+		{
+			"name": "interface",
+			"targetType": "library",
+			"sourcePaths": ["source/interface"],
+			"versions": [
+				"IRR_COMPILE_WITH_GUI", 
+				"IRR_COMPILE_WITH_BMP_LOADER"
+			]
+		},
+		{
+			"name": "implementation",
+			"targetType": "library",
+			"sourcePaths": ["source/implement"],
+			"dependencies" : {
+				"dirrlicht:interface": "~master",
+				"derelict:sdl2": "~master"
+			},
+			"configurations" : 
+			[
+				{
+					"name": "lightSDL",
+					"versions": 
+					[
+						"IRR_COMPILE_WITH_SDL_DEVICE",
+						"IRR_COMPILE_WITH_OPENGL"
+					]
+				},
+				{
+					"name": "all",
+					"versions":
+					[
+						"IRR_COMPILE_WITH_WINDOWS_DEVICE",
+						"IRR_COMPILE_WITH_OSX_DEVICE",
+						"IRR_COMPILE_WITH_X11_DEVICE",
+						"IRR_COMPILE_WITH_SDL_DEVICE",
+						"IRR_COMPILE_WITH_FB_DEVICE",
+						"IRR_COMPILE_WITH_CONSOLE_DEVICE",
+						"IRR_COMPILE_WITH_SOFTWARE",
+						"IRR_COMPILE_WITH_BURNINGSVIDEO",
+						"IRR_COMPILE_WITH_DIRECT3D_8",
+						"IRR_COMPILE_WITH_DIRECT3D_9",
+						"IRR_COMPILE_WITH_OPENGL"					
+					]
+				}
+			]
+		},
 		{
 			"name": "example_01_HelloWorld",
 			"targetType": "executable",
