@@ -5,6 +5,8 @@ module irrlicht.main;
 
 immutable(string) copyright = "Irrlicht Engine (c) 2002-2013 Nikolaus Gebhardt";
 
+enum IRRLICHT_SDK_VERSION = "1.8.0";
+
 import irrlicht.IrrlichtDevice;
 import irrlicht.IEventReceiver;
 import irrlicht.SIrrlichtCreationParameters;
