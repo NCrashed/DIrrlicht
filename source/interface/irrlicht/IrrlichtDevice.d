@@ -146,7 +146,7 @@ interface IrrlichtDevice
 	/** 
 	* Returns: Pointer to the IRandomizer object. 
 	*/
-	IRandomizer getRandomizer() const;
+	IRandomizer getRandomizer();
 
 	/// Sets a new randomizer.
 	/**
@@ -294,7 +294,7 @@ interface IrrlichtDevice
 	* Returns: true if joysticks are supported on this device and _IRR_COMPILE_WITH_JOYSTICK_EVENTS_
 	*		is defined, false if joysticks are not supported or support is compiled out.
 	*/
-	bool activateJoysticks(SJoystickInfo[] joystickInfo);
+	bool activateJoysticks(out SJoystickInfo[] joystickInfo);
 
 	/// Set the current Gamma Value for the Display
 	bool setGammaRamp(float red, float green, float blue,

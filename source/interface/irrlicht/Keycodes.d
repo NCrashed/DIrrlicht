@@ -160,4 +160,4 @@ enum EKEY_CODE
 	KEY_OEM_CLEAR        = 0xFE,   // Clear key
 
 	KEY_KEY_CODES_COUNT  = 0xFF // this is not a key, but the amount of keycodes there are.
-};
+}

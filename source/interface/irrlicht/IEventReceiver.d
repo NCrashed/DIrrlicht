@@ -443,7 +443,7 @@ struct SEvent
 * Many of the engine's classes inherit IEventReceiver so they are able to
 * process events. Events usually start at a postEventFromUser function and are
 * passed down through a chain of event receivers until OnEvent returns true. See
-* irr::EEVENT_TYPE for a description of where each type of event starts, and the
+* EEVENT_TYPE for a description of where each type of event starts, and the
 * path it takes through the system. 
 */
 interface IEventReceiver
@@ -488,7 +488,7 @@ struct SJoystickInfo
 	 * A Windows device will identify the presence or absence or the POV hat.  A
 	 * Linux device cannot, and will always return POV_HAT_UNKNOWN. 
 	 */
-	enum PovHat
+	enum PovHatEnum
 	{
 		/// A hat is definitely present.
 		POV_HAT_PRESENT,
@@ -499,4 +499,6 @@ struct SJoystickInfo
 		/// The presence or absence of a hat cannot be determined.
 		POV_HAT_UNKNOWN
 	}
+
+	PovHatEnum PovHat;
 } // struct SJoystickInfo

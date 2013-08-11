@@ -26,6 +26,16 @@ struct SKeyMap
 		KeyCode = keyCode;
 	} 
 
+	int opCmp()(auto ref const SKeyMap other)
+	{
+		if(Action < other.Action || (Action == other.Action && KeyCode < other.KeyCode))
+			return -1;
+		else if(Action > other.Action || (Action == other.Action && KeyCode > other.KeyCode))
+			return 1;
+		else 
+			return 0;
+	}
+
 	EKEY_ACTION Action;
 	EKEY_CODE KeyCode;
 }

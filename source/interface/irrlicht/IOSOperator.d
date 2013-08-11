@@ -7,7 +7,7 @@ module irrlicht.IOSOperator;
 interface IOSOperator
 {
 	/// Get the current operation system version as string.
-	const string getOperatingSystemVersion() const;
+	string getOperatingSystemVersion() const;
 
 	/// Get the current operation system version as string.
 	/**

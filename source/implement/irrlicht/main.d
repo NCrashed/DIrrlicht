@@ -55,7 +55,7 @@ export IrrlichtDevice createDevice(
 }
 
 export IrrlichtDevice createDeviceEx(
-	const SIrrlichtCreationParameters params)
+	SIrrlichtCreationParameters params)
 {
 	IrrlichtDevice dev = null;
 

@@ -18,7 +18,8 @@
 			"sourcePaths": ["source/interface"],
 			"versions": [
 				"IRR_COMPILE_WITH_GUI", 
-				"IRR_COMPILE_WITH_BMP_LOADER"
+				"IRR_COMPILE_WITH_BMP_LOADER",
+				"IRR_COMPILE_WITH_JOYSTICK_EVENTS"
 			]
 		},
 		{

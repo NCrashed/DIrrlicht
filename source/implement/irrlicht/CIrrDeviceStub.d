@@ -8,6 +8,7 @@ import irrlicht.IrrlichtDevice;
 import irrlicht.ILogger;
 import irrlicht.CLogger;
 import irrlicht.ITimer;
+import irrlicht.CTimer;
 import irrlicht.IRandomizer;
 import irrlicht.IEventReceiver;
 import irrlicht.SIrrlichtCreationParameters;
@@ -47,7 +48,7 @@ IFileSystem createFileSystem()
 	return null;
 }
 
-/*IVideoDriver createSoftwareDriver()(auto ref const dimension2du windowSize,
+IVideoDriver createSoftwareDriver()(auto ref const dimension2du windowSize,
 	bool fullscreen, IFileSystem io,
 	IImagePresenter presenter)
 {
@@ -63,14 +64,14 @@ IVideoDriver createBurningVideoDriver()(auto ref const SIrrlichtCreationParamete
 IVideoDriver createNullDriver()(IFileSystem fs, auto ref const dimension2du screenSize)
 {
 	return null;
-}*/
+}
 // ended dummy functions
 
 /// Stub for an Irrlicht Device implementation
-class CIrrDeviceStub : IrrlichtDevice
+abstract class CIrrDeviceStub : IrrlichtDevice
 {
 	/// constructor
-	this()(auto ref const SIrrlichtCreationParameters params)
+	this(SIrrlichtCreationParameters params)
 	{
 		CreationParams = params;
 		UserReceiver = params.EventReceiver;
@@ -78,7 +79,7 @@ class CIrrDeviceStub : IrrlichtDevice
 		Timer = new CTimer(params.UsePerformanceTimer);
 		if(Printer.Logger !is null)
 		{
-			Logger = Printer.Logger;
+			Logger = cast(CLogger)Printer.Logger;
 			Logger.setReceiver(UserReceiver);
 		}
 		else
@@ -258,7 +259,7 @@ class CIrrDeviceStub : IrrlichtDevice
 	}
 
 	/// Activate any joysticks, and generate events for them.
-	bool activateJoysticks(SJoystickInfo[] joystickInfo)
+	bool activateJoysticks(out SJoystickInfo[] joystickInfo)
 	{
 		return false;
 	}
