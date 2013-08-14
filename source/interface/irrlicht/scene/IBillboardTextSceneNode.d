@@ -27,17 +27,17 @@ abstract class IBillboardTextSceneNode : IBillboardSceneNode
 	}
 
 	/// Sets the size of the billboard.
-	void setSize()(auto ref const dimension2d!float size);
+	override void setSize(ref const dimension2d!float size);
 
 	/// Returns the size of the billboard.
-	auto ref const dimension2d!float getSize()() const;
+	override dimension2d!float getSize() const;
 
 	/// Set the color of all vertices of the billboard
 	/**
 	* Params:
 	* 	overallColor=  the color to set 
 	*/
-	void setColor()(auto ref const SColor overallColor);
+	override void setColor(SColor overallColor);
 
 	/// Set the color of the top and bottom vertices of the billboard
 	/**
@@ -45,7 +45,7 @@ abstract class IBillboardTextSceneNode : IBillboardSceneNode
 	* 	topColor=  the color to set the top vertices
 	* 	bottomColor=  the color to set the bottom vertices 
 	*/
-	void setColor()(auto ref const SColor topColor, auto ref const SColor bottomColor);
+	override void setColor(SColor topColor, SColor bottomColor);
 
 	/// Gets the color of the top and bottom vertices of the billboard
 	/**
@@ -59,5 +59,5 @@ abstract class IBillboardTextSceneNode : IBillboardSceneNode
 	void setText(wstring text);
 
 	/// sets the color of the text
-	void setTextColor()(auto ref const SColor color);
+	void setTextColor(SColor color);
 }

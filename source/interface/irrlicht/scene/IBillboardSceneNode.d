@@ -25,7 +25,12 @@ abstract class IBillboardSceneNode : ISceneNode
 	}
 
 	/// Sets the size of the billboard, making it rectangular.
-	void setSize()(auto ref const dimension2df size);
+	void setSize(ref const dimension2df size);
+
+	final void setSize(dimension2df size)
+	{
+		setSize(size);
+	}
 
 	/// Sets the size of the billboard with independent widths of the bottom and top edges.
 	/**
@@ -34,7 +39,7 @@ abstract class IBillboardSceneNode : ISceneNode
 	* 	bottomEdgeWidth=  The width of the bottom edge of the billboard.
 	* 	topEdgeWidth=  The width of the top edge of the billboard.
 	*/
-	void setSize()(float height, float bottomEdgeWidth, float topEdgeWidth);
+	void setSize(float height, float bottomEdgeWidth, float topEdgeWidth);
 
 	/// Returns the size of the billboard.
 	/**
@@ -42,7 +47,7 @@ abstract class IBillboardSceneNode : ISceneNode
 	* Use getWidths() to retrieve the bottom and top edges independently.
 	* Returns: Size of the billboard.
 	*/
-	auto ref const dimension2d!float getSize()() const;
+	dimension2d!float getSize() const;
 
 	/// Gets the size of the the billboard and handles independent top and bottom edge widths correctly.
 	/**
@@ -51,14 +56,14 @@ abstract class IBillboardSceneNode : ISceneNode
 	* 	bottomEdgeWidth = The width of the bottom edge of the billboard.
 	* 	topEdgeWidth = The width of the top edge of the billboard.
 	*/
-	void getSize()(out float height, out float bottomEdgeWidth, out float topEdgeWidth) const;
+	void getSize(out float height, out float bottomEdgeWidth, out float topEdgeWidth) const;
 
 	/// Set the color of all vertices of the billboard
 	/**
 	* Params:
 	* 	overallColor=  Color to set 
 	*/
-	void setColor()(auto ref const SColor overallColor);
+	void setColor(SColor overallColor);
 
 	/// Set the color of the top and bottom vertices of the billboard
 	/**
@@ -66,8 +71,8 @@ abstract class IBillboardSceneNode : ISceneNode
 	* 	topColor=  Color to set the top vertices
 	* 	bottomColor=  Color to set the bottom vertices 
 	*/
-	void setColor()(auto ref const SColor topColor,
-			auto ref const SColor bottomColor);
+	void setColor(SColor topColor,
+			SColor bottomColor);
 
 	/// Gets the color of the top and bottom vertices of the billboard
 	/**

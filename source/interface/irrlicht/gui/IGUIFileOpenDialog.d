@@ -3,9 +3,11 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.d module.
 module irrlicht.gui.IGUIFileOpenDialog;
 
+import irrlicht.gui.IGUIEnvironment;
 import irrlicht.gui.IGUIElement;
 import irrlicht.gui.EGUIElementTypes;
 import irrlicht.io.path;
+import irrlicht.core.rect;
 
 /// Standard file chooser dialog.
 /**
@@ -18,7 +20,7 @@ import irrlicht.io.path;
 abstract class IGUIFileOpenDialog : IGUIElement
 {
 	/// constructor
-	this()(IGUIEnvironment environment, IGUIElement parent, size_t id, auto ref const rect!int rectangle)
+	this(IGUIEnvironment environment, IGUIElement parent, size_t id, rect!int rectangle)
 	{
 		super(EGUI_ELEMENT_TYPE.EGUIET_FILE_OPEN_DIALOG, environment, parent, id, rectangle);
 	}

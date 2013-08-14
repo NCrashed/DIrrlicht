@@ -6,10 +6,12 @@ module irrlicht.gui.IGUISkin;
 
 import irrlicht.io.IAttributeExchangingObject;
 import irrlicht.gui.EGUIAlignment;
+import irrlicht.gui.IGUIElement;
 import irrlicht.gui.IGUIFont;
 import irrlicht.gui.IGUISpriteBank;
 import irrlicht.video.SColor;
 import irrlicht.core.rect;
+import irrlicht.core.vector2d;
 
 /// Enumeration of available default skins.
 /**
@@ -379,7 +381,7 @@ interface IGUISkin : IAttributeExchangingObject
 	* For example for Message box button captions:
 	* "OK", "Cancel", "Yes", "No" and so on. 
 	*/
-	const wstring getDefaultText(EGUI_DEFAULT_TEXT text) const;
+	wstring getDefaultText(EGUI_DEFAULT_TEXT text) const;
 
 	/// Sets a default text.
 	/**
@@ -431,8 +433,8 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	rect=  Defining area where to draw.
 	* 	clip=  Clip area. 
 	*/
-	void draw3DButtonPaneStandard()(IGUIElement element,
-		auto ref const rect!int rectPar,
+	void draw3DButtonPaneStandard(IGUIElement element,
+		rect!int rectPar,
 		const rect!(int)* clip = null);
 
 	/// draws a pressed 3d button pane
@@ -447,8 +449,8 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	rect=  Defining area where to draw.
 	* 	clip=  Clip area. 
 	*/
-	void draw3DButtonPanePressed()(IGUIElement element,
-		auto ref const rect!int rectPar,
+	void draw3DButtonPanePressed(IGUIElement element,
+		rect!int rectPar,
 		const rect!(int)* clip = null);
 
 	/// draws a sunken 3d pane
@@ -466,9 +468,9 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	rect=  Defining area where to draw.
 	* 	clip=  Clip area. 
 	*/
-	void draw3DSunkenPane()(IGUIElement element,
+	void draw3DSunkenPane(IGUIElement element,
 		SColor bgcolor, bool flat, bool fillBackGround,
-		auto ref const rect!int rectPar,
+		rect!int rectPar,
 		const rect!(int)* clip = null);
 
 	/// draws a window background
@@ -488,9 +490,9 @@ interface IGUISkin : IAttributeExchangingObject
 	* Returns: Returns rect where it would be good to draw title bar text. This will
 	* work even when checkClientArea is set to a non-null value.
 	*/
-	rect!int draw3DWindowBackground()(IGUIElement element,
+	rect!int draw3DWindowBackground(IGUIElement element,
 		bool drawTitleBar, SColor titleBarColor,
-		auto ref const rect!int rectPar,
+		rect!int rectPar,
 		const rect!(int)* clip = null,
 		const rect!(int)* checkClientArea = null);
 
@@ -506,8 +508,8 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	rect=  Defining area where to draw.
 	* 	clip=  Clip area. 
 	*/
-	void draw3DMenuPane()(IGUIElement element,
-		auto ref const rect!int rectPar,
+	void draw3DMenuPane(IGUIElement element,
+		rect!int rectPar,
 		const rect!(int)* clip = null);
 
 	/// draws a standard 3d tool bar
@@ -520,8 +522,8 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	rect=  Defining area where to draw.
 	* 	clip=  Clip area. 
 	*/
-	void draw3DToolBar()(IGUIElement element,
-		auto ref const rect!int rectPar,
+	void draw3DToolBar(IGUIElement element,
+		const rect!int rectPar,
 		const rect!(int)* clip = null);
 
 	/// draws a tab button
@@ -536,8 +538,8 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	clip=  Clip area.
 	* 	alignment=  Alignment of GUI element. 
 	*/
-	void draw3DTabButton()(IGUIElement element, bool active,
-		auto ref const rect!int rectPar, const ref rect!(int)* clip = null, 
+	void draw3DTabButton(IGUIElement element, bool active,
+		rect!int rectPar, const rect!(int)* clip = null, 
 		EGUI_ALIGNMENT alignment = EGUI_ALIGNMENT.EGUIA_UPPERLEFT);
 
 	/// draws a tab control body
@@ -553,8 +555,8 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	tabHeight=  Height of tab.
 	* 	alignment=  Alignment of GUI element. 
 	*/
-	void draw3DTabBody()(IGUIElement element, bool border, bool background,
-		auto ref const rect!int rectPar, const rect!(int)* clip = null, 
+	void draw3DTabBody(IGUIElement element, bool border, bool background,
+		rect!int rectPar, const rect!(int)* clip = null, 
 		int tabHeight = -1, EGUI_ALIGNMENT alignment = EGUI_ALIGNMENT.EGUIA_UPPERLEFT );
 
 	/// draws an icon, usually from the skin's sprite bank
@@ -570,8 +572,8 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	loop=  Whether the animation should loop or not
 	* 	clip=  Clip area. 
 	*/
-	void drawIcon()(IGUIElement element, EGUI_DEFAULT_ICON icon,
-		auto ref const vector2di position, uint starttime = 0, uint currenttime = 0,
+	void drawIcon(IGUIElement element, EGUI_DEFAULT_ICON icon,
+		vector2di position, uint starttime = 0, uint currenttime = 0,
 		bool loop = false, const rect!(int)* clip = null);
 
 	/// draws a 2d rectangle.
@@ -586,8 +588,8 @@ interface IGUISkin : IAttributeExchangingObject
 	* 	clip=  Pointer to rectangle against which the rectangle will be clipped.
 	* If the pointer is null, no clipping will be performed. 
 	*/
-	void draw2DRectangle()(IGUIElement element, auto ref const SColor color,
-		auto ref const rect!int pos, const rect!(int)* clip = null);
+	void draw2DRectangle(IGUIElement element, SColor color,
+		rect!int pos, const rect!(int)* clip = null);
 
 	/// get the type of this skin
 	EGUI_SKIN_TYPE getType() const;

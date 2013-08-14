@@ -267,7 +267,7 @@ interface IXMLBase
 * ---------
 * See_Also: $(B irrxmlexample) for a more detailed example.
 */
-class IIrrXMLReader(char_type, super_class) : super_class
+abstract class IIrrXMLReader(char_type, super_class) : super_class
 {
 	alias immutable(char_type)[] string_type;
 

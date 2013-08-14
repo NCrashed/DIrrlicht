@@ -54,7 +54,7 @@ immutable(string[]) GUICursorIconNames =
 /// structure used to set sprites as cursors.
 struct SCursorSprite
 {
-	this( IGUISpriteBank spriteBank, size_t spriteId, const vector2d!int hotspot = vector2d!int(0,0) )
+	this( IGUISpriteBank spriteBank, size_t spriteId, vector2d!int hotspot = vector2d!int(0,0) )
 	{
 		SpriteBank = spriteBank;
 		SpriteId = spriteId;
@@ -109,7 +109,12 @@ interface ICursorControl
 	* Params:
 	* 	pos=  New position of the cursor. 
 	*/
-	void setPosition()(auto ref const vector2d!float pos);
+	void setPosition(ref const vector2d!float pos);
+
+	final void setPosition(const vector2d!float pos)
+	{
+		setPosition(pos);
+	}
 
 	/// Sets the new position of the cursor.
 	/**
@@ -121,14 +126,19 @@ interface ICursorControl
 	* 	x=  New x-coord of the cursor.
 	* 	y=  New x-coord of the cursor. 
 	*/
-	void setPosition()(float x, float y);
+	void setPosition(float x, float y);
 
 	/// Sets the new position of the cursor.
 	/**
 	* Params:
 	* 	pos=  New position of the cursor. The coordinates are pixel units. 
 	*/
-	void setPosition()(auto ref const vector2d!int pos);
+	void setPosition(ref const vector2d!int pos);
+
+	final void setPosition(const vector2d!int pos)
+	{
+		setPosition(pos);
+	}
 
 	/// Sets the new position of the cursor.
 	/**
@@ -136,14 +146,14 @@ interface ICursorControl
 	* 	x=  New x-coord of the cursor. The coordinates are pixel units.
 	* 	y=  New y-coord of the cursor. The coordinates are pixel units. 
 	*/
-	void setPosition()(int x, int y);
+	void setPosition(int x, int y);
 
 	/// Returns the current position of the mouse cursor.
 	/**
 	* Returns: Returns the current position of the cursor. The returned position
 	* is the position of the mouse cursor in pixel units. 
 	*/
-	auto ref const vector2d!int getPosition()();
+	ref const(vector2d!int) getPosition();
 
 	/// Returns the current position of the mouse cursor.
 	/**
@@ -178,7 +188,12 @@ interface ICursorControl
 	/**
 	* Returns: Identification for the icon 
 	*/
-	ECURSOR_ICON addIcon()(auto ref const SCursorSprite icon);
+	ECURSOR_ICON addIcon(ref const SCursorSprite icon);
+
+	final ECURSOR_ICON addIcon(const SCursorSprite icon)
+	{
+		return addIcon(icon);
+	}
 
 	/// replace a cursor icon.
 	/**
@@ -186,7 +201,12 @@ interface ICursorControl
 	*	 Note that this only changes the icons within your application, system cursors outside your
 	*	 application will not be affected.
 	*/
-	void changeIcon()(ECURSOR_ICON iconId, auto ref const SCursorSprite sprite);
+	void changeIcon(ECURSOR_ICON iconId, ref const SCursorSprite sprite);
+
+	final void changeIcon(ECURSOR_ICON iconId, const SCursorSprite sprite)
+	{
+		changeIcon(iconId, sprite);
+	}
 
 	/// Return a system-specific size which is supported for cursors. Larger icons will fail, smaller icons might work.
 	dimension2di getSupportedIconSize() const;

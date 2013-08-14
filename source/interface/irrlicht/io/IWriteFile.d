@@ -15,7 +15,7 @@ interface IWriteFile
 	*
 	* Returns: How much bytes were written. 
 	*/
-	int write(const void* buffer, uint sizeToWrite);
+	int write(const void* buffer, size_t sizeToWrite);
 
 	/// Changes position in file
 	/**
@@ -27,13 +27,13 @@ interface IWriteFile
 	*
 	* Returns: True if successful, otherwise false. 
 	*/
-	bool seek(long finalPos, bool relativeMovement = false);
+	bool seek(ulong finalPos, bool relativeMovement = false);
 
 	/// Get the current position in the file.
 	/** 
 	* Returns: Current position in the file in bytes. 
 	*/
-	long getPos();
+	ulong getPos();
 
 	/// Get name of file.
 	/** 

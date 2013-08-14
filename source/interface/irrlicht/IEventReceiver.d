@@ -455,7 +455,7 @@ interface IEventReceiver
 	* Therefore your return value for all unprocessed events should be 'false'.
 	* Returns: True if the event was processed.
 	*/
-	bool OnEvent()(auto ref const SEvent event);
+	bool OnEvent(ref const SEvent event);
 }
 
 

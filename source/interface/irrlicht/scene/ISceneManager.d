@@ -1245,8 +1245,8 @@ interface ISceneManager
 	* Returns: The animator. Attach it to a scene node with ISceneNode.addAnimator()
 	* and the animator will animate it.
 	*/
-	ISceneNodeAnimator createFlyStraightAnimator()(auto ref const vector3df startPoint,
-		auto ref const vector3df endPoint, uint timeForWay, bool loop = false, bool pingpong = false);
+	ISceneNodeAnimator createFlyStraightAnimator(vector3df startPoint,
+		vector3df endPoint, uint timeForWay, bool loop = false, bool pingpong = false);
 
 	/// Creates a texture animator, which switches the textures of the target scene node based on a list of textures.
 	/**
@@ -1507,7 +1507,7 @@ interface ISceneManager
 	* Usually you do not have to
 	* use this method, it is used by the internal engine. 
 	*/
-	bool postEventFromUser()(auto ref const SEvent event);
+	bool postEventFromUser(ref const SEvent event);
 
 	/// Clears the whole 
 	/**
@@ -1578,7 +1578,7 @@ interface ISceneManager
 	/**
 	* Returns: Pointer to the requested scene node animator factory, or 0 if it does not exist.
 	*/
-	ISceneNodeAnimatorFactory* getSceneNodeAnimatorFactory(size_t index);
+	ISceneNodeAnimatorFactory getSceneNodeAnimatorFactory(size_t index);
 
 	/// Get typename from a scene node type or null if not found
 	string getSceneNodeTypeName(ESCENE_NODE_TYPE type);

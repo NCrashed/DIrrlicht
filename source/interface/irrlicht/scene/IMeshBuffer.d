@@ -99,13 +99,7 @@ interface IMeshBuffer
 	/**
 	* Returns: Axis aligned bounding box of this buffer. 
 	*/
-	auto ref const aabbox3df getBoundingBox()() const;
-
-	/// Get the axis aligned bounding box of this meshbuffer.
-	/**
-	* Returns: Axis aligned bounding box of this buffer. 
-	*/
-	auto ref aabbox3df getBoundingBox()();
+	aabbox3df getBoundingBox() const;
 
 	/// Set axis aligned bounding box
 	/**
@@ -113,28 +107,19 @@ interface IMeshBuffer
 	* 	box=  User defined axis aligned bounding box to use
 	* for this buffer. 
 	*/
-	void setBoundingBox()(auto ref const aabbox3df box);
+	void setBoundingBox(aabbox3df box);
 
 	/// Recalculates the bounding box. Should be called if the mesh changed.
 	void recalculateBoundingBox();
 
 	/// returns position of vertex i, const version
-	auto ref const vector3df getPosition()(size_t i) const;
-
-	/// returns position of vertex i
-	auto ref vector3df getPosition()(size_t i);
+	vector3df getPosition(size_t i) const;
 
 	/// returns normal of vertex i, const version
-	auto ref const vector3df getNormal()(size_t i) const;
-
-	/// returns normal of vertex i
-	auto ref vector3df getNormal()(size_t i);
+	vector3df getNormal(size_t i) const;
 
 	/// returns texture coord of vertex i, const version
-	auto ref const vector2df getTCoords()(size_t i) const;
-
-	/// returns texture coord of vertex i
-	auto ref vector2df getTCoords()(size_t i);
+	vector2df getTCoords(size_t i) const;
 
 	/// Append the vertices and indices to the current buffer
 	/**

@@ -56,16 +56,16 @@ interface IGUISpriteBank
 	void clear();
 
 	/// Draws a sprite in 2d with position and color
-	void draw2DSprite()(size_t index, auto ref const vector2di pos,
+	void draw2DSprite(size_t index, vector2di pos,
 			const rect!(int)* clip = null,
-			const SColor color= SColor(255,255,255,255),
+			SColor color= SColor(255,255,255,255),
 			uint starttime = 0, uint currenttime = 0,
 			bool loop = true, bool center = false);
 
 	/// Draws a sprite batch in 2d using an array of positions and a color
 	void draw2DSpriteBatch(const size_t[] indices, const vector2di[] pos,
 			const rect!(int)* clip = null,
-			const SColor color = SColor(255,255,255,255),
+			SColor color = SColor(255,255,255,255),
 			uint starttime = 0, uint currenttime = 0,
 			bool loop = true, bool center = false);
 }

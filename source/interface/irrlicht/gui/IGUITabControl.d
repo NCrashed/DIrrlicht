@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.d module.
 module irrlicht.gui.IGUITabControl;
 
+import irrlicht.gui.IGUIEnvironment;
 import irrlicht.gui.IGUIElement;
 import irrlicht.gui.EGUIElementTypes;
 import irrlicht.gui.EGUIAlignment;
@@ -17,7 +18,7 @@ import irrlicht.core.rect;
 abstract class IGUITab : IGUIElement
 {
 	/// constructor
-	this()(IGUIEnvironment environment, IGUIElement parent, size_t id, auto ref const rect!int rectangle)
+	this(IGUIEnvironment environment, IGUIElement parent, size_t id, rect!int rectangle)
 	{
 		super(EGUI_ELEMENT_TYPE.EGUIET_TAB, environment, parent, id, rectangle);
 	}
@@ -56,7 +57,7 @@ abstract class IGUITab : IGUIElement
 abstract class IGUITabControl : IGUIElement
 {
 	/// constructor
-	this()(IGUIEnvironment environment, IGUIElement parent, size_t id, auto ref const rect!int rectangle)
+	this(IGUIEnvironment environment, IGUIElement parent, size_t id, rect!int rectangle)
 	{
 		super(EGUI_ELEMENT_TYPE.EGUIET_TAB_CONTROL, environment, parent, id, rectangle);
 	}

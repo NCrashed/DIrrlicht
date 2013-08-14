@@ -62,6 +62,7 @@ class CIrrDeviceSDL : CIrrDeviceStub, IImagePresenter
 		// noparachute prevents SDL from catching fatal errors.
 		version(IRR_COMPILE_WITH_JOYSTICK_EVENTS)
 		{
+			Joysticks = new SDL_Joystick*[0];
 			if (SDL_Init( SDL_INIT_TIMER | SDL_INIT_VIDEO |
 					SDL_INIT_JOYSTICK | SDL_INIT_NOPARACHUTE ) < 0)
 			{
@@ -79,12 +80,12 @@ class CIrrDeviceSDL : CIrrDeviceStub, IImagePresenter
 			}
 		}
 
-		/*version(Windows)
-			SDL_putenv("SDL_VIDEODRIVER=directx");
-		version(OSX)
-			SDL_putenv("SDL_VIDEODRIVER=Quartz");
-		else
-			SDL_putenv("SDL_VIDEODRIVER=x11");*/
+		//version(Windows)
+		//	SDL_putenv("SDL_VIDEODRIVER=directx");
+		//version(OSX)
+		//	SDL_putenv("SDL_VIDEODRIVER=Quartz");
+		//else
+		//	SDL_putenv("SDL_VIDEODRIVER=x11");
 
 		SDL_GetVersion(&Info);
 
@@ -710,31 +711,31 @@ class CIrrDeviceSDL : CIrrDeviceStub, IImagePresenter
 		}
 
 		/// Sets the new position of the cursor.
-		void setPosition()(auto ref const vector2df pos)
+		void setPosition(ref const vector2df pos)
 		{
 			setPosition(pos.X, pos.Y);
 		}
 
 		/// Sets the new position of the cursor.
-		void setPosition()(float x, float y)
+		void setPosition(float x, float y)
 		{
 			setPosition(cast(int)(x*Device.Width), cast(int)(y*Device.Height));
 		}
 
 		/// Sets the new position of the cursor.
-		void setPosition()(auto ref const vector2di pos)
+		void setPosition(ref const vector2di pos)
 		{
 			setPosition(pos.X, pos.Y);
 		}
 
 		/// Sets the new position of the cursor.
-		void setPosition()(int x, int y)
+		void setPosition(int x, int y)
 		{
-			SDL_WarpMouse( x, y );
+			SDL_WarpMouseInWindow(Device.Window, x, y );
 		}
 
 		/// Returns the current position of the mouse cursor.
-		auto ref const position2di getPosition()() const
+		ref const(vector2di) getPosition()
 		{
 			updateCursorPos();
 			return CursorPos;
@@ -772,7 +773,7 @@ class CIrrDeviceSDL : CIrrDeviceStub, IImagePresenter
 		/**
 		* Returns: Identification for the icon 
 		*/
-		ECURSOR_ICON addIcon()(auto ref const SCursorSprite icon)
+		ECURSOR_ICON addIcon(ref const SCursorSprite icon)
 		{
 			return ECURSOR_ICON.ECI_NORMAL;
 		}
@@ -783,7 +784,7 @@ class CIrrDeviceSDL : CIrrDeviceStub, IImagePresenter
 		*	 Note that this only changes the icons within your application, system cursors outside your
 		*	 application will not be affected.
 		*/
-		void changeIcon()(ECURSOR_ICON iconId, auto ref const SCursorSprite sprite)
+		void changeIcon(ECURSOR_ICON iconId, ref const SCursorSprite sprite)
 		{
 
 		}
@@ -809,21 +810,28 @@ class CIrrDeviceSDL : CIrrDeviceStub, IImagePresenter
 			return ECURSOR_PLATFORM_BEHAVIOR.ECPB_NONE;
 		}
 
+
 		private void updateCursorPos()
 		{
 			CursorPos.X = Device.MouseX;
 			CursorPos.Y = Device.MouseY;
-
-			if (CursorPos.X < 0)
-				CursorPos.X = 0;
-			if (CursorPos.X > cast(int)Device.Width)
-				CursorPos.X = Device.Width;
-			if (CursorPos.Y < 0)
-				CursorPos.Y = 0;
-			if (CursorPos.Y > cast(int)Device.Height)
-				CursorPos.Y = Device.Height;
+			clipCursorPos();
 		}
 
+		protected
+		{
+			void clipCursorPos()
+			{
+				if (CursorPos.X < 0)
+					CursorPos.X = 0;
+				if (CursorPos.X > cast(int)Device.Width)
+					CursorPos.X = Device.Width;
+				if (CursorPos.Y < 0)
+					CursorPos.Y = 0;
+				if (CursorPos.Y > cast(int)Device.Height)
+					CursorPos.Y = Device.Height;
+			}
+		}
 
 		private
 		{
@@ -1123,7 +1131,7 @@ class CIrrDeviceSDL : CIrrDeviceStub, IImagePresenter
 		
 		version(IRR_COMPILE_WITH_JOYSTICK_EVENTS)
 		{
-			SDL_Joystick*[] Joysticks = [];
+			SDL_Joystick*[] Joysticks;
 		}
 
 		int MouseX, MouseY;

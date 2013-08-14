@@ -67,7 +67,7 @@ class SMesh : IMesh
 	}
 
 	/// set user axis aligned bounding box
-	void setBoundingBox(const aabbox3df box)
+	void setBoundingBox(aabbox3df box)
 	{
 		BoundingBox = box;
 	}

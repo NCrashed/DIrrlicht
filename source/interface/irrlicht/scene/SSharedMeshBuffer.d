@@ -9,6 +9,7 @@ import irrlicht.video.S3DVertex;
 import irrlicht.video.SVertexIndex;
 import irrlicht.video.SMaterial;
 import irrlicht.core.vector3d;
+import irrlicht.core.vector2d;
 import irrlicht.core.aabbox3d;
 
 /// Implementation of the IMeshBuffer interface with shared vertex list
@@ -93,19 +94,13 @@ class SSharedMeshBuffer : IMeshBuffer
 	}
 
 	/// returns an axis aligned bounding box
-	auto ref const aabbox3d!float getBoundingBox()() const
-	{
-		return BoundingBox;
-	}
-
-	/// returns an axis aligned bounding box
-	auto ref aabbox3d!float getBoundingBox()()
+	aabbox3d!float getBoundingBox() const
 	{
 		return BoundingBox;
 	}
 
 	/// set user axis aligned bounding box
-	void setBoundingBox()( auto ref const aabbox3df box)
+	void setBoundingBox(aabbox3df box)
 	{
 		BoundingBox = box;
 	}
@@ -130,42 +125,21 @@ class SSharedMeshBuffer : IMeshBuffer
 	}
 
 	/// returns position of vertex i
-	auto ref const vector3df getPosition()(size_t i) const
-	{
-		assert(Vertices !is null);
-		return Vertices[Indices[i]].Pos;
-	}
-
-	/// returns position of vertex i
-	auto ref vector3df getPosition()(size_t i)
+	vector3df getPosition(size_t i) const
 	{
 		assert(Vertices !is null);
 		return Vertices[Indices[i]].Pos;
 	}
 
 	/// returns normal of vertex i
-	auto ref const vector3df getNormal()(size_t i) const
-	{
-		assert(Vertices !is null);
-		return Vertices[Indices[i]].Normal;
-	}
-
-	/// returns normal of vertex i
-	auto ref vector3df getNormal()(size_t i)
+	vector3df getNormal(size_t i) const
 	{
 		assert(Vertices !is null);
 		return Vertices[Indices[i]].Normal;
 	}
 
 	/// returns texture coord of vertex i
-	auto ref const vector2df getTCoords()(size_t i) const
-	{
-		assert(Vertices !is null);
-		return Vertices[Indices[i]].TCoords;
-	}
-
-	/// returns texture coord of vertex i
-	auto ref vector2df getTCoords()(size_t i)
+	vector2df getTCoords(size_t i) const
 	{
 		assert(Vertices !is null);
 		return Vertices[Indices[i]].TCoords;

@@ -65,7 +65,7 @@ interface IFileArchive
 	*
 	* Returns: a pointer to the created file on success, or 0 on failure. 
 	*/
-	IReadFile createAndOpenFile(uint index);
+	IReadFile createAndOpenFile(size_t index);
 
 	/// Returns the complete file tree
 	/** 

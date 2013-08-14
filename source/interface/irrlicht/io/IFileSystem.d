@@ -42,7 +42,7 @@ interface IFileSystem
 	*							 along with the IReadFile when it is dropped.
 	* Returns: Pointer to the created file interface.
 	*/
-	IReadFile createMemoryReadFile(void* memory, int len, const Path fileName, bool deleteMemoryWhenDropped=false);
+	IReadFile createMemoryReadFile(void* memory, size_t len, const Path fileName, bool deleteMemoryWhenDropped=false);
 
 	/// Creates an IReadFile interface for accessing files inside files.
 	/** 
@@ -55,7 +55,7 @@ interface IFileSystem
 	* Returns: A pointer to the created file interface.
 	*/
 	IReadFile createLimitReadFile(const Path fileName,
-			IReadFile alreadyOpenedFile, int pos, int areaSize);
+			IReadFile alreadyOpenedFile, int pos, size_t areaSize);
 
 	/// Creates an IWriteFile interface for accessing memory like a file.
 	/** 
@@ -69,7 +69,7 @@ interface IFileSystem
 	*							 along with the IWriteFile when it is dropped.
 	* Returns: Pointer to the created file interface.
 	*/
-	IWriteFile createMemoryWriteFile(void* memory, int len, const Path fileName, bool deleteMemoryWhenDropped=false);
+	IWriteFile createMemoryWriteFile(void* memory, size_t len, const Path fileName, bool deleteMemoryWhenDropped=false);
 
 	/// Opens a file for write access.
 	/**
@@ -155,7 +155,7 @@ interface IFileSystem
 	bool addFileArchive(IFileArchive archive);
 
 	/// Get the number of archives currently attached to the file system
-	uint getFileArchiveCount() const;
+	size_t getFileArchiveCount() const;
 
 	/// Removes an archive from the file system.
 	/** 
@@ -166,7 +166,7 @@ interface IFileSystem
 	*	index= The index of the archive to remove
 	* Returns: True on success, false on failure 
 	*/
-	bool removeFileArchive(uint index);
+	bool removeFileArchive(size_t index);
 
 	/// Removes an archive from the file system.
 	/** 
@@ -202,10 +202,10 @@ interface IFileSystem
 	*	sourceIndex= The index of the archive to change
 	*	relative= The relative change in position, archives with a lower index are searched first 
 	*/
-	bool moveFileArchive(uint sourceIndex, int relative);
+	bool moveFileArchive(size_t sourceIndex, ptrdiff_t relative);
 
 	/// Get the archive at a given index.
-	IFileArchive getFileArchive(uint index);
+	IFileArchive getFileArchive(size_t index);
 
 	/// Adds an external archive loader to the engine.
 	/** 
@@ -215,7 +215,7 @@ interface IFileSystem
 	void addArchiveLoader(IArchiveLoader loader);
 
 	/// Gets the number of archive loaders currently added
-	uint getArchiveLoaderCount() const;
+	size_t getArchiveLoaderCount() const;
 
 	/// Retrieve the given archive loader
 	/** 
@@ -224,7 +224,7 @@ interface IFileSystem
 	*			array index.
 	* Returns: A pointer to the specified loader, 0 if the index is incorrect. 
 	*/
-	IArchiveLoader getArchiveLoader(uint index) const;
+	IArchiveLoader getArchiveLoader(size_t index) const;
 
 	/// Adds a zip archive to the file system.
 	/** 

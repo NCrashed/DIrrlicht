@@ -10,6 +10,8 @@ import irrlicht.video.SVertexIndex;
 import irrlicht.scene.EHardwareBufferFlags;
 import irrlicht.core.matrix4;
 import irrlicht.core.aabbox3d;
+import irrlicht.core.vector3d;
+import irrlicht.core.vector2d;
 
 /// A mesh buffer able to choose between S3DVertex2TCoords, S3DVertex and S3DVertexTangents at runtime
 class SSkinMeshBuffer : IMeshBuffer
@@ -121,19 +123,13 @@ class SSkinMeshBuffer : IMeshBuffer
 	}
 
 	/// Get bounding box
-	auto ref const aabbox3d!float getBoundingBox()() const
-	{
-		return BoundingBox;
-	}
-
-	/// Get bounding box
-	auto ref aabbox3d!float getBoundingBox()()
+	aabbox3d!float getBoundingBox() const
 	{
 		return BoundingBox;
 	}
 
 	/// Set bounding box
-	void setBoundingBox()(auto ref const aabbox3df box)
+	void setBoundingBox(aabbox3df box)
 	{
 		BoundingBox = box;
 	}
@@ -246,21 +242,7 @@ class SSkinMeshBuffer : IMeshBuffer
 	}
 
 	/// returns position of vertex i
-	auto ref const vector3df getPosition()(size_t i) const
-	{
-		switch (VertexType)
-		{
-			case E_VERTEX_TYPE.EVT_2TCOORDS:
-				return Vertices_2TCoords[i].Pos;
-			case E_VERTEX_TYPE.EVT_TANGENTS:
-				return Vertices_Tangents[i].Pos;
-			default:
-				return Vertices_Standard[i].Pos;
-		}
-	}
-
-	/// returns position of vertex i
-	auto ref vector3df getPosition()(size_t i)
+	vector3df getPosition(size_t i) const
 	{
 		switch (VertexType)
 		{
@@ -274,21 +256,7 @@ class SSkinMeshBuffer : IMeshBuffer
 	}
 
 	/// returns normal of vertex i
-	auto ref const vector3df getNormal()(size_t i) const
-	{
-		switch (VertexType)
-		{
-			case E_VERTEX_TYPE.EVT_2TCOORDS:
-				return Vertices_2TCoords[i].Normal;
-			case E_VERTEX_TYPE.EVT_TANGENTS:
-				return Vertices_Tangents[i].Normal;
-			default:
-				return Vertices_Standard[i].Normal;
-		}
-	}
-
-	/// returns normal of vertex i
-	auto ref vector3df getNormal()(size_t i)
+	vector3df getNormal(size_t i) const
 	{
 		switch (VertexType)
 		{
@@ -302,7 +270,7 @@ class SSkinMeshBuffer : IMeshBuffer
 	}
 
 	/// returns texture coords of vertex i
-	auto ref const vector2df getTCoords()(size_t i) const
+	vector2df getTCoords(size_t i) const
 	{
 		switch (VertexType)
 		{
@@ -315,19 +283,6 @@ class SSkinMeshBuffer : IMeshBuffer
 		}
 	}
 
-	/// returns texture coords of vertex i
-	auto ref vector2df getTCoords()(size_t i)
-	{
-		switch (VertexType)
-		{
-			case E_VERTEX_TYPE.EVT_2TCOORDS:
-				return Vertices_2TCoords[i].TCoords;
-			case E_VERTEX_TYPE.EVT_TANGENTS:
-				return Vertices_Tangents[i].TCoords;
-			default:
-				return Vertices_Standard[i].TCoords;
-		}
-	}
 
 	/// append the vertices and indices to the current buffer
 	void append(const(void[]) vertices, const(ushort[]) indices) {}

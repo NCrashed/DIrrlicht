@@ -22,8 +22,8 @@ import std.math;
 abstract class IGUIElement : IAttributeExchangingObject, IEventReceiver
 {
 	/// Constructor
-	this()(EGUI_ELEMENT_TYPE type, IGUIEnvironment environment, IGUIElement parent,
-		size_t id, auto ref const rect!int rectangle)
+	this(EGUI_ELEMENT_TYPE type, IGUIEnvironment environment, IGUIElement parent,
+		size_t id, rect!int rectangle)
 	{
 		// Init
 		Parent = null;
@@ -112,7 +112,7 @@ abstract class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* Params:
 	* 	r=  The absolute position to set 
 	*/
-	void setRelativePosition()(auto ref const rect!int r)
+	void setRelativePosition(ref const rect!int r)
 	{
 		if (Parent !is null)
 		{
@@ -137,31 +137,40 @@ abstract class IGUIElement : IAttributeExchangingObject, IEventReceiver
 		updateAbsolutePosition();
 	}
 
+	final void setRelativePosition(const rect!int r)
+	{
+		setRelativePosition(r);
+	}
+
 	/// Sets the relative rectangle of this element, maintaining its current width and height
 	/**
 	* Params:
 	* 	position=  The new relative position to set. Width and height will not be changed. 
 	*/
-	void setRelativePosition()(auto ref const vector2di position)
+	void setRelativePosition(ref const vector2di position)
 	{
 		immutable mySize = RelativeRect.getSize();
 		
 		immutable rectangle = rect!int(position.X, position.Y,
-						position.X + mySize.Width, position.Y + mySize.Height);
+						position.X + mySize.X, position.Y + mySize.Y);
 		
 		setRelativePosition(rectangle);
 	}
 
+	final void setRelativePosition(const vector2di position)
+	{
+		setRelativePosition(position);
+	}
 
 	/// Sets the relative rectangle of this element as a proportion of its parent's area.
 	/**
-	* Note:  This method used to be 'void setRelativePosition(const core::rect<f32>& r)'
+	* Note:  This method used to be 'void setRelativePosition(ref const rect!float r)'
 	* Params:
 	* 	r=   The rectangle to set, interpreted as a proportion of the parent's area.
 	* Meaningful values are in the range [0...1], unless you intend this element to spill
 	* outside its parent. 
 	*/
-	void setRelativePositionProportional()(auto ref const rect!int r)
+	void setRelativePositionProportional(ref const rect!int r)
 	{
 		if (Parent is null)
 			return;
@@ -169,16 +178,21 @@ abstract class IGUIElement : IAttributeExchangingObject, IEventReceiver
 		immutable d = Parent.getAbsolutePosition().getSize();
 
 		DesiredRect = rect!int(
-					cast(int)floor(cast(float)d.Width * r.UpperLeftCorner.X),
-					cast(int)floor(cast(float)d.Height * r.UpperLeftCorner.Y),
-					cast(int)floor(cast(float)d.Width * r.LowerRightCorner.X),
-					cast(int)floor(cast(float)d.Height * r.LowerRightCorner.Y));
+					cast(int)floor(cast(float)d.X * r.UpperLeftCorner.X),
+					cast(int)floor(cast(float)d.Y * r.UpperLeftCorner.Y),
+					cast(int)floor(cast(float)d.X * r.LowerRightCorner.X),
+					cast(int)floor(cast(float)d.Y * r.LowerRightCorner.Y));
 
-		ScaleRect = r;
+		ScaleRect = rect!float(r.UpperLeftCorner.X, r.UpperLeftCorner.Y, 
+			r.LowerRightCorner.X, r.LowerRightCorner.Y);
 
 		updateAbsolutePosition();
 	}
 
+	final void setRelativePositionProportional(const rect!int r)
+	{
+		setRelativePositionProportional(r);
+	}
 
 	/// Gets the absolute rectangle of this element
 	rect!int getAbsolutePosition() const
@@ -220,15 +234,19 @@ abstract class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	/**
 	* If set to 0,0, there is no maximum size 
 	*/
-	void setMaxSize()(auto ref const dimension2du size)
+	void setMaxSize(ref const dimension2du size)
 	{
 		MaxSize = size;
 		updateAbsolutePosition();
 	}
 
+	final void setMaxSize(const dimension2du size)
+	{
+		setMaxSize(size);
+	}
 
 	/// Sets the minimum size allowed for this element
-	void setMinSize()(auto ref const dimension2du size)
+	void setMinSize(ref const dimension2du size)
 	{
 		MinSize = size;
 		if (MinSize.Width < 1)
@@ -238,6 +256,10 @@ abstract class IGUIElement : IAttributeExchangingObject, IEventReceiver
 		updateAbsolutePosition();
 	}
 
+	final void setMinSize(const dimension2du size)
+	{
+		setMinSize(size);
+	}
 
 	/// The alignment defines how the borders of this element will be positioned when the parent element is resized.
 	void setAlignment(EGUI_ALIGNMENT left, EGUI_ALIGNMENT right, EGUI_ALIGNMENT top, EGUI_ALIGNMENT bottom)
@@ -291,7 +313,7 @@ abstract class IGUIElement : IAttributeExchangingObject, IEventReceiver
 	* Returns: The topmost GUI element at that point, or 0 if there are
 	* no candidate elements at this point.
 	*/
-	IGUIElement getElementFromPoint()(auto ref const vector2d!int point)
+	IGUIElement getElementFromPoint(ref const vector2d!int point)
 	{
 		IGUIElement target = null;
 
@@ -315,16 +337,24 @@ abstract class IGUIElement : IAttributeExchangingObject, IEventReceiver
 		return target;
 	}
 
+	final IGUIElement getElementFromPoint(const vector2d!int point)
+	{
+		return getElementFromPoint(point);
+	}
 
 	/// Returns true if a point is within this element.
 	/**
 	* Elements with a shape other than a rectangle should override this method 
 	*/
-	bool isPointInside()(auto ref const vector2d!int point) const
+	bool isPointInside(ref const vector2d!int point) const
 	{
 		return AbsoluteClippingRect.isPointInside(point);
 	}
 
+	final bool isPointInside(const vector2d!int point) const
+	{
+		return isPointInside(point);
+	}
 
 	/// Adds a GUI element as new child of this element.
 	void addChild(IGUIElement child)
@@ -571,7 +601,7 @@ abstract class IGUIElement : IAttributeExchangingObject, IEventReceiver
 
 
 	/// Called if an event happened.
-	bool OnEvent()(auto ref const SEvent event)
+	bool OnEvent(ref const SEvent event)
 	{
 		return (Parent !is null) ? Parent.OnEvent(event) : false;
 	}

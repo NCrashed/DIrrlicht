@@ -16,7 +16,7 @@ interface IFileList
 		* Returns:
 		* Amount of files and directories in the file list. 
 		*/
-		uint getFileCount();
+		size_t getFileCount();
 
 		/// Gets the name of a file in the list, based on an index.
 		/** 
@@ -27,7 +27,7 @@ interface IFileList
 		* 
 		* Returns: File name of the file. Returns 0, if an error occured. 
 		*/
-		const Path getFileName(uint index);
+		const Path getFileName(size_t index);
 
 		/// Gets the full name of a file in the list including the path, based on an index.
 		/** 
@@ -37,7 +37,7 @@ interface IFileList
 		*
 		* Returns: File name of the file. Returns 0 if an error occured. 
 		*/
-		const Path getFullFileName(uint index);
+		const Path getFullFileName(size_t index);
 
 		/// Returns the size of a file in the file list, based on an index.
 		/**
@@ -47,7 +47,7 @@ interface IFileList
 		*
 		* Returns: The size of the file in bytes.
 		*/
-		uint getFileSize(uint index);
+		ulong getFileSize(size_t index);
 
 		/// Returns the file offset of a file in the file list, based on an index.
 		/**
@@ -57,7 +57,7 @@ interface IFileList
 		*
 		* Returns: The offset of the file in bytes.
 		*/
-		uint getFileOffset(uint index);
+		ulong getFileOffset(size_t index);
 
 		/// Returns the ID of a file in the file list, based on an index.
 		/** 
@@ -70,7 +70,7 @@ interface IFileList
 		*
 		* Returns: The ID of the file. 
 		*/
-		uint getID(uint index);
+		size_t getID(size_t index);
 
 		/// Check if the file is a directory
 		/**
@@ -80,7 +80,7 @@ interface IFileList
 		* 
 		* Returns: True if the file is a directory, else false. 
 		*/
-		bool isDirectory(uint index);
+		bool isDirectory(size_t index);
 
 		/// Searches for a file or folder in the list
 		/** 
@@ -106,7 +106,7 @@ interface IFileList
 		* size 			The size of the file in bytes.
 		* id 			The ID of the file in the archive which owns it 
 		*/
-		uint addItem(const Path fullPath, uint offset, uint size, bool isDirectory, uint id = 0);
+		size_t addItem(const Path fullPath, size_t offset, size_t size, bool isDirectory, size_t id = 0);
 	
 		/// Sorts the file list. You should call this after adding any items to the file list
 		void sort();

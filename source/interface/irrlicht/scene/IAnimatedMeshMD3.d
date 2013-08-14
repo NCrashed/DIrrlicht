@@ -149,7 +149,7 @@ struct SMD3MeshBuffer
 struct SMD3QuaternionTag
 {
 	// construct for searching
-	this()( const string name )
+	this()(string name )
 	{
 		Name = name;
 	}
@@ -256,8 +256,8 @@ interface IAnimatedMeshMD3 : IAnimatedMesh
 	void setInterpolationShift(uint shift, uint loopMode);
 
 	/// get the tag list of the mesh.
-	auto ref SMD3QuaternionTagList getTagList()(int frame, int detailLevel, int startFrameLoop, int endFrameLoop);
+	ref SMD3QuaternionTagList getTagList(int frame, int detailLevel, int startFrameLoop, int endFrameLoop);
 
 	/// get the original md3 mesh.
-	auto ref SMD3Mesh getOriginalMesh();
+	ref SMD3Mesh getOriginalMesh();
 }

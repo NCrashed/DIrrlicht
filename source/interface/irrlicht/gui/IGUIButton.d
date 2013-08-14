@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.d module.
 module irrlicht.gui.IGUIButton;
 
+import irrlicht.gui.IGUIEnvironment;
 import irrlicht.gui.IGUIElement;
 import irrlicht.gui.EGUIElementTypes;
 import irrlicht.gui.IGUIFont;
@@ -11,6 +12,7 @@ import irrlicht.gui.EGUIElementTypes;
 import irrlicht.gui.IGUIFont;
 import irrlicht.video.ITexture;
 import irrlicht.video.SColor;
+import irrlicht.core.rect;
 
 enum EGUI_BUTTON_STATE
 {
@@ -49,9 +51,9 @@ immutable(string[]) GUIButtonStateNames =
 abstract class IGUIButton: IGUIElement
 {
 	/// constructor
-	this()(IGUIEnvironment environment, IGUIElement parent, size_t id, auto ref const rect!int rectangle)
+	this(IGUIEnvironment environment, IGUIElement parent, size_t id, rect!int rectangle)
 	{
-		super(EGUI_ELEMENT_TYPE.EGUIET_BUTTON, environment, parent. id, rectangle);
+		super(EGUI_ELEMENT_TYPE.EGUIET_BUTTON, environment, parent, id, rectangle);
 	}
 
 	/// Sets another skin independent font.
@@ -80,7 +82,7 @@ abstract class IGUIButton: IGUIElement
 	* Params:
 	* 	image=  Image to be displayed 
 	*/
-	void setImage()(ITexture image = null);
+	void setImage(ITexture image = null);
 
 	/// Sets a background image for the button when it is in normal state.
 	/**
@@ -88,7 +90,12 @@ abstract class IGUIButton: IGUIElement
 	* 	image=  Texture containing the image to be displayed
 	* 	pos=  Position in the texture, where the image is located 
 	*/
-	void setImage()(ITexture image, auto ref const rect!int pos);
+	void setImage(ITexture image, ref const rect!int pos);
+
+	final void setImage(ITexture image, const rect!int pos)
+	{
+		setImage(image, pos);
+	}
 
 	/// Sets a background image for the button when it is in pressed state.
 	/**
@@ -97,7 +104,7 @@ abstract class IGUIButton: IGUIElement
 	* Params:
 	* 	image=  Image to be displayed 
 	*/
-	void setPressedImage()(ITexture image = null);
+	void setPressedImage(ITexture image = null);
 
 	/// Sets an image which should be displayed on the button when it is in pressed state.
 	/**
@@ -105,8 +112,13 @@ abstract class IGUIButton: IGUIElement
 	* 	image=  Texture containing the image to be displayed
 	* 	pos=  Position in the texture, where the image is located 
 	*/
-	void setPressedImage()(ITexture image, auto ref const rect!int pos);
+	void setPressedImage(ITexture image, ref const rect!int pos);
 
+	final void setPressedImage(ITexture image, const rect!int pos)
+	{
+		setPressedImage(image, pos);
+	}
+	
 	/// Sets the sprite bank used by the button
 	void setSpriteBank(IGUISpriteBank bank = null);
 

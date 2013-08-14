@@ -16,7 +16,7 @@ interface IReadFile
 	*
 	* Returns: How many bytes were read. 
 	*/
-	int read(void* buffer, uint sizeToRead);
+	int read(void* buffer, size_t sizeToRead);
 
 	/// Changes position in file
 	/**
@@ -28,19 +28,19 @@ interface IReadFile
 	*
 	* Returns: True if successful, otherwise false. 
 	*/
-	bool seek(long finalPos, bool relativeMovement = false);
+	bool seek(ulong finalPos, bool relativeMovement = false);
 
 	/// Get size of file.
 	/** 
 	* Returns: Size of the file in bytes. 
 	*/
-	long getSize();
+	ulong getSize();
 
 	/// Get the current position in the file.
 	/** 
 	* Returns: Current position in the file in bytes. 
 	*/
-	long getPos();
+	ulong getPos();
 
 	/// Get name of file.
 	/** 
@@ -53,7 +53,7 @@ interface IReadFile
 IReadFile createReadFile(const Path fileName);
 
 /// Internal function, please do not use
-IReadFile createLimitReadFile(const Path fileName, IReadFile alreadyOpenedFile, long pos, long areaSize);
+IReadFile createLimitReadFile(const Path fileName, IReadFile alreadyOpenedFile, ulong pos, size_t areaSize);
 
 /// Internal function, please do not use.
-IReadFile createMemoryReadFile(void* memory, long size, const Path fileName, bool deleteMemoryWhenDropped);
+IReadFile createMemoryReadFile(void* memory, ulong size, const Path fileName, bool deleteMemoryWhenDropped);

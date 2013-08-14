@@ -18,10 +18,12 @@ import irrlicht.core.matrix4;
 import irrlicht.core.quaternion;
 import irrlicht.core.plane3d;
 import irrlicht.core.irrArray;
+import irrlicht.core.meta;
 import irrlicht.io.IXMLReader;
 import irrlicht.io.IXMLWriter;
 import irrlicht.io.EAttributes;
 import std.traits;
+import std.typetuple;
 
 /// Provides a generic interface for attributes and their values and the possiblity to serialize them
 interface IAttributes 
@@ -116,21 +118,73 @@ interface IAttributes
 	* - User pointer void*
 	*/
 
+	protected
+	{
+		alias TypeTuple!(
+			int, long, uint, ulong, float, double, bool,
+			string, wstring,
+			void[], wstring[],
+			int[], long[], uint[], ulong[], float[], double[], bool[],
+			SColor, SColorf,
+			vector3df, vector2df, vector3di, vector2di,
+			recti, rectf,
+			dimension2df, dimension2di, dimension2du,
+			matrix4,
+			quaternion,
+			aabbox3df, aabbox3di,
+			plane3df, plane3di,
+			triangle3df, triangle3di,
+			line3df, line2df, line3di, line2di,
+			void*
+			) TypesToBeHandled;
+		
+		mixin(genTemplatePrototypes!("Type", TypesToBeHandled)(q{
+			void add(Type)(string attributeName, Type value);
+			void setAttribute(Type)(string attributeName, Type value);
+			void setAttribute(Type)(size_t index, Type value);
+			Type getAttribute(Type)(string attributeName) const;
+			Type getAttribute(Type)(size_t index) const;
+		}));		
+
+		mixin(genTemplatePrototypes!("Type", TypeTuple!(string, wstring))(q{
+			void getAttribute(Type)(string attributeName, out Type target);
+		}));
+
+		mixin(genTemplatePrototypes!("Type", TypeTuple!(ITexture))(q{
+			void add(Type)(string attributeName, Type texture, string filename = "");
+			void setAttribute(Type)(string attributeName, Type texture, string filename = "");
+			void setAttribute(Type)(size_t index, Type texture, string filename = "");
+		}));
+	}
+
 	/// Adds an attribute as Type
-	void add(Type)(string attributeName, Type value);
+	final void add(Type)(string attributeName, Type value)
+	{
+		pragma(msg, Type);
+		mixin("add"~mangleUnqual!Type~"(attributeName, value);");
+	}
 
 	/// Sets an attribute as Type value
-	void setAttribute(Type)(string attributeName, Type value);
+	final void setAttribute(Type)(string attributeName, Type value)
+	{
+		mixin("setAttribute"~mangleUnqual!Type~"(attributeName, value);");
+	}
 
 	/// Sets an attribute as Type value
-	void setAttribute(Type)(size_t index, Type value);
+	final void setAttribute(Type)(size_t index, Type value)
+	{
+		mixin("setAttribute"~mangleUnqual!Type~"(index, value);");
+	}
 
 	/// Gets an attribute as integer value
 	/**
 	* Params:
 	* 	index=  Index value, must be between 0 and getAttributeCount()-1. 
 	*/
-	Type getAttribute(Type)(string attributeName) const;
+	final Type getAttribute(Type)(string attributeName) const
+	{
+		mixin("return getAttribute"~mangleUnqual!Type~"(attributeName);");
+	}
 
 	/// Gets an attribute as Type value
 	/**
@@ -138,7 +192,10 @@ interface IAttributes
 	* 	attributeName=  Name of the attribute to get.
 	* Returns: Returns value of the attribute previously set by setAttribute() 
 	*/
-	Type getAttribute(Type)(size_t index) const;
+	final Type getAttribute(Type)(size_t index) const
+	{
+		mixin("return getAttribute"~mangleUnqual!Type~"(index);");
+	}
 
 
 	/// Gets an attribute as string.
@@ -147,8 +204,11 @@ interface IAttributes
 	* 	attributeName=  Name of the attribute to get.
 	* 	target=  Buffer where the string is copied to. 
 	*/
-	void getAttribute(Type)(string attributeName, out Type target)
-		if(isSomeString!Type);
+	final void getAttribute(Type)(string attributeName, out Type target)
+		if(isSomeString!Type)
+	{
+		mixin("return getAttribute"~mangleUnqual!Type~"(attributeName, target);");
+	}
 
 	/*
 
@@ -231,15 +291,23 @@ interface IAttributes
 	*/
 
 	/// Adds an attribute as texture reference
-	void add(Type)(string attributeName, Type texture, string filename = "")
-		if(is(Type == ITexture));
+	final void add(Type)(string attributeName, Type texture, string filename = "")
+		if(is(Type == ITexture))
+	{
+		return addITexture(attributeName, texture, filename);
+	}
 
 	/// Sets an attribute as texture reference
-	void setAttribute(Type)(string attributeName, Type texture, string filename = "")
-		if(is(Type == ITexture));
+	final void setAttribute(Type)(string attributeName, Type texture, string filename = "")
+		if(is(Type == ITexture))
+	{
+		return setAttributeITexture(attributeName, texture, filename);
+	}
 
 	/// Sets an attribute as texture reference
-	void setAttribute(Type)(size_t index, Type texture, string filename = "")
-		if(is(Type == ITexture));
-
+	final void setAttribute(Type)(size_t index, Type texture, string filename = "")
+		if(is(Type == ITexture))
+	{
+		return setAttributeITexture(index, texture, filename);
+	}
 }

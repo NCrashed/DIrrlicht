@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.gui.IGUISpinBox;
 
+import irrlicht.gui.IGUIEnvironment;
 import irrlicht.gui.IGUIElement;
 import irrlicht.gui.EGUIElementTypes;
 import irrlicht.gui.IGUIEditBox;
@@ -16,8 +17,8 @@ import irrlicht.core.rect;
 abstract class IGUISpinBox : IGUIElement
 {
 	/// constructor
-	this()(IGUIEnvironment environment, IGUIElement parent,
-				int id, auto ref const rect!int rectangle)
+	this(IGUIEnvironment environment, IGUIElement parent,
+				int id, rect!int rectangle)
 	{
 		super(EGUI_ELEMENT_TYPE.EGUIET_SPIN_BOX, environment, parent, id, rectangle);
 	}

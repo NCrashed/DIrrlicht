@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 module irrlicht.gui.IGUITable;
 
+import irrlicht.gui.IGUIEnvironment;
 import irrlicht.gui.IGUIElement;
 import irrlicht.gui.EGUIElementTypes;
 import irrlicht.gui.IGUISkin;
@@ -82,7 +83,7 @@ enum EGUI_TABLE_DRAW_FLAGS
 abstract class IGUITable : IGUIElement
 {
 	/// constructor
-	this()(IGUIEnvironment environment, IGUIElement parent, size_t id, auto ref const rect!int rectangle)
+	this(IGUIEnvironment environment, IGUIElement parent, size_t id, rect!int rectangle)
 	{
 		super(EGUI_ELEMENT_TYPE.EGUIET_TABLE, environment, parent, id, rectangle);
 	}

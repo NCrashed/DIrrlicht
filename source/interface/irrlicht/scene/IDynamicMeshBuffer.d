@@ -21,10 +21,10 @@ import std.range;
 interface IDynamicMeshBuffer : IMeshBuffer
 {
 	IVertexBuffer   getVertexBuffer() const;
-	IIndexBuffer  getIndexBuffer()() const;
+	IIndexBuffer  getIndexBuffer() const;
 
 	void setVertexBuffer(IVertexBuffer vertexBuffer);
-	void setIndexBuffer()(IIndexBuffer indexBuffer);
+	void setIndexBuffer(IIndexBuffer indexBuffer);
 
 	/// Get the material of this meshbuffer
 	/**
@@ -42,7 +42,7 @@ interface IDynamicMeshBuffer : IMeshBuffer
 	/**
 	* Returns: Axis aligned bounding box of this buffer. 
 	*/
-	auto ref const aabbox3df getBoundingBox()() const;
+	aabbox3df getBoundingBox() const;
 
 	/// Set axis aligned bounding box
 	/**
@@ -50,7 +50,7 @@ interface IDynamicMeshBuffer : IMeshBuffer
 	* 	box=  User defined axis aligned bounding box to use
 	* for this buffer. 
 	*/
-	void setBoundingBox()(auto ref const aabbox3df box);
+	void setBoundingBox(aabbox3df box);
 
 	/// Recalculates the bounding box. Should be called if the mesh changed.
 	void recalculateBoundingBox();

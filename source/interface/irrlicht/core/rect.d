@@ -90,7 +90,7 @@ struct rect(T)
 	*	Returns:
 	*	True if the position is within the rectangle, false if not.
 	*/
-	bool isPointInside()(auto ref const vector2d!T pos)
+	bool isPointInside()(auto ref const vector2d!T pos) const
 	{
 		return (UpperLeftCorner.X <= pos.X &&
 			UpperLeftCorner.Y <= pos.Y &&
@@ -105,7 +105,7 @@ struct rect(T)
 	*	
 	*	Returns: True if the rectangles collide.
 	*/
-	bool isRectCollided()(auto ref const rect!T other)
+	bool isRectCollided()(auto ref const rect!T other) const
 	{
 		return (LowerRightCorner.Y > other.UpperLeftCorner.Y &&
 			UpperLeftCorner.Y < other.LowerRightCorner.Y &&

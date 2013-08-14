@@ -11,6 +11,7 @@ import irrlicht.scene.IAnimatedMesh;
 import irrlicht.scene.IAnimatedMeshMD2;
 import irrlicht.scene.IAnimatedMeshMD3;
 import irrlicht.scene.IShadowVolumeSceneNode;
+import irrlicht.core.vector3d;
 
 enum E_JOINT_UPDATE_ON_RENDER
 {
@@ -30,7 +31,7 @@ enum E_JOINT_UPDATE_ON_RENDER
 * IAnimatedMeshSceneNode.setAnimationEndCallback to be able to
 * be notified if an animation playback has ended.
 **/
-class IAnimationEndCallBack
+interface IAnimationEndCallBack
 {
 	/// Will be called when the animation playback has ended.
 	/**
@@ -51,18 +52,10 @@ class IAnimationEndCallBack
 abstract class IAnimatedMeshSceneNode : ISceneNode
 {
 	/// Constructor
-	this()(ISceneNode parent, ISceneManager mgr, int id,
-		const vector3df position = vector3df(0,0,0),
-		const vector3df rotation = vector3df(0,0,0),
-		const vector3df scale = vector3df(1.0f, 1.0f, 1.0f))
-	{
-		super(parent, mgr, id, position, rotation, scale);
-	}
-
-	this()(ISceneNode parent, ISceneManager mgr, int id,
-		auto ref const vector3df position,
-		auto ref const vector3df rotation,
-		auto ref const vector3df scale)
+	this(ISceneNode parent, ISceneManager mgr, int id,
+		vector3df position = vector3df(0,0,0),
+		vector3df rotation = vector3df(0,0,0),
+		vector3df scale = vector3df(1.0f, 1.0f, 1.0f))
 	{
 		super(parent, mgr, id, position, rotation, scale);
 	}
@@ -231,7 +224,7 @@ abstract class IAnimatedMeshSceneNode : ISceneNode
 	IAnimatedMesh getMesh();
 
 	/// Get the absolute transformation for a special MD3 Tag if the mesh is a md3 mesh, or the absolutetransformation if it's a normal scenenode
-	auto ref const SMD3QuaternionTag getMD3TagTransformation()(string tagname);
+	SMD3QuaternionTag getMD3TagTransformation(string tagname);
 
 	/// Set how the joints should be updated on render
 	void setJointMode(E_JOINT_UPDATE_ON_RENDER mode);

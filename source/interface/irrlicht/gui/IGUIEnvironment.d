@@ -40,6 +40,7 @@ import irrlicht.IOSOperator;
 import irrlicht.IEventReceiver;
 import irrlicht.core.rect;
 import irrlicht.core.dimension2d;
+import irrlicht.core.vector2d;
 
 /// GUI Environment. Used as factory and manager of all other GUI elements.
 /** 
@@ -128,7 +129,12 @@ interface IGUIEnvironment
 	*	event= The event to post.
 	* Returns: True if succeeded, else false. 
 	*/
-	bool postEventFromUser()(auto ref const SEvent event);
+	bool postEventFromUser(ref const SEvent event);
+
+	final bool postEventFromUser(const SEvent event)
+	{
+		return postEventFromUser(event);
+	}
 
 	/// This sets a new event receiver for gui events.
 	/** 
@@ -250,7 +256,7 @@ interface IGUIEnvironment
 	*	tooltiptext= Text displayed in the tooltip.
 	* Returns: Pointer to the created button. Returns 0 if an error occurred.
 	*/
-	IGUIButton addButton()(auto ref const rect!int rectangle,
+	IGUIButton addButton(rect!int rectangle,
 		IGUIElement parent = null, int id = -1, wstring text = "", wstring tooltiptext = "");
 
 	/// Adds an empty window element.
@@ -265,8 +271,8 @@ interface IGUIEnvironment
 	*	id= Id with which the gui element can be identified.
 	* Returns: Pointer to the created window. Returns 0 if an error occurred.
 	*/
-	IGUIWindow addWindow()(auto ref const rect!int rectangle, bool modal = false,
-		const wstring text = "", IGUIElement parent = null, int id=-1);
+	IGUIWindow addWindow(rect!int rectangle, bool modal = false,
+		wstring text = "", IGUIElement parent = null, int id=-1);
 
 	/// Adds a modal screen.
 	/**
@@ -295,7 +301,7 @@ interface IGUIEnvironment
 	*Returns: Pointer to the created message box. Returns 0 if an error
 	*			occurred. 
 	*/
-	IGUIWindow addMessageBox(const wstring caption, const wstring text="",
+	IGUIWindow addMessageBox(wstring caption, wstring text="",
 		bool modal = true, int flags = EMESSAGE_BOX_FLAG.EMBF_OK, IGUIElement parent = null, int id = -1, ITexture image = null);
 
 	/// Adds a scrollbar.
@@ -309,7 +315,7 @@ interface IGUIEnvironment
 	* Return: Pointer to the created scrollbar. Returns 0 if an error
 	*			occurred. 
 	*/
-	IGUIScrollBar addScrollBar()(bool horizontal, auto ref const rect!int rectangle,
+	IGUIScrollBar addScrollBar(bool horizontal, rect!int rectangle,
 		IGUIElement parent = null, int id = -1);
 
 	/// Adds an image element.
@@ -326,8 +332,8 @@ interface IGUIEnvironment
 	* Returns: Pointer to the created image element. Returns 0 if an error
 	* occurred.
 	*/
-	IGUIImage addImage()(ITexture image, auto ref const vector2d!int pos,
-		bool useAlphaChannel = true, IGUIElement parent = null, int id = -1, const wstring text = "");
+	IGUIImage addImage(ITexture image, vector2d!int pos,
+		bool useAlphaChannel = true, IGUIElement parent = null, int id = -1, wstring text = "");
 
 	/// Adds an image element.
 	/** 
@@ -342,8 +348,8 @@ interface IGUIEnvironment
 	* Returna: Pointer to the created image element. Returns 0 if an error
 	*			occurred.  
 	*/
-	IGUIImage addImage()(auto ref const rect!int rectangle,
-		IGUIElement parent = null, int id = -1, const string wtext = "", bool useAlphaChannel = true);
+	IGUIImage addImage( rect!int rectangle,
+		IGUIElement parent = null, int id = -1, string wtext = "", bool useAlphaChannel = true);
 
 	/// Adds a checkbox element.
 	/**
@@ -356,8 +362,8 @@ interface IGUIEnvironment
 	*Returns: Pointer to the created check box. Returns 0 if an error
 	*			occurred. 
 	*/
-	IGUICheckBox addCheckBox()(bool checked, auto ref const rect!int rectangle,
-		IGUIElement parent = null, int id = -1, const wstring text = "");
+	IGUICheckBox addCheckBox(bool checked, rect!int rectangle,
+		IGUIElement parent = null, int id = -1, wstring text = "");
 
 	/// Adds a list box element.
 	/** 
@@ -368,7 +374,7 @@ interface IGUIEnvironment
 	*	drawBackground= Flag whether the background should be drawn.
 	* Returns: Pointer to the created list box. Returns 0 if an error occurred.
 	*/
-	IGUIListBox addListBox()(auto ref const rect!int rectangle,
+	IGUIListBox addListBox(rect!int rectangle,
 		IGUIElement parent = null, int id = -1, bool drawBackground = false);
 
 	/// Adds a tree view element.
@@ -382,7 +388,7 @@ interface IGUIEnvironment
 	*	scrollBarHorizontal= Flag whether a horizontal scrollbar should be used
 	* Returns: Pointer to the created list box. Returns 0 if an error occurred.
 	*/
-	IGUITreeView addTreeView()(auto ref const rect!int rectangle,
+	IGUITreeView addTreeView(rect!int rectangle,
 		IGUIElement parent = null, int id = -1, bool drawBackground = false,
 		bool scrollBarVertical = true, bool scrollBarHorizontal = false);
 
@@ -396,8 +402,8 @@ interface IGUIEnvironment
 	* Returns: Pointer to the created mesh viewer. Returns 0 if an error
 	* occurred. 
 	*/
-	IGUIMeshViewer addMeshViewer()(auto ref const rect!int rectangle,
-			IGUIElement parent = null, int id = -1, const wstring text = "");
+	IGUIMeshViewer addMeshViewer(rect!int rectangle,
+			IGUIElement parent = null, int id = -1, wstring text = "");
 
 	/// Adds a file open dialog.
 	/**
@@ -415,7 +421,7 @@ interface IGUIEnvironment
 	* Returns: Pointer to the created file open dialog. Returns 0 if an error
 	* occurred. 
 	*/
-	IGUIFileOpenDialog addFileOpenDialog()(const wstring title = "",
+	IGUIFileOpenDialog addFileOpenDialog(wstring title = "",
 		bool modal = true, IGUIElement parent = null, int id = -1,
 		bool restoreCWD = false, const Path startDir = "");
 
@@ -431,7 +437,7 @@ interface IGUIEnvironment
 	* Returns: Pointer to the created file open dialog. Returns 0 if an error
 	* occurred. 
 	*/
-	IGUIColorSelectDialog addColorSelectDialog(const wstring title = "",
+	IGUIColorSelectDialog addColorSelectDialog(wstring title = "",
 		bool modal = true, IGUIElement parent = null, int id = -1);
 
 	/// Adds a static text.
@@ -448,7 +454,7 @@ interface IGUIEnvironment
 	* Returns: Pointer to the created static text. Returns 0 if an error
 	* occurred.  
 	*/
-	IGUIStaticText addStaticText()(const wstring text, auto ref const rect!int rectangle,
+	IGUIStaticText addStaticText(wstring text, rect!int rectangle,
 		bool border = false, bool wordWrap = true, IGUIElement parent = null, int id = -1,
 		bool fillBackground = false);
 
@@ -468,7 +474,7 @@ interface IGUIEnvironment
 	*	id= The ID of the element.
 	* Returns: Pointer to the created edit box. Returns null if an error occurred.
 	*/
-	IGUIEditBox addEditBox()(const wstring text, auto ref const rect!int rectangle,
+	IGUIEditBox addEditBox(wstring text, rect!int rectangle,
 		bool border = true, IGUIElement parent = null, int id = -1);
 
 	/// Adds a spin box.
@@ -483,7 +489,7 @@ interface IGUIEnvironment
 	*	id= The ID of the element.
 	* Returns: Pointer to the created spin box. Returns 0 if an error occurred.
 	*/
-	IGUISpinBox addSpinBox()(const wstring text, auto ref const rect!int rectangle,
+	IGUISpinBox addSpinBox(wstring text, rect!int rectangle,
 		bool border = true, IGUIElement parent = null, int id = -1);
 
 	/// Adds an element for fading in or out.
@@ -496,7 +502,7 @@ interface IGUIEnvironment
 	* Returns: Pointer to the created in-out-fader. Returns 0 if an error
 	* occurred.
 	*/
-	IGUIInOutFader addInOutFader()(auto ref const rect!int rectangle = null, IGUIElement parent = null, int id = -1);
+	IGUIInOutFader addInOutFader(const rect!(int)* rectangle = null, IGUIElement parent = null, int id = -1);
 
 	/// Adds a tab control to the environment.
 	/** 
@@ -513,7 +519,7 @@ interface IGUIEnvironment
 	* Returns: Pointer to the created tab control element. Returns 0 if an
 	* error occurred. 
 	*/
-	IGUITabControl addTabControl()(auto ref const rect!int rectangle,
+	IGUITabControl addTabControl(rect!int rectangle,
 		IGUIElement parent = null, bool fillbackground = false,
 		bool border = true, int id = -1);
 
@@ -530,7 +536,7 @@ interface IGUIEnvironment
 	* Returns: Pointer to the created tab. Returns 0 if an
 	*			error occurred. 
 	*/
-	IGUITab addTab()(auto ref const rect!int rectangle,
+	IGUITab addTab(rect!int rectangle,
 		IGUIElement parent = null, int id = -1);
 
 	/// Adds a context menu to the environment.
@@ -544,7 +550,7 @@ interface IGUIEnvironment
 	* Returns: Pointer to the created context menu. Returns 0 if an
 	* error occurred. 
 	*/
-	IGUIContextMenu addContextMenu()(auto ref const rect!int rectangle,
+	IGUIContextMenu addContextMenu(rect!int rectangle,
 		IGUIElement parent = null, int id = -1);
 
 	/// Adds a menu to the environment.
@@ -583,7 +589,7 @@ interface IGUIEnvironment
 	* Returns: Pointer to the created combo box. Returns 0 if an
 	*			error occurred.  
 	*/
-	IGUIComboBox addComboBox()(auto ref const rect!int rectangle,
+	IGUIComboBox addComboBox(rect!int rectangle,
 		IGUIElement parent = null, int id = -1);
 
 	/// Adds a table to the environment
@@ -596,7 +602,7 @@ interface IGUIEnvironment
 	*		drawBackground Flag whether the background should be drawn.
 	* Returns: Pointer to the created table. Returns 0 if an error occurred. 
 	*/
-	IGUITable addTable()(auto ref const rect!int rectangle,
+	IGUITable addTable(rect!int rectangle,
 		IGUIElement parent = null, int id = -1, bool drawBackground = false);
 
 	/// Get the default element factory which can create all built-in elements
@@ -639,7 +645,7 @@ interface IGUIEnvironment
 	* Returns:
 	*	New GUI element, or 0 if no such element exists. 
 	*/
-	IGUIElement addGUIElement(const string elementName, IGUIElement parent= null);
+	IGUIElement addGUIElement(string elementName, IGUIElement parent= null);
 
 	/// Saves the current gui into a file.
 	/** 

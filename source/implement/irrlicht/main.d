@@ -35,7 +35,7 @@ version(IRR_COMPILE_WITH_CONSOLE_DEVICE)
 export IrrlichtDevice createDevice(
 	E_DRIVER_TYPE deviceType = E_DRIVER_TYPE.EDT_SOFTWARE,
 	// parantheses are necessary for some compilers
-	const dimension2du windowSize = dimension2du(640,480),
+	dimension2du windowSize = dimension2du(640,480),
 	uint bits = 16,
 	bool fullscreen = false,
 	bool stencilbuffer = false,

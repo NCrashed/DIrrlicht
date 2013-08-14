@@ -45,16 +45,16 @@ interface IGUIFont
 	* 	clip=  Optional pointer to a rectangle against which the text will be clipped.
 	* If the pointer is null, no clipping will be done. 
 	*/
-	void draw()(const wstring text, auto ref const rect!int position,
+	void draw(wstring text, rect!int position,
 		SColor color, bool hcenter = false, bool vcenter = false,
-		const rect!int clip = rect!int(0,0,0,0));
+		const rect!(int)* clip = null);
 
 	/// Calculates the width and height of a given string of text.
 	/**
 	* Returns: Returns width and height of the area covered by the text if
 	* it would be drawn. 
 	*/
-	dimension2d!uint getDimension(const string text) const;
+	dimension2d!uint getDimension(string text) const;
 
 	/// Calculates the index of the character in the text which is on a specific position.
 	/**
@@ -64,7 +64,7 @@ interface IGUIFont
 	* Returns: Returns zero based index of the character in the text, and -1 if no no character
 	* is on this position. (=the text is too short). 
 	*/
-	int getCharacterFromPos(const string text, int pixel_x) const;
+	int getCharacterFromPos(string text, int pixel_x) const;
 
 	/// Returns the type of this font
 	abstract EGUI_FONT_TYPE getType() const;
@@ -88,7 +88,7 @@ interface IGUIFont
 	* which supports kerning pairs a string such as 'Wo' may have the 'o'
 	* tucked neatly under the 'W'.
 	*/
-	int getKerningWidth(const wstring thisLetter = "", const wstring previousLetter = "") const;
+	int getKerningWidth(wstring thisLetter = "", wstring previousLetter = "") const;
 
 	/// Returns the distance between letters
 	int getKerningHeight() const;

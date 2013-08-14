@@ -35,7 +35,7 @@ enum EGUI_LISTBOX_COLOR
 abstract class IGUIListBox : IGUIElement
 {
 	/// constructor
-	this()(IGUIEnvironment environment, IGUIElement parent, int id, auto ref rect!int rectangle)
+	this(IGUIEnvironment environment, IGUIElement parent, int id, rect!int rectangle)
 	{
 		super(EGUI_ELEMENT_TYPE.EGUIET_LIST_BOX, environment, parent, id, rectangle);
 	}

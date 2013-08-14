@@ -3,9 +3,11 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.d module.
 module irrlicht.gui.IGUIInOutFader;
 
+import irrlicht.gui.IGUIEnvironment;
 import irrlicht.gui.IGUIElement;
 import irrlicht.gui.EGUIElementTypes;
 import irrlicht.video.SColor;
+import irrlicht.core.rect;
 
 /// Element for fading out or in
 /**
@@ -23,7 +25,7 @@ import irrlicht.video.SColor;
 abstract class IGUIInOutFader : IGUIElement
 {
 	/// constructor
-	this()(IGUIEnvironment environment, IGUIElement parent, size_t id, auto ref const rect!int rectangle)
+	this(IGUIEnvironment environment, IGUIElement parent, size_t id, rect!int rectangle)
 	{
 		super(EGUI_ELEMENT_TYPE.EGUIET_IN_OUT_FADER, environment, parent, id, rectangle);
 	}

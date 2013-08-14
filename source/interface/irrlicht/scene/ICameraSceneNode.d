@@ -44,19 +44,24 @@ abstract class ICameraSceneNode : ISceneNode, IEventReceiver
 	* 	isOrthogonal=  Set this to true if the matrix is an
 	* orthogonal one (e.g. from matrix4.buildProjectionMatrixOrtho).
 	*/
-	void setProjectionMatrix()(auto ref const matrix4 projection, bool isOrthogonal = false);
+	void setProjectionMatrix(ref const matrix4 projection, bool isOrthogonal = false);
+
+	final void setProjectionMatrix(matrix4 projection, bool isOrthogonal = false)
+	{
+		setProjectionMatrix(projection, isOrthogonal);
+	}
 
 	/// Gets the current projection matrix of the camera.
 	/**
 	* Returns: The current projection matrix of the camera. 
 	*/
-	auto ref const matrix4 getProjectionMatrix()() const;
+	ref const matrix4 getProjectionMatrix() const;
 
 	/// Gets the current view matrix of the camera.
 	/**
 	* Returns: The current view matrix of the camera. 
 	*/
-	auto ref const matrix4 getViewMatrix()() const;
+	ref const matrix4 getViewMatrix() const;
 
 	/// Sets a custom view matrix affector.
 	/**
@@ -66,13 +71,18 @@ abstract class ICameraSceneNode : ISceneNode, IEventReceiver
 	* Params:
 	* 	affector=  The affector matrix. 
 	*/
-	void setViewMatrixAffector()(auto ref const matrix4 affector);
+	void setViewMatrixAffector(ref const matrix4 affector);
+
+	final void setViewMatrixAffector(matrix4 affector)
+	{
+		setViewMatrixAffector(affector);
+	}
 
 	/// Get the custom view matrix affector.
 	/**
 	* Returns: The affector matrix. 
 	*/
-	auto ref const matrix4 getViewMatrixAffector() const;
+	ref const matrix4 getViewMatrixAffector() const;
 
 	/// It is possible to send mouse and key events to the camera.
 	/**
@@ -83,7 +93,7 @@ abstract class ICameraSceneNode : ISceneNode, IEventReceiver
 	* this input for changing their position, look at target or
 	* whatever. 
 	*/
-	bool OnEvent()(auto ref const SEvent event);
+//	bool OnEvent(ref const SEvent event);
 
 	/// Sets the look at target of the camera
 	/**
@@ -96,7 +106,12 @@ abstract class ICameraSceneNode : ISceneNode, IEventReceiver
 	* Params:
 	* 	pos=  Look at target of the camera, in world co-ordinates. 
 	*/
-	void setTarget()(auto ref const vector3df pos);
+	void setTarget(ref const vector3df pos);
+
+	final void setTarget(vector3df pos)
+	{
+		setTarget(pos);
+	}
 
 	/// Sets the rotation of the node.
 	/**
@@ -107,26 +122,37 @@ abstract class ICameraSceneNode : ISceneNode, IEventReceiver
 	* Params:
 	* 	rotation=  New rotation of the node in degrees. 
 	*/
-	void setRotation()(auto ref const vector3df rotation);
+	void setRotation(ref const vector3df rotation);
+
+	final void setRotation(vector3df rotation)
+	{
+		setRotation(rotation);
+	}
 
 	/// Gets the current look at target of the camera
 	/**
 	* Returns: The current look at target of the camera, in world co-ordinates 
 	*/
-	auto ref const vector3df getTarget()() const;
+	ref const vector3df getTarget() const;
 
 	/// Sets the up vector of the camera.
 	/**
 	* Params:
 	* 	pos=  New upvector of the camera. 
 	*/
-	void setUpVector()(auto ref const vector3df pos);
+	void setUpVector(ref const vector3df pos);
+
+	final void setUpVector(vector3df pos)
+	{
+		setUpVector(pos);
+	}
 
 	/// Gets the up vector of the camera.
 	/**
 	* Returns: The up vector of the camera, in world space. 
 	*/
-	auto ref const vector3df getUpVector()() const;
+	ref const vector3df getUpVector() const;
+
 
 	/// Gets the value of the near plane of the camera.
 	/**
@@ -185,7 +211,7 @@ abstract class ICameraSceneNode : ISceneNode, IEventReceiver
 	* Needed sometimes by bspTree or LOD render nodes.
 	* Returns: The current view frustum. 
 	*/
-	auto ref const SViewFrustum getViewFrustum()() const;
+	ref const SViewFrustum getViewFrustum() const;
 
 	/// Disables or enables the camera to get key or mouse inputs.
 	/**

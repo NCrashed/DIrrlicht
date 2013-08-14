@@ -68,7 +68,7 @@ abstract class IBoneSceneNode : ISceneNode
 	}
 
 	/// Get the index of the bone
-	uint getBoneIndex() const;
+	size_t getBoneIndex() const;
 
 	/// Sets the animation mode of the bone.
 	/**
@@ -80,7 +80,7 @@ abstract class IBoneSceneNode : ISceneNode
 	E_BONE_ANIMATION_MODE getAnimationMode() const;
 
 	/// Get the axis aligned bounding box of this node
-	auto ref const aabbox3d!float getBoundingBox()() const;
+	ref const aabbox3d!float getBoundingBox() const;
 
 	/// Returns the relative transformation of the scene node.
 	//matrix4 getRelativeTransformation() const;

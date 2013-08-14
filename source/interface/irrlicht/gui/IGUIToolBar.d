@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.d module.
 module irrlicht.gui.IGUIToolBar;
 
+import irrlicht.gui.IGUIEnvironment;
 import irrlicht.gui.IGUIElement;
 import irrlicht.gui.EGUIElementTypes;
 import irrlicht.gui.IGUIButton;
@@ -13,9 +14,9 @@ import irrlicht.core.rect;
 abstract class IGUIToolBar : IGUIElement
 {
 	/// constructor
-	this()(IGUIEnvironment environment, IGUIElement parent, size_t id, auto ref const rect!int rectangle)
+	this(IGUIEnvironment environment, IGUIElement parent, size_t id, rect!int rectangle)
 	{
-		this(EGUI_ELEMENT_TYPE.EGUIET_TOOL_BAR, environment, parent, id, rectangle);
+		super(EGUI_ELEMENT_TYPE.EGUIET_TOOL_BAR, environment, parent, id, rectangle);
 	}
 
 	/// Adds a button to the tool bar

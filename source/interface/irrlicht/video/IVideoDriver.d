@@ -1,24 +1,5 @@
 module irrlicht.video.IVideoDriver;
 
-import irrlicht.core.rect;
-import irrlicht.video.SColor;
-import irrlicht.video.ITexture;
-import irrlicht.video.SMaterial;
-import irrlicht.video.EDriverTypes;
-import irrlicht.video.EDriverFeatures;
-import irrlicht.video.SExposedVideoData;
-import irrlicht.core.irrArray;
-import irrlicht.core.matrix4;
-import irrlicht.core.plane3d;
-import irrlicht.core.dimension2d;
-import irrlicht.core.vector2d;
-import irrlicht.core.vector3d;
-import irrlicht.core.triangle3d;
-import irrlicht.io.IAttributes;
-import irrlicht.io.IAttributeExchangingObject;
-import irrlicht.io.IReadFile;
-import irrlicht.io.IWriteFile;
-import irrlicht.io.path;
 import irrlicht.scene.IMeshBuffer;
 import irrlicht.scene.IMesh;
 import irrlicht.scene.IMeshManipulator;
@@ -33,6 +14,26 @@ import irrlicht.video.IImageLoader;
 import irrlicht.video.IImageWriter;
 import irrlicht.video.IMaterialRenderer;
 import irrlicht.video.IGPUProgrammingServices;
+import irrlicht.video.SColor;
+import irrlicht.video.ITexture;
+import irrlicht.video.SMaterial;
+import irrlicht.video.EDriverTypes;
+import irrlicht.video.EDriverFeatures;
+import irrlicht.video.SExposedVideoData;
+import irrlicht.io.IAttributes;
+import irrlicht.io.IAttributeExchangingObject;
+import irrlicht.io.IReadFile;
+import irrlicht.io.IWriteFile;
+import irrlicht.io.path;
+import irrlicht.core.rect;
+import irrlicht.core.irrArray;
+import irrlicht.core.matrix4;
+import irrlicht.core.plane3d;
+import irrlicht.core.dimension2d;
+import irrlicht.core.aabbox3d;
+import irrlicht.core.vector2d;
+import irrlicht.core.vector3d;
+import irrlicht.core.triangle3d;
 
 /**
 *	Mixin template generating enum E_TRANSFORMATION_STATE with
@@ -356,7 +357,12 @@ interface IVideoDriver
 	* world, or projection.
 	* 	mat=  Matrix describing the transformation. 
 	*/
-	void setTransform()(E_TRANSFORMATION_STATE state, auto ref const matrix4 mat);
+	void setTransform(E_TRANSFORMATION_STATE state, ref const matrix4 mat);
+
+	final void setTransform(E_TRANSFORMATION_STATE state, matrix4 mat)
+	{
+		setTransform(state, mat);
+	}
 
 	/// Returns the transformation set by setTransform
 	/**
@@ -364,7 +370,7 @@ interface IVideoDriver
 	* 	state=  Transformation type to query
 	* Returns: Matrix describing the transformation. 
 	*/
-	auto ref const matrix4 getTransform(E_TRANSFORMATION_STATE state) const;
+	ref const matrix4 getTransform(E_TRANSFORMATION_STATE state) const;
 
 	/// Retrieve the number of image loaders
 	/**
@@ -468,7 +474,7 @@ interface IVideoDriver
 	* color format.
 	* Returns: Pointer to the newly created texture. 
 	*/
-	ITexture addTexture()(auto ref const dimension2d!uint size,
+	ITexture addTexture(dimension2d!uint size,
 		const Path name, ECOLOR_FORMAT format = ECOLOR_FORMAT.ECF_A8R8G8B8);
 
 	/// Creates a texture from an IImage.
@@ -483,7 +489,7 @@ interface IVideoDriver
 	* derived from image.
 	* Returns: Pointer to the newly created texture. 
 	*/
-	ITexture addTexture()(const Path name, IImage image, void[] mipmapData = null);
+	ITexture addTexture(const Path name, IImage image, void[] mipmapData = null);
 
 	/// Adds a new render target texture to the texture cache.
 	/**
@@ -497,7 +503,7 @@ interface IVideoDriver
 	* Returns: Pointer to the created texture or 0 if the texture
 	* could not be created. 
 	*/
-	ITexture addRenderTargetTexture()(auto ref const dimension2d!uint size,
+	ITexture addRenderTargetTexture(dimension2d!uint size,
 			const Path name = "rt", const ECOLOR_FORMAT format = ECOLOR_FORMAT.ECF_UNKNOWN);
 
 	/// Removes a texture from the texture cache and deletes it.
@@ -705,13 +711,13 @@ interface IVideoDriver
 	* 	area=  Rectangle defining the new area of rendering
 	* operations. 
 	*/
-	void setViewPort()(auto ref const rect!int area);
+	void setViewPort(rect!int area);
 
 	/// Gets the area of the current viewport.
 	/**
 	* Returns: Rectangle of the current viewport. 
 	*/
-	auto ref const rect!int getViewPort() const;
+	ref const rect!int getViewPort() const;
 
 	/// Draws a vertex primitive list
 	/**
@@ -887,8 +893,8 @@ interface IVideoDriver
 	* 	end=  End of the 3d line.
 	* 	color=  Color of the line. 
 	*/
-	void draw3DLine()(auto ref const vector3df start,
-		auto ref const vector3df end, SColor color = SColor(255,255,255,255));
+	void draw3DLine(vector3df start,
+		vector3df end, SColor color = SColor(255,255,255,255));
 
 	/// Draws a 3d triangle.
 	/**
@@ -908,7 +914,7 @@ interface IVideoDriver
 	* 	triangle=  The triangle to draw.
 	* 	color=  Color of the line. 
 	*/
-	void draw3DTriangle()(auto const triangle3df triangle,
+	void draw3DTriangle(triangle3df triangle,
 		SColor color = SColor(255,255,255,255));
 
 	/// Draws a 3d axis aligned box.
@@ -927,7 +933,7 @@ interface IVideoDriver
 	* 	box=  The axis aligned box to draw
 	* 	color=  Color to use while drawing the box. 
 	*/
-	void draw3DBox()(auto ref const aabbox3d!float box,
+	void draw3DBox(aabbox3d!float box,
 		SColor color = SColor(255,255,255,255));
 
 	/// Draws a 2d image without any special effects
@@ -937,8 +943,8 @@ interface IVideoDriver
 	* 	destPos=  Upper left 2d destination position where the
 	* image will be drawn. 
 	*/
-	void draw2DImage()(const ITexture texture,
-		auto ref const vector2d!int destPos);
+	void draw2DImage(const ITexture texture,
+		vector2d!int destPos);
 
 	/// Draws a 2d image using a color
 	/**
@@ -959,8 +965,8 @@ interface IVideoDriver
 	* 	useAlphaChannelOfTexture=  If true, the alpha channel of
 	* the texture is used to draw the image.
 	*/
-	void draw2DImage()(const ITexture texture, auto ref const vector2d!int destPos,
-		auto ref const rect!int sourceRect, const rect!(int)* clipRect = null,
+	void draw2DImage(const ITexture texture, vector2d!int destPos,
+		rect!int sourceRect, const rect!(int)* clipRect = null,
 		SColor color=SColor(255,255,255,255), bool useAlphaChannelOfTexture=false);
 
 	/// Draws a set of 2d images, using a color and the alpha channel of the texture.
@@ -986,8 +992,8 @@ interface IVideoDriver
 	* 	useAlphaChannelOfTexture=  If true, the alpha channel of
 	* the texture is used to draw the image. 
 	*/
-	void draw2DImageBatch()(const ITexture texture,
-			auto ref const position2d!int pos,
+	void draw2DImageBatch(const ITexture texture,
+			vector2d!int pos,
 			const rect!(int)[] sourceRects,
 			const int[] indices,
 			int kerningWidth=0,
@@ -1014,8 +1020,8 @@ interface IVideoDriver
 	* 	useAlphaChannelOfTexture=  If true, the alpha channel of
 	* the texture is used to draw the image. 
 	*/
-	void draw2DImageBatch()(const ITexture texture,
-			const position2d!(int)[] positions,
+	void draw2DImageBatch(const ITexture texture,
+			const vector2d!(int)[] positions,
 			const rect!(int)[] sourceRects,
 			const rect!(int)* clipRect=null,
 			SColor color=SColor(255,255,255,255),
@@ -1034,9 +1040,10 @@ interface IVideoDriver
 	* 	useAlphaChannelOfTexture=  True if alpha channel will be
 	* blended. 
 	*/
-	void draw2DImage()(const ITexture texture, auto ref const rect!int destRect,
-		auto ref const rect!int sourceRect, const rect!(int)* clipRect = null,
-		const SColor[4] colors = null, bool useAlphaChannelOfTexture = false);
+	void draw2DImage(const ITexture texture, rect!int destRect,
+		rect!int sourceRect, const rect!(int)* clipRect = null,
+		const SColor[4] colors = [SColor(0), SColor(0), SColor(0) ,SColor(0)],
+		bool useAlphaChannelOfTexture = false);
 
 	/// Draws a 2d rectangle.
 	/**
@@ -1049,7 +1056,7 @@ interface IVideoDriver
 	* will be clipped. If the pointer is null, no clipping will be
 	* performed. 
 	*/
-	void draw2DRectangle()(SColor color, auto ref const rect!int pos,
+	void draw2DRectangle(SColor color, rect!int pos,
 		const rect!(int)* clip = null);
 
 	/// Draws a 2d rectangle with a gradient.
@@ -1072,7 +1079,7 @@ interface IVideoDriver
 	* will be clipped. If the pointer is null, no clipping will be
 	* performed. 
 	*/
-	void draw2DRectangle()(auto ref const rect!int pos,
+	void draw2DRectangle(rect!int pos,
 			SColor colorLeftUp, SColor colorRightUp,
 			SColor colorLeftDown, SColor colorRightDown,
 			const rect!(int)* clip = null);
@@ -1084,7 +1091,7 @@ interface IVideoDriver
 	* 	color=  Color of the rectangle to draw. The alpha component
 	* specifies how transparent the rectangle outline will be. 
 	*/
-	void draw2DRectangleOutline()(auto ref const recti pos,
+	void draw2DRectangleOutline(recti pos,
 			SColor color=SColor(255,255,255,255));
 
 	/// Draws a 2d line. Both start and end will be included in coloring.
@@ -1096,8 +1103,8 @@ interface IVideoDriver
 	* pixels.
 	* 	color=  Color of the line to draw. 
 	*/
-	void draw2DLine()(auto ref const position2d!int start,
-				auto ref const position2d!int end,
+	void draw2DLine(vector2d!int start,
+				vector2d!int end,
 				SColor color = SColor(255,255,255,255));
 
 	/// Draws a pixel.
@@ -1107,7 +1114,7 @@ interface IVideoDriver
 	* 	y=  The y-position of the pixel.
 	* 	color=  Color of the pixel to draw. 
 	*/
-	void drawPixel()(uint x, uint y, auto ref const SColor color);
+	void drawPixel(uint x, uint y, SColor color);
 
 	/// Draws a non filled concyclic regular 2d polyon.
 	/**
@@ -1125,7 +1132,7 @@ interface IVideoDriver
 	* to draw a line, 3 to draw a triangle, 4 for tetragons and a lot
 	* (>10) for nearly a circle. 
 	*/
-	void draw2DPolygon()(auto ref vector2d!int center,
+	void draw2DPolygon(vector2d!int center,
 			float radius,
 			SColor color=SColor(100,255,255,255),
 			int vertexCount=10);
@@ -1233,7 +1240,7 @@ interface IVideoDriver
 	/**
 	* Returns: Size of screen or render window. 
 	*/
-	auto ref const dimension2d!uint getScreenSize()() const;
+	ref const dimension2d!uint getScreenSize() const;
 
 	/// Get the size of the current render target
 	/**
@@ -1242,7 +1249,7 @@ interface IVideoDriver
 	* target is the screen.
 	* Returns: Size of render target or screen/window 
 	*/
-	auto ref const dimension2d!uint getCurrentRenderTargetSize()() const;
+	ref const dimension2d!uint getCurrentRenderTargetSize() const;
 
 	/// Returns current frames per second value.
 	/**
@@ -1274,7 +1281,7 @@ interface IVideoDriver
 	*
 	* Returns: An index to the light, or -1 if an error occurs
 	*/
-	int addDynamicLight()(auto ref const SLight light);
+	int addDynamicLight(SLight light);
 
 	/// Returns the maximal amount of dynamic lights the device can handle
 	/**
@@ -1295,7 +1302,7 @@ interface IVideoDriver
 	* greater and smaller than IVideoDriver::getDynamicLightCount.
 	* Returns: Light data. 
 	*/
-	auto ref const SLight getDynamicLight(size_t idx) const;
+	ref const SLight getDynamicLight(size_t idx) const;
 
 	/// Turns a dynamic light on or off
 	/**
@@ -1434,8 +1441,8 @@ interface IVideoDriver
 	* destruction.
 	* Returns: The created image.
 	*/
-	IImage createImageFromData()(ECOLOR_FORMAT format,
-		auto ref const dimension2d!uint size, void *data,
+	IImage createImageFromData(ECOLOR_FORMAT format,
+		dimension2d!uint size, void *data,
 		bool ownForeignMemory=false,
 		bool deleteMemory = true);
 
@@ -1446,7 +1453,7 @@ interface IVideoDriver
 	* 	size=  Size of the image to create.
 	* Returns: The created image.
 	*/
-	IImage createImage()(ECOLOR_FORMAT format, auto ref const dimension2d!uint size);
+	IImage createImage(ECOLOR_FORMAT format, dimension2d!uint size);
 
 	/// Creates a software image by converting it to given format from another image.
 	/**
@@ -1456,7 +1463,7 @@ interface IVideoDriver
 	* 	imageToCopy=  Image to copy to the new image.
 	* Returns: The created image.
 	*/
-	deprecated IImage createImage()(ECOLOR_FORMAT format, IImage imageToCopy);
+	deprecated IImage createImage(ECOLOR_FORMAT format, IImage imageToCopy);
 
 	/// Creates a software image from a part of another image.
 	/**
@@ -1467,9 +1474,9 @@ interface IVideoDriver
 	* 	size=  Extents of rectangle to copy.
 	* Returns: The created image.
 	*/
-	deprecated IImage createImage()(IImage imageToCopy,
-			auto ref const position2d!int pos,
-			auto ref const dimension2d!uint size);
+	deprecated IImage createImage(IImage imageToCopy,
+			vector2d!int pos,
+			dimension2d!uint size);
 
 	/// Creates a software image from a part of a texture.
 	/**
@@ -1479,16 +1486,16 @@ interface IVideoDriver
 	* 	size=  Extents of rectangle to copy.
 	* Returns: The created image.
 	*/
-	IImage createImage()(ITexture texture,
-			auto ref const position2d!int pos,
-			auto ref const dimension2d!uint size);
+	IImage createImage(ITexture texture,
+			vector2d!int pos,
+			dimension2d!uint size);
 
 	/// Event handler for resize events. Only used by the engine internally.
 	/**
 	* Used to notify the driver that the window was resized.
 	* Usually, there is no need to call this method. 
 	*/
-	void OnResize()(auto ref const dimension2d!uint size);
+	void OnResize(dimension2d!uint size);
 
 	/// Adds a new material renderer to the video device.
 	/**
@@ -1592,7 +1599,7 @@ interface IVideoDriver
 	* extended without having to modify the source of the engine.
 	* Returns: Collection of device dependent pointers. 
 	*/
-	auto ref const SExposedVideoData getExposedVideoData()();
+	ref const SExposedVideoData getExposedVideoData();
 
 	/// Get type of video driver
 	/**
@@ -1649,7 +1656,7 @@ interface IVideoDriver
 	* it.
 	* Returns: True if the clipping plane is usable. 
 	*/
-	bool setClipPlane()(size_t index, auto ref const plane3df plane, bool enable=false);
+	bool setClipPlane(size_t index, plane3df plane, bool enable=false);
 
 	/// Enable or disable a clipping plane.
 	/**
@@ -1714,7 +1721,7 @@ interface IVideoDriver
 	* Params:
 	* 	color=  New color of the ambient light. 
 	*/
-	void setAmbientLight()(auto ref const SColorf color);
+	void setAmbientLight(SColorf color);
 
 	/// Only used by the engine internally.
 	/**
