@@ -103,7 +103,7 @@ class SMaterialLayer
 	/**
 	* Returns: Texture matrix of this layer. 
 	*/
-	auto ref const matrix4 getTextureMatrix() const
+	matrix4 getTextureMatrix() const
 	{
 		return TextureMatrix;
 	}

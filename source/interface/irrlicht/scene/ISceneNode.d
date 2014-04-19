@@ -189,7 +189,7 @@ abstract class ISceneNode : IAttributeExchangingObject
 	* an update with updateAbsolutePosition().
 	* Returns: The absolute transformation matrix. 
 	*/
-	auto ref const matrix4 getAbsoluteTransformation() const
+	const matrix4 getAbsoluteTransformation() const
 	{
 		return AbsoluteTransformation;
 	}
@@ -471,7 +471,7 @@ abstract class ISceneNode : IAttributeExchangingObject
 	* getAbsoluteTransformation().getScale()
 	* Returns: The scale of the scene node. 
 	*/
-	auto ref const vector3df getScale()() const
+	vector3df getScale() const
 	{
 		return RelativeScale;
 	}
@@ -495,7 +495,7 @@ abstract class ISceneNode : IAttributeExchangingObject
 	* getAbsoluteTransformation().getRotation()
 	* Returns: Current relative rotation of the scene node. 
 	*/
-	auto ref const vector3df getRotation()() const
+	vector3df getRotation() const
 	{
 		return RelativeRotation;
 	}
@@ -519,7 +519,7 @@ abstract class ISceneNode : IAttributeExchangingObject
 	* the position in world coordinates, use getAbsolutePosition() instead.
 	* Returns: The current position of the node relative to the parent. 
 	*/
-	auto ref const vector3df getPosition()() const
+	vector3df getPosition() const
 	{
 		return RelativeTranslation;
 	}

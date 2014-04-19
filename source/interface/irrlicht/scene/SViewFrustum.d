@@ -214,7 +214,7 @@ struct SViewFrustum
 	}
 
 	/// returns a bounding box enclosing the whole view frustum
-	auto ref const aabbox3d!float getBoundingBox() const
+	aabbox3d!float getBoundingBox() const
 	{
 		return boundingBox;
 	}
