@@ -541,7 +541,7 @@ class SMaterial
 	* 	i=  The desired level.
 	* Returns: Texture matrix for texture level i, or identity matrix for levels larger than MATERIAL_MAX_TEXTURES. 
 	*/
-	ref const matrix4 getTextureMatrix(size_t i)
+	matrix4 getTextureMatrix(size_t i)
 	{
 		assert(i<MATERIAL_MAX_TEXTURES);
 		return TextureLayer[i].getTextureMatrix();
