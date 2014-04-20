@@ -9,6 +9,22 @@ import irrlicht.SIrrlichtCreationParameters;
 import irrlicht.video.EDriverTypes;
 import irrlicht.core.dimension2d;
 
+private 
+{
+    import derelict.util.loader;
+    import derelict.util.system;
+    import derelict.util.exception;
+    
+    static if( Derelict_OS_Windows )
+        enum libNames = "Irrlicht.dll";
+    else static if( Derelict_OS_Mac )
+        enum libNames = "libIrrlicht.dylib";
+    else static if( Derelict_OS_Posix )
+        enum libNames = "libIrrlicht.so";
+    else
+        static assert(0, "Need to implement Irrlicht libNames for this poeration system" );
+}
+
 /// Creates an Irrlicht device. The Irrlicht device is the root object for using the engine.
 /**
 * If you need more parameters to be passed to the creation of the Irrlicht Engine device,
@@ -29,26 +45,15 @@ import irrlicht.core.dimension2d;
 * Returns: Returns pointer to the created IrrlichtDevice or null if the
 * device could not be created.
 */
-/*extern IrrlichtDevice createDevice(
-	E_DRIVER_TYPE deviceType = E_DRIVER_TYPE.EDT_SOFTWARE,
-	// parantheses are necessary for some compilers
-	dimension2du windowSize = dimension2du(640,480),
-	uint bits = 16,
-	bool fullscreen = false,
-	bool stencilbuffer = false,
-	bool vsync = false,
-	IEventReceiver receiver = null);*/
-
-/// alias for Function Pointer
-/*alias IrrlichtDevice function(
-		E_DRIVER_TYPE deviceType,
-		dimension2du windowSize,
-		uint bits,
-		bool fullscreen,
-		bool stencilbuffer,
-		bool vsync,
-		IEventReceiver receiver) funcptr_createDevice;*/
-
+//extern(C) IrrlichtDevice createDevice(
+//	E_DRIVER_TYPE deviceType = E_DRIVER_TYPE.EDT_SOFTWARE,
+//	// parantheses are necessary for some compilers
+//	dimension2du windowSize = dimension2du(640,480),
+//	uint bits = 16,
+//	bool fullscreen = false,
+//	bool stencilbuffer = false,
+//	bool vsync = false,
+//	IEventReceiver receiver = null);
 
 /// Creates an Irrlicht device with the option to specify advanced parameters.
 /**
@@ -56,15 +61,54 @@ import irrlicht.core.dimension2d;
 * Use this function only if you wish to specify advanced parameters like a window
 * handle in which the device should be created.
 * Params:
-* 	parameters=  Structure containing advanced parameters for the creation of the device.
+*   parameters=  Structure containing advanced parameters for the creation of the device.
 * See_Also:
-* 	irrlicht.SIrrlichtCreationParameters for details.
+*   irrlicht.SIrrlichtCreationParameters for details.
 * Returns: Returns pointer to the created IrrlichtDevice or null if the
 * device could not be created. 
 */
-//extern IrrlichtDevice createDeviceEx(
-//	SIrrlichtCreationParameters parameters);
+//extern(C) IrrlichtDevice createDeviceEx(SIrrlichtCreationParameters parameters);
 
-/// alias for Function Pointer
-//alias IrrlichtDevice function( 
-//	SIrrlichtCreationParameters parameters ) funcptr_createDeviceEx;
+extern(C) nothrow
+{
+    /// alias for Function Pointer
+    alias IrrlichtDevice function(
+            E_DRIVER_TYPE deviceType,
+            const ref dimension2du windowSize,
+            uint bits,
+            bool fullscreen,
+            bool stencilbuffer,
+            bool vsync,
+            IEventReceiver receiver) funcptr_createDevice;
+    
+    /// alias for Function Pointer
+    alias IrrlichtDevice function( 
+        SIrrlichtCreationParameters parameters ) funcptr_createDeviceEx;
+}
+
+__gshared
+{
+    funcptr_createDevice createDevice;
+    funcptr_createDeviceEx createDeviceEx;
+}
+
+class DerelicthIrrlichtLoader : SharedLibLoader
+{
+    public this()
+    {
+        super(libNames);
+    }
+    
+    protected override void loadSymbols()
+    {
+        bindFunc( cast( void** )&createDevice, "createDevice" );
+        bindFunc( cast( void** )&createDeviceEx, "createDeviceEx" );
+    }
+}
+
+__gshared DerelicthIrrlichtLoader DerelictIrrlicht;
+
+shared static this()
+{
+    DerelictIrrlicht = new DerelicthIrrlichtLoader();
+}

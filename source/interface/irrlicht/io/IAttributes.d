@@ -160,7 +160,6 @@ interface IAttributes
 	/// Adds an attribute as Type
 	final void add(Type)(string attributeName, Type value)
 	{
-		pragma(msg, Type);
 		mixin("add"~mangleUnqual!Type~"(attributeName, value);");
 	}
 

@@ -51,7 +51,6 @@ menu item 'Namespace List' or by using this link:
 http://irrlicht.sourceforge.net/docu/namespaces.html
 */
 import irrlicht.d;
-import irrlicht.main; // temp
 
 /*
 This is the main method. We can now use main() on every platform.
@@ -91,9 +90,10 @@ int main()
 	Always check the return value to cope with unsupported drivers,
 	dimensions, etc.
 	*/
+	auto winSize = dimension2d!uint(640, 480);
 	IrrlichtDevice device = 
-		createDevice(E_DRIVER_TYPE.EDT_SOFTWARE, dimension2d!uint(640, 480),
-			false, false, false, 0);
+		createDevice(E_DRIVER_TYPE.EDT_SOFTWARE, winSize, 32,
+			false, false, false, null);
 
 	if(device is null)
 		return 1;
